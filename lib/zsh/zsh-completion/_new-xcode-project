@@ -1,0 +1,45 @@
+#compdef new-xcode-project.pl
+#*****************************************************************************************
+# new-xcode-project
+#
+# The is a completion script for my Xcode project generator
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  18-Aug-2023  8:11pm
+# Modified :  23-Oct-2023  8:57pm
+#
+# Copyright © 2023 By Gee Dbl A All rights reserved.
+#*****************************************************************************************
+
+_new-xcode-project() {
+   	local state
+
+	_arguments -C "1:templates:->templates" "2:.*:->proj" "3:.*:->loc"
+
+   	case "$state" in
+   		templates)
+		    setopt localoptions extendedglob
+
+		    local -a _descriptions _values
+			local raw_names=("${(@f)$(find "$HOME/Developer/GeeDblA/ProjectTemplates" -type d -depth 1 -not -name "_*"  -not -name ".*")}")
+			for template in "${raw_names[@]}"; do
+				name=$(basename "$template")
+				desc=$(<"${template}/.ProjectDescription")
+				_descriptions+="$name:$desc"
+			done
+
+	       _describe 'templates' _descriptions
+		;;
+
+    	proj)
+		;;
+
+	   	loc)
+		_path_files -/
+		;;
+
+   	esac
+
+	return 1
+}
+_new-xcode-project "$@"

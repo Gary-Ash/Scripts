@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# fill_array_with_command
+#
+# This routine will fill an array with the output from the command that is passed to it
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  18-Aug-2023  8:11pm
+# Modified :
+#
+# Copyright © 2023 By Gee Dbl A All rights reserved.
+#*****************************************************************************************
+
+fill_array_with_command() {
+	local raw array line
+
+	raw=$(eval "$1")
+	while IFS= read -r line; do
+		array+=("$line")
+	done < <(echo "${raw}")
+	echo "${array[@]}"
+}
+
+fill_array_with_command "$@"

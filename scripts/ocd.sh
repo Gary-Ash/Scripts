@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :   4-Mar-2024  3:26pm
+# Modified :   9-Mar-2024 10:20pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -156,7 +156,7 @@ find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".j
 load-simulator.pl
 
 start_persistant_sudo "$SUDO_PASSWORD"
-sudo perl /opt/bin/geedbla/sublime-snippets.pl --delete
+sudo perl /opt/geedbla/scripts/sublime-snippets.pl --delete
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
 #****************************************************************************************
@@ -197,7 +197,7 @@ rm -rf "$(getconf DARWIN_USER_DIR)/com.apple.notificationcenter/"* &>/dev/null
 #*****************************************************************************************
 sudo find /usr/local -type f -name ".DS_Store" -delete &>/dev/null
 sudo find /opt -type f -name ".DS_Store" -delete &>/dev/null
-sudo find "$HOME" -type f -name ".DS_Store" -not -path "$HOME/.DS_Store" -delete &>/dev/null
+sudo find "$HOME" -type f -name ".DS_Store" -not -path "$HOME/.DS_Store" -not -path "$HOME/Downloads/.DS_Store" -delete &>/dev/null
 
 echo -n '' | pbcopy
 sudo periodic daily weekly monthly

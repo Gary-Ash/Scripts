@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  16-Aug-2023  6:24pm
-# Modified :   8-Mar-2024  7:17pm
+# Modified :   9-Mar-2024  8:33pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -144,6 +144,8 @@ if ($noGitHub == 0) {
     `cd "$projectDirectory";gh repo create "$projectName" --private --source=. --remote=upstream`;
     `rm -rf ~/,local`;
 }
+
+system("open -a Xcode /Users/garyash/Developer/GeeDblA/SnazzyPrompt/SnazzyPrompt.xcodeproj &");
 
 #*****************************************************************************************
 # process a source file

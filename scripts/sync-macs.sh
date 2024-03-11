@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :   8-Mar-2024  8:52pm
+# Modified :  10-Mar-2024  4:52pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -75,11 +75,14 @@ sync() {
 		remote="$USER@$computer"
 		if [ "$me" != "$computer" ]; then
 			sshpass -p "$password" rsync -arz -E --rsh=ssh "$HOME/Downloads/bundles.txt" "$remote:$HOME/Downloads/bundles.txt" &>/dev/null
+			sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chmod -R 777 /Applications/*" &>/dev/null
 			sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew bundle --force --no-lock --file=$HOME/Downloads/bundles.txt &> /dev/null" &>/dev/null
 			sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew bundle cleanup --force --file=$HOME/Downloads/bundles.txt &> /dev/null" &>/dev/null
 			sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew update &> /dev/null" &>/dev/null
 			sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew upgrade &> /dev/null" &>/dev/null
 			sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew autoremove &> /dev/null" &>/dev/null
+			sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chown -R root:wheel /Applications/*" &>/dev/null
+			sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chmod -R 755 /Applications/*" &>/dev/null
 			sshpass -p "$password" ssh "$remote" "rm -f \"$HOME/Downloads/bundles.txt\" &> /dev/null" &>/dev/null
 			sshpass -p "$password" ssh "$remote" "echo $password | sudo -S rm -rf \"$HOME/Pictures/Photos Library.photoslibrary\" &> /dev/null" &>/dev/null
 			sshpass -p "$password" rsync -arz --rsh=ssh "$HOME/Pictures/Photos Library.photoslibrary" "$remote:$HOME/Pictures" &>/dev/null
@@ -241,11 +244,15 @@ sync() {
 				fi
 			done
 
+			sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chmod -R 777 /Applications/*" &>/dev/null
 			for pathToSync in "${toSync[@]}"; do
 				targetDirectory=$(dirname "$pathToSync")
 				targetDirectory="${targetDirectory// /\\ }"
 				rsync --rsh="sshpass -p $password ssh -l $USER" -arzE --delete "$pathToSync" "$remote:$targetDirectory/"
 			done
+
+			sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chown -R root:wheel /Applications/*" &>/dev/null
+			sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chmod -R 755 /Applications/*" &>/dev/null
 		fi
 	done
 

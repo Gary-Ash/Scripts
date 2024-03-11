@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :   9-Mar-2024 10:20pm
+# Modified :  10-Mar-2024  3:38pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -82,7 +82,6 @@ export OCD_OPTION="$cmd"
 defaults write com.apple.Safari IncludeInternalDebugMenu 1
 
 SUDO_PASSWORD=$(get_sudo_password)
-COPY_SUDO_PASSWORD="$SUDO_PASSWORD"
 error_log="$TMPDIR/Error.txt"
 
 kill-everything
@@ -99,12 +98,25 @@ refresh-compile-commands.sh
 # brew
 #*****************************************************************************************
 if command -v brew &>/dev/null; then
+	SUDO_PASSWORD=$(get_sudo_password)
+	start_persistant_sudo "$SUDO_PASSWORD"
+	sudo chmod -R 777 /Applications/* &>/dev/null
+	stop_persistant_sudo
+
 	brew update &>"$error_log"
 	brew upgrade &>"$error_log"
 	brew upgrade --cask &>"$error_log"
 	brew autoremove &>"$error_log"
 	brew cleanup &>"$error_log"
 	rm -rf $(brew --cache) &>/dev/null
+
+	SUDO_PASSWORD=$(get_sudo_password)
+	start_persistant_sudo "$SUDO_PASSWORD"
+
+	sudo chown -R root:wheel /Applications/* &>/dev/null
+	sudo chmod -R 755 /Applications/* &>/dev/null
+	sudo xattr -cr /Applications/* &>/dev/null
+	stop_persistant_sudo
 fi
 
 #*********************************************************************************
@@ -155,6 +167,7 @@ find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".j
 
 load-simulator.pl
 
+SUDO_PASSWORD=$(get_sudo_password)
 start_persistant_sudo "$SUDO_PASSWORD"
 sudo perl /opt/geedbla/scripts/sublime-snippets.pl --delete
 #****************************************************************************************
@@ -861,8 +874,6 @@ dscacheutil -flushcache &>/dev/null
 sudo /usr/libexec/xpchelper --rebuild-cache &>/dev/null
 sudo update_dyld_shared_cache -force &>/dev/null
 sudo purge &>/dev/null
-sudo launchctl stop com.apple.usbd
-sudo launchctl start com.apple.usbd
 
 find "$HOME/Library/Developer" -type d -name "[A-Za-z0-9]* Device Logs" -exec rm -rfv {} \; &>/dev/null
 sqlite3 "$(find "$HOME/Library/Mail" -name "Envelope Index")" vacuum
@@ -1419,7 +1430,7 @@ sub processFiles {
     }
 }
 PERL
-defaults write com.sublimetext.4.plist NSNavLastRootDirectory "$HOME/Developer/"
+
 mkdir -p "$XDG_CACHE_HOME/zsh"
 #*****************************************************************************************
 # clean Z the directory tool
@@ -1432,7 +1443,7 @@ fi
 if [[ $OCD_OPTION == "" ]]; then
 	finish
 	history -p
-	perl /opt/bin/geedbla/startup-banner.pl
+	perl /opt/geedbla/scripts/startup-banner.pl --light
 	osascript <<"END2"
 try
     tell application "System Events" to tell process "ColorSnapper2"

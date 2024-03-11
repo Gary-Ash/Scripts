@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  10-Mar-2024  3:38pm
+# Modified :  10-Mar-2024  9:41pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -1018,7 +1018,8 @@ our @plistKeysToDelete = (
     "BKPreviouslyOpenedBookIDs",                                                                                             "RecentMoveAndCopyDestinations",
     "DownloadsFolderListViewSettingsVersion",                                                                                "recent_viewed",
     "RecentsArrangeGroupViewBy",																							 "IDEAppChooserRecentApplications-My Mac",
-    "RecentRegions", "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS", ""
+    "RecentRegions", 																										 "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS",
+    "lastSource", "lastReplacement", "lastRegex",
 );
 
 our @itemsToDelete = (

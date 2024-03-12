@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  16-Aug-2023  6:24pm
-# Modified :   9-Mar-2024  8:33pm
+# Modified :  12-Mar-2024  1:20pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -24,6 +24,7 @@ use File::Path qw(make_path);
 use File::Copy;
 use POSIX qw(strftime);
 use File::Basename;
+
 #-----------------------------------------------------------------------------------------
 # constants
 #-----------------------------------------------------------------------------------------
@@ -50,20 +51,40 @@ $currentDate =~ s/PM/pm/;
 #-----------------------------------------------------------------------------------------
 # parse command line arguments
 #-----------------------------------------------------------------------------------------
-my $noGitHub = 0;
+my $noGitHub               = 0;
+my $noXcode                = 0;
 my $numberArgumentsOptions = $#ARGV + 1;
 for (my $index = 0; $index < $numberArgumentsOptions; ++$index) {
-        if ($ARGV[$index] eq "--no-github"|| $ARGV[$index] eq "-n") {
-        $noGitHub = 1;
-        splice(@ARGV, $index, 1);
-        last;
+    my $dashCheck = substr($ARGV[$index], 0, 1);
+
+    if ($dashCheck eq "-") {
+        my $option = lc($ARGV[$index]);
+        if ($option eq "--no-github" || $option eq "-ng") {
+            $noGitHub = 1;
+            splice(@ARGV, $index, 1);
+            --$numberArgumentsOptions;
+            --$index;
+        }
+        elsif ($option eq "--no-xcode" || $option eq "-nx") {
+            $noXcode = 1;
+            splice(@ARGV, $index, 1);
+            --$numberArgumentsOptions;
+            --$index;
+        }
+        else {
+            print "Unrecognized option given: $ARGV[$index]";
+            exit(2);
+        }
     }
+
 }
 
 my $numberArguments = $#ARGV + 1;
 
 if ($numberArguments != 3 && $numberArguments != 4) {
-    print "*** Error: $BASE_PROGRAM_NAME <template name> <project name> <location of project> <company>\n";
+    print "*** Error: $BASE_PROGRAM_NAME <template name> <project name> <location of project> [company]\n\n";
+    print "-ng, --no-github: Do Not create a GitHub repository\n";
+    print "-nx, --no-xcode:  Do Not start Xcode after the project is generated\n";
     exit(1);
 }
 
@@ -78,6 +99,7 @@ if ($numberArguments == 4) {
 else {
     $company = "Gee Dbl A";
 }
+
 
 if (length($projectName) < 3 || length($projectName) > 255) {
     print STDERR "*** Error: Bad project name\n";
@@ -145,7 +167,9 @@ if ($noGitHub == 0) {
     `rm -rf ~/,local`;
 }
 
-system("open -a Xcode /Users/garyash/Developer/GeeDblA/SnazzyPrompt/SnazzyPrompt.xcodeproj &");
+if ($noXcode == 0) {
+    system("open -a Xcode $projectDirectory/$projectName.xcodeproj &");
+}
 
 #*****************************************************************************************
 # process a source file

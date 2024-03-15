@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  10-Mar-2024  4:52pm
+# Modified :  13-Mar-2024  5:25pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -248,7 +248,7 @@ sync() {
 			for pathToSync in "${toSync[@]}"; do
 				targetDirectory=$(dirname "$pathToSync")
 				targetDirectory="${targetDirectory// /\\ }"
-				rsync --rsh="sshpass -p $password ssh -l $USER" -arzE --delete "$pathToSync" "$remote:$targetDirectory/"
+				rsync --rsh="sshpass -p $password ssh -l $USER" -arzE --delete "$pathToSync" "$remote:$targetDirectory/" &>/dev/null
 			done
 
 			sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chown -R root:wheel /Applications/*" &>/dev/null

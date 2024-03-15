@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  16-Aug-2023  6:24pm
-# Modified :  12-Mar-2024  1:20pm
+# Modified :  15-Mar-2024  3:23pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -19,7 +19,9 @@ use warnings;
 use English;
 use File::Find;
 use File::Basename;
-use Cwd        qw(cwd);
+use Cwd qw(cwd);
+use Cwd qw(abs_path);
+
 use File::Path qw(make_path);
 use File::Copy;
 use POSIX qw(strftime);
@@ -90,7 +92,7 @@ if ($numberArguments != 3 && $numberArguments != 4) {
 
 my $templateName    = $ARGV[0];
 my $projectName     = $ARGV[1];
-my $projectLocation = $ARGV[2];
+my $projectLocation = abs_path($ARGV[2]);
 my $company         = "";
 
 if ($numberArguments == 4) {
@@ -99,7 +101,6 @@ if ($numberArguments == 4) {
 else {
     $company = "Gee Dbl A";
 }
-
 
 if (length($projectName) < 3 || length($projectName) > 255) {
     print STDERR "*** Error: Bad project name\n";
@@ -185,6 +186,7 @@ sub processFiles {
     $dir =~ s/$templateNameUnderscore/$projectNameUnderscore/g;
 
     if (!-e "$dir") {
+        print("$dir\n");
         make_path($dir);
     }
 

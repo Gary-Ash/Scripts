@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  15-Mar-2024  9:37pm
+# Modified :  17-Mar-2024  6:51pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -42,28 +42,20 @@ kill-everything() {
 	osascript <<"CLOSE_SCRIPT" &>/dev/null
 tell application "System Events"
 	set processList to ¬
-		(name of every process where background only is false)
+		(name of every process where background only is false) as text
 
-    set myFrontMost to name of first item of ¬
-        (processes whose frontmost is true)
-
-    if application "ITerm" is  running
-        set myFrontMost to "iTerm"
-    end if
-
-    if application "Terminal" is  running
-        set myFrontMost to "Terminal"
-    end if
+	set myFrontMost to name of first item of ¬
+		(processes whose frontmost is true) as text
 
 	repeat with processName in processList
 		try
-			if processName is not equal "Terminal" and processName is not equal myFrontMost  then
+			if processName is not equal to myFrontMost then
 				do shell script "Killall " & quoted form of processName
 			end if
 		end try
 	end repeat
 end tell
-delay 3
+delay 1
 CLOSE_SCRIPT
 }
 

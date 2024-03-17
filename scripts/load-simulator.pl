@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  16-Mar-2024 10:39pm
+# Modified :  17-Mar-2024  2:58pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -37,9 +37,6 @@ my $media          = "$HOME/Documents/GeeDblA/Resources/Development/Apple/Simula
 
 find(\&getSimulators, $simulatorsLoc);
 find(\&addMedia, $media);
-
-`open -a Simulator`;
-sleep(8);
 
 for (keys %simulators) {
     `xcrun simctl boot "$_" &> /dev/null`;

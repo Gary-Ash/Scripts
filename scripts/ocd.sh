@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  10-Mar-2024  9:41pm
+# Modified :  15-Mar-2024  9:37pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -42,17 +42,25 @@ kill-everything() {
 	osascript <<"CLOSE_SCRIPT" &>/dev/null
 tell application "System Events"
 	set processList to ¬
-		(name of every process where background only is false) & ¬
-		(name of every process whose ¬
-			(name is "AppName") or ¬
-			(name is "AnotherAppName"))
+		(name of every process where background only is false)
+
+    set myFrontMost to name of first item of ¬
+        (processes whose frontmost is true)
+
+    if application "ITerm" is  running
+        set myFrontMost to "iTerm"
+    end if
+
+    if application "Terminal" is  running
+        set myFrontMost to "Terminal"
+    end if
 
 	repeat with processName in processList
-		if processName as string is not equal to "Terminal" then
-			try
+		try
+			if processName is not equal "Terminal" and processName is not equal myFrontMost  then
 				do shell script "Killall " & quoted form of processName
-			end try
-		end if
+			end if
+		end try
 	end repeat
 end tell
 delay 3
@@ -165,10 +173,9 @@ find "$HOME/Library/Application Support/AddressBook" -name "*.abbu.tbz" -delete 
 find "/Users/Shared/CleanMyMac X/" -depth 1 ! -name ".licence" -exec rm -rfv {} \; &>/dev/null
 find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 
-load-simulator.pl
-
 SUDO_PASSWORD=$(get_sudo_password)
 start_persistant_sudo "$SUDO_PASSWORD"
+load-simulator.pl
 sudo perl /opt/geedbla/scripts/sublime-snippets.pl --delete
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
@@ -1454,7 +1461,17 @@ try
 end try
 try
     tell application "Keyboard Maestro Engine" to launch
+    try
+		repeat while application "Keyboard Maestro Engine"  is not running
+			delay 0.01
+		end repeat
+	end try
+    tell application "Keyboard Maestro Engine" to activate
+	tell application "System Events" to tell process "Keyboard Maestro"
+			click menu item "Close" of menu 1 of menu bar item "File" of menu bar 1
+	end tell
 end try
+
 set volume output volume 50 with output muted --100%
 set volume without output muted
 

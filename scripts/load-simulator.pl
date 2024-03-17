@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  23-Feb-2024  7:23pm
+# Modified :  16-Mar-2024 10:39pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -23,10 +23,10 @@ use File::Find;
 #*****************************************************************************************
 # main line
 #*****************************************************************************************
-our @files;
-our @simulators;
+our @mediaFiles;
+our %simulators;
 
-my $first          = "";
+my $mediaList      = "";
 my $HOME           = $ENV{"HOME"};
 my $simulatorsLoc  = "$HOME/Library/Developer/CoreSimulator/Devices";
 my $media          = "$HOME/Documents/GeeDblA/Resources/Development/Apple/SimulatorBackup";
@@ -38,13 +38,21 @@ my $media          = "$HOME/Documents/GeeDblA/Resources/Development/Apple/Simula
 find(\&getSimulators, $simulatorsLoc);
 find(\&addMedia, $media);
 
-for my $simulator (@simulators) {
-    `xcrun simctl boot "$simulator"`;
-    for my $file (@files) {
-        `xcrun simctl addmedia "$simulator" "$file"`;
-    }
-    `xcrun simctl shutdown "$simulator"`;
+`open -a Simulator`;
+sleep(8);
+
+for (keys %simulators) {
+    `xcrun simctl boot "$_" &> /dev/null`;
 }
+
+sleep(4);
+
+for (keys %simulators) {
+    for my $file (@mediaFiles) {
+        system("xcrun simctl addmedia $simulators{$_} $file");
+    }
+}
+`xcrun simctl shutdown all`;
 
 #*****************************************************************************************
 # this routine will load a hash with names and UUIDs of the currently defined simulators
@@ -53,10 +61,11 @@ sub getSimulators {
     return if ($File::Find::name !~ /\/device.plist/);
     my $plist = NSMutableDictionary->dictionaryWithContentsOfFile_($File::Find::name);
     if ($plist && $$plist) {
-        my $name = $plist->objectForKey_("name")->UTF8String;
         my $platform = $plist->objectForKey_("runtime")->UTF8String;
         if ($platform =~ /.*iOS*/) {
-            push @simulators, $name;
+            my $name = $plist->objectForKey_("name")->UTF8String;
+            my $uuid = $plist->objectForKey_("UDID")->UTF8String;;
+            $simulators{$name} = $uuid;
         }
     }
 }
@@ -67,5 +76,5 @@ sub getSimulators {
 sub addMedia {
     return if $_ eq "." or $_ eq ".." or $_ eq ".DS_Store";
     return if !-f $_;
-    push @files, $File::Find::name;
+    push @mediaFiles, $File::Find::name;
 }

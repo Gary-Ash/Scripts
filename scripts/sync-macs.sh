@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  13-Mar-2024  5:25pm
+# Modified :  18-Mar-2024  1:02pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -25,7 +25,6 @@ preference_files=(
 	"com.googlecode.iterm2.plist"
 	"com.apple.applescript.plist"
 	"com.apple.Terminal.plist"
-	"com.apple.dock.plist"
 )
 
 #****************************************************************************************

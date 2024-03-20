@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  18-Mar-2024  1:02pm
+# Modified :  19-Mar-2024  9:00pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -197,11 +197,13 @@ sync() {
 				--exclude="UserData/Previews" \
 				--exclude="UserData/XcodeCloud" \
 				--exclude="UserData/IDEEditorInteractivityHistory" \
+				--exclude="UserData/IDEFindNavigatorScopes.plist" \
 				--exclude="/Products" \
 				--exclude="/XCPGDevices" \
 				--exclude="/XCTestDevices" \
 				--exclude="/* DeviceSupport" \
 				--exclude="/* Device Logs" \
+				--exclude="DeviceLogs" \
 				--exclude="/DeviceLogs" \
 				--exclude="/DerivedData" \
 				--exclude="/DocumentationIndex" \
@@ -280,11 +282,13 @@ buildRepository() {
 		--exclude="UserData/Previews" \
 		--exclude="UserData/XcodeCloud" \
 		--exclude="UserData/IDEEditorInteractivityHistory" \
-		--exclude="/Products" \
+		--exclude="UserData/IDEFindNavigatorScopes.plist" \
+		\	 --exclude="/Products" \
 		--exclude="/XCPGDevices" \
 		--exclude="/XCTestDevices" \
 		--exclude="/* DeviceSupport" \
 		--exclude="/* Device Logs" \
+		--exclude="/DeviceLogs" \
 		--exclude="/DerivedData" \
 		--exclude="/DocumentationIndex" \
 		--exclude="/DocumentationCache" \

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  17-Mar-2024  6:51pm
+# Modified :  21-Mar-2024  7:41pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -1474,23 +1474,6 @@ tell application "System Events"
     tell application "Spotlight" to activate
     click group 1 of scroll area 1 of application process "Finder"
 end tell
-
-(*****************************************************************************************
- * if iTerm is running activate it
- ****************************************************************************************)
-if (system attribute "OCD_OPTION" as text) is not equal to "" then
-	if application "iTerm" is running then
-		tell application "iTerm"
-			quit
-		end tell
-	end if
-else
-	if application "iTerm" is running then
-		tell application "iTerm"
-			activate
-		end tell
-	end if
-end if
 END2
 fi
 
@@ -1504,6 +1487,7 @@ tell application "Finder" to restart
 RESTART
 elif [[ $OCD_OPTION == "off" ]]; then
 	nohup osascript <<"SHUTDOWN" &>/dev/null &
+
 delay 0.1
 tell application "Finder" to shut down
 SHUTDOWN
@@ -1511,4 +1495,5 @@ fi
 
 if [[ $OCD_OPTION == "restart" ]] || [[ $OCD_OPTION == "off" ]]; then
 	killall Terminal &>/dev/null
+	killall iTerm &>/dev/null
 fi

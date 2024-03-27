@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2023  8:10pm
-# Modified :  21-Mar-2024  7:41pm
+# Modified :  27-Mar-2024  4:36pm
 #
 # Copyright © 2023-2024 By Gee Dbl A All rights reserved.
 #*****************************************************************************************
@@ -71,7 +71,6 @@ if [[ $# -gt 0 ]]; then
 
 	if [[ $cmd == "restart" ]]; then
 	elif [[ $cmd == "off" ]]; then
-	elif [[ $cmd == "reg" ]]; then
 	else
 		echo "Unknown command option -- $cmd"
 		exit 1
@@ -160,6 +159,7 @@ done < <(echo "${raw}")
 
 find "$HOME/Developer" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 find "$HOME/Documents" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
+
 find "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Preferencesc" -name "Keyboard Maestro Macros \(*.kmsync" -delete &>/dev/null
 find "$HOME/Library/Application Support/AddressBook" -name "*.abbu.tbz" -delete &>/dev/null
 find "/Users/Shared/CleanMyMac X/" -depth 1 ! -name ".licence" -exec rm -rfv {} \; &>/dev/null
@@ -167,6 +167,7 @@ find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".j
 
 SUDO_PASSWORD=$(get_sudo_password)
 start_persistant_sudo "$SUDO_PASSWORD"
+
 load-simulator.pl
 sudo perl /opt/geedbla/scripts/sublime-snippets.pl --delete
 #****************************************************************************************
@@ -213,6 +214,8 @@ sudo find "$HOME" -type f -name ".DS_Store" -not -path "$HOME/.DS_Store" -not -p
 
 echo -n '' | pbcopy
 sudo periodic daily weekly monthly
+
+sudo killall Finder
 
 #*****************************************************************************************
 # get Safari bookmarks get use a tool to hunt junk cookies in the Safari cleaner
@@ -1191,13 +1194,13 @@ our @itemsToDelete = (
 #*****************************************************************************************
 podcastapp();
 texturePacker();
-xcode();
-sublimeText();
-sublimeMerge();
 books();
 
 plists();
 deleteFilesAndFolders();
+xcode();
+sublimeText();
+sublimeMerge();
 
 #*****************************************************************************************
 # Books
@@ -1265,6 +1268,11 @@ sub sublimeText {
         print $configFile $json;
         close($configFile);
     }
+
+   my $plistFile = "$HOME/Library/Preferences/com.sublimetext.4.plist";
+   my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
+   $plist->setObject_forKey_("$HOME/Developer/", "NSNavLastRootDirectory");
+   $plist->writeToFile_atomically_($plistFile, "0");
 }
 
 #*****************************************************************************************
@@ -1290,6 +1298,11 @@ sub sublimeMerge {
         print $configFile $json;
         close($configFile);
     }
+
+   my $plistFile = "$HOME/Library/Preferences/com.sublimemerge.plist";
+   my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
+   $plist->setObject_forKey_("$HOME/Developer/", "NSNavLastRootDirectory");
+   $plist->writeToFile_atomically_($plistFile, "0");
 }
 
 #*****************************************************************************************
@@ -1400,7 +1413,7 @@ sub xcode {
             $options->setObject_forKey_($templateOptions{$key}, $key);
         }
         $plist->setObject_forKey_($options,       "IDETemplateOptions");
-        $plist->setObject_forKey_("~/Developer/", "NSNavLastRootDirectory");
+        $plist->setObject_forKey_("$HOME/Developer/", "NSNavLastRootDirectory");
         $plist->writeToFile_atomically_($plistFile, "0");
     }
 }

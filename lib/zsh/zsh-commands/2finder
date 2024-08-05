@@ -1,0 +1,34 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# 2finder
+#
+# Open the terminal's current directory in a Finder Window
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  11-Oct-2024  9:20pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+/usr/bin/osascript &>/dev/null <<"END"
+tell application "Finder"
+	activate
+	repeat with w in (get every Finder window)
+		activate w
+		tell application "System Events"
+			keystroke "a" using {command down}
+			key code 123
+			keystroke "a" using {command down, option down}
+		end tell
+		close w
+	end repeat
+
+	set desktopBounds to bounds of window of desktop
+	set w to round (((item 3 of desktopBounds) - 1100) / 2) rounding as taught in school
+	set h to round (((item 4 of desktopBounds) - 1000) / 2) rounding as taught in school
+	set finderBounds to {w, h, 1100 + w, 1000 + h}
+
+	make new Finder window to (POSIX file (system attribute "PWD"))
+	set (bounds of window 1) to finderBounds
+end tell
+END

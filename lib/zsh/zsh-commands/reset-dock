@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# resetDock.sh
+#
+# Reset the macOS dock
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  11-Oct-2024  9:20pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+defaults delete com.apple.dock
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.dock show-process-indicators -bool true
+defaults write com.apple.dock minimize-to-application -bool true
+defaults write com.apple.dock tilesize 16
+
+killall Dock

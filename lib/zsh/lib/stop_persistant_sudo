@@ -1,0 +1,31 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# stop_persistant_sudo
+#
+# This routine will stop a persistant sudo session
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   9-Oct-2024  3:09pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+stop_persistant_sudo() {
+	if [[ -n $ZSH_VERSION ]]; then
+		setopt local_options no_monitor
+	fi
+
+	kill $SUDO_SHELL_PID
+	kill $CAFFEINATE
+	wait
+	unset SUDO_SHELL_PID
+	unset CAFFEINATE
+	unset SUDO_PASSWORD
+
+	if [[ -n $ZSH_VERSION ]]; then
+		setopt monitor
+	fi
+
+	sudo --reset-timestamp
+}
+stop_persistant_sudo

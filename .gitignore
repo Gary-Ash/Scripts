@@ -1,0 +1,14 @@
+*.d
+*.slo
+*.lo
+*.o
+*.obj
+*.pch
+*.so
+*.dylib
+*.lai
+*.la
+*.a
+.DS_Store
+*.zwc
+bin/

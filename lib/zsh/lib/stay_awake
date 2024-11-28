@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# stay_awake
+#
+# This command will cause the computer to stay awake until cancel_awake is called
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   1-May-2025  3:22pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+stay_awake() {
+	caffeinate -dis &>/dev/null &
+	export CAFFEINATE=$!
+}
+stay_awake

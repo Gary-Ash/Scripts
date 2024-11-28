@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# compile-commands-json
+#
+# Generate a compile_commands.json file (based on the Xcode project files in current
+# project directory tree) for by the clang language server engine
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   9-Dec-2024 10:04pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+project_file="$(find . -name '*.xcodeproj' -print -quit)"
+if [[ -n $project_file ]]; then
+	xcodebuild -project "$project_file" | xcpretty -r json-compilation-database --output compile_commands.json &>/dev/null
+	rm -rf "$(dirname ${project_file})/build"
+fi

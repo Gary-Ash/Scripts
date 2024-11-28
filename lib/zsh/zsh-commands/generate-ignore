@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# generate-ignore
+#
+# Generate a .gitignore for a project based the languages, IDE's, etc specified
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   9-Dec-2024 10:04pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+stuff=""
+
+for s in "$@"; do
+	out=$(curl -sL "https://www.gitignore.io/api/$s")
+	case $out in
+		*ERROR*)
+			echo "Unknown ignore type - $s"
+			return 1
+			;;
+	esac
+
+	if [[ -n $stuff ]]; then
+		stuff+=","
+	fi
+	stuff+="$s"
+done
+curl -sL "https://www.gitignore.io/api/$stuff" >.gitignore

@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+#****************************************************************************************
+# clean
+#
+# Clean the junk files from the current directory tree and Trash
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  20-Dec-2024  9:55pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#****************************************************************************************
+search='.'
+if [ "$1" ]; then
+	search=${1}
+fi
+find "$search" \( -name "*~" -or -name ".*~" -or -name "#*#" -or -name ".#*#" -or -name "*.o" -or -name "*(deleted*" -or -name "*conflicted*" -or -name "*.DS_Store" \) -exec rm -frv {} \; &>/dev/null
+rm -rf ~/.Trash/ &>/dev/null

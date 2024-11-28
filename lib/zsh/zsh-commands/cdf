@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# cdf
+#
+# Change the directory to the one listed in the top Finder window
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  20-Dec-2024  9:55pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')" || return

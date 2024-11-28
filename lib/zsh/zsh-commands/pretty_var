@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# pretty_var
+#
+# Break up the PATH or PATH style environment variable named on the command line at the
+# colon seperator for easier reading
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  28-Feb-2025  6:52pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+echo "$1" | tr -s ":" '\n'

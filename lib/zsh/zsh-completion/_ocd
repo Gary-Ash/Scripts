@@ -1,0 +1,23 @@
+#compdef ocd
+#*****************************************************************************************
+# _ocd
+#
+# This file provides tab completion for the OCD mac cleaning script
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   1-Jan-2025 10:08pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+
+_ocd() {
+    local -a commands
+    commands=(
+              "off":"Clean and then turn the computer off"
+              "restart":"Clean and then restart the computer"
+    )
+    _describe 'commands' commands
+
+}
+_ocd "%@"

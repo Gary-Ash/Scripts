@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# xcode
+#
+# Open the Xcode workspace or project in this directory tree
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   1-Jan-2025 10:08pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+workspace=$(find . -name "*.xcworkspace" -depth 1)
+if [[ -n "$workspace" ]]; then
+	open "$workspace"
+else
+	project=$(find . -name "*.xcodeproj" -depth 1)
+	if [[ -n "$project" ]]; then
+		open "$project"
+	else
+		echo "No Xcode workspace or project found!"
+	fi
+fi

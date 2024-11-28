@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# xcode
+#
+# Open the Xcode workspace or project in this directory tree
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  28-Nov-2024  1:33pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+open $(find . -name *.xcworkspace || find . -name *.xcodeproj)

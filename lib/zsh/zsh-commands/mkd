@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# mkd
+#
+# Make the directory/directory structure named on the command line and enter it
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  28-Nov-2024  1:33pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+mkdir -p "$@"
+cd "$_" || return

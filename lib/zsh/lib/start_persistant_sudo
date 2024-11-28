@@ -1,0 +1,38 @@
+#!/usr/bin/env zsh
+#*****************************************************************************************
+# start_persistant_sudo
+#
+# This routine will start a persistant sudo session
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  28-Nov-2024  1:33pm
+# Modified :
+#
+# Copyright © 2024 By Gary Ash All rights reserved.
+#*****************************************************************************************
+autoload get_sudo_password
+
+start_persistant_sudo() {
+	local SUDO_PASSWORD
+
+	if [[ -n $ZSH_VERSION ]]; then
+		setopt local_options no_monitor
+	fi
+
+	if [[ $# == 1 ]]; then
+		SUDO_PASSWORD="$1"
+	else
+		SUDO_PASSWORD=$(get_sudo_password)
+	fi
+
+	echo "$SUDO_PASSWORD" | sudo --validate --stdin &>/dev/null
+	while true; do
+		sudo --non-interactive -E true
+		sleep 60
+	done &
+
+	export SUDO_SHELL_PID=$!
+	caffeinate -dis &>/dev/null &
+	export CAFFEINATE=$!
+}
+start_persistant_sudo "$@"

@@ -38,6 +38,7 @@ updateSyncedFolders() {
 		"$HOME/Library/Script Libraries/"
 		"$HOME/Library/Application Support/BBEdit"
 		"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist"
+		"$HOME/Library/Containers/com.renfei.SnippetsLab/Data/Library/Preferences/com.renfei.SnippetsLab.plist"
 	)
 
 	for pathToSync in "${toSync[@]}"; do

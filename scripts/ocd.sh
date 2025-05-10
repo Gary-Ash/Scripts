@@ -33,7 +33,20 @@ finish() {
 # kill applications
 #*****************************************************************************************
 kill-everything() {
-	appsToKill=("Keyboard Maestro Engine" "Dock" "Safari" "Finder" "Slack" "ColorSnapper2" "Default Folder X" "Mona", "BBEdit")
+	appsToKill=(
+	"Keyboard Maestro Engine"
+	"Dock"
+	"Safari"
+	"Finder"
+	"Dash"
+	"Alfred"
+	"Moom"
+	"SnippetsLab"
+	 "Slack"
+	 "ColorSnapper2"
+	 "Default Folder X"
+	 "Mona",
+	 "BBEdit")
 
 	for app in "${appsToKill[@]}"; do
 		killall "$app" &>/dev/null
@@ -44,12 +57,15 @@ tell application "System Events"
 	set processList to the name of ¬
 		every process whose visible is true as string
 
+	set activeApp to name of first application process whose frontmost is true as string
 
 	repeat with processName in processList
-		if processName as string is not equal to "Terminal" then
+		if processName as string is not equal to activeApp then
 			do shell script "Killall " & quoted form of processName
 		end if
 	end repeat
+
+	do shell script "Killall CrashReporter"
 end tell
 CLOSE_SCRIPT
 }

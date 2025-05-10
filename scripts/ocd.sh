@@ -5,7 +5,7 @@
 # Update system software and clean macOS settings
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :   1-May-2025  3:22pm
+# Created  :  17-May-2025  9:57pm
 # Modified :
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
@@ -33,7 +33,20 @@ finish() {
 # kill applications
 #*****************************************************************************************
 kill-everything() {
-	appsToKill=("Keyboard Maestro Engine" "Dock" "Safari" "Finder" "Slack" "ColorSnapper2" "Default Folder X" "Mona", "BBEdit")
+	appsToKill=(
+	"Keyboard Maestro Engine"
+	"Dock"
+	"Safari"
+	"Finder"
+	"Dash"
+	"Alfred"
+	"Moom"
+	"SnippetsLab"
+	 "Slack"
+	 "ColorSnapper2"
+	 "Default Folder X"
+	 "Mona",
+	 "BBEdit")
 
 	for app in "${appsToKill[@]}"; do
 		killall "$app" &>/dev/null
@@ -44,12 +57,15 @@ tell application "System Events"
 	set processList to the name of ¬
 		every process whose visible is true as string
 
+	set activeApp to name of first application process whose frontmost is true as string
 
 	repeat with processName in processList
-		if processName as string is not equal to "Terminal" then
+		if processName as string is not equal to activeApp then
 			do shell script "Killall " & quoted form of processName
 		end if
 	end repeat
+
+	do shell script "Killall CrashReporter"
 end tell
 CLOSE_SCRIPT
 }
@@ -301,7 +317,6 @@ our @itemsToDelete = (
     ["$HOME/triald-*.ips",                                                                                                                1],
     ["$HOME/.config/configstore",                                                                                                         0],
     ["$HOME/Pictures/Pixelmator Pro Sidecar Files/",                                                                                      0],
-    ["/private/var/folders/sf/_p_7qs4n7gg_r4yrrrvmphd00000gn/C/us.zoom.ZoomAutoUpdater",                                                  0],
   	["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Auto-Save Recovery", 											  0],
  	["$HOME/Library/Containers/com.barebones.bbedit/Data/Sleep State.appstate",															  0],
     ["$HOME/Library/Autosave Information",                                                                                                0],
@@ -353,7 +368,8 @@ our @itemsToDelete = (
     ["$HOME/Library/Developer/Xcode/snapshots",                                                                                           0],
     ["$HOME/Library/Developer/Xcode/UserData/*.xcuserstate",                                                                              1],
     ["$HOME/Library/Developer/Xcode/UserData/IDEEditorInteractivityHistory",                                                              0],
-    ["$HOME/Library/Application Support/Alfred/usage.data",                                                                               1],
+    ["$HOME/Library/Application Support/Alfred/Caches",                                                                                   1],
+    ["$HOME/Library/Application Support/Alfred/Workflow Data",                                                                            1],
     ["$HOME/Library/Application Support/Sublime Merge/Local/Backup Session.sublime_session",                                              0],
     ["$HOME/Library/Application Support/Sublime Merge/Log",                                                                               0],
     ["$HOME/Library/Application Support/Sublime Merge/Cache",                                                                             1],
@@ -411,17 +427,20 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/Google/Chrome/Profile 1/Top Sites",                                                               0],
     ["$HOME/Library/Application Support/Google/Chrome/Profile 1/Top Sites-journal",                                                       0],
     ["$HOME/Library/Application Support/Google/Chrome/Profile 1/Visited Links",                                                           0],
-    ["/Library/Logs",                                                                                                                     1],
-    ["/Library/Logs/DiagnosticReports",                                                                                                   1],
-    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2",                                             0],
-    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2",                                             0],
-    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2Helper",                                       0],
-    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2Helper",                                       0],
     ["$HOME/Library/Containers/com.apple.iBooksX/Data/Documents/BCRecentlyOpenedBooksDB",                                                 0],
     ["$HOME/Library/Containers/com.runisoft.Video-Joiner-and-Merger/Data/Library/Preferences/com.runisoft.Video-Joiner-and-Merger.plist", 0],
     ["$HOME/Library/Containers/com.bridgetech.asset-catalog/Data/Library/Application Support/saved_asset_catalog_creator",                0],
     ["$HOME/Library/Caches/com.apple.Music/SubscriptionPlayCache/",                                                                       0],
     ["$HOME/Library/Application Support/iTerm2/SavedState/lock",                                                                          0],
+
+    ["/Library/Logs",                                                                                                                     1],
+    ["/Library/Logs/DiagnosticReports",                                                                                                   1],
+
+    ["/private/var/folders/sf/_p_7qs4n7gg_r4yrrrvmphd00000gn/C/us.zoom.ZoomAutoUpdater",                                                  0],
+    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2",                                             0],
+    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2",                                             0],
+    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2Helper",                                       0],
+    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2Helper",                                       0],
 );
 
 #*****************************************************************************************

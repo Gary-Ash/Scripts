@@ -5,7 +5,7 @@
 # This script will sync my Macs using the system that runs this script as the source.
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :   1-May-2025  3:22pm
+# Created  :  17-May-2025  9:57pm
 # Modified :
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
@@ -38,6 +38,7 @@ updateSyncedFolders() {
 		"$HOME/Library/Script Libraries/"
 		"$HOME/Library/Application Support/BBEdit"
 		"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist"
+		"$HOME/Library/Containers/com.renfei.SnippetsLab/Data/Library/Preferences/com.renfei.SnippetsLab.plist"
 	)
 
 	for pathToSync in "${toSync[@]}"; do

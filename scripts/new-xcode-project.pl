@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  17-May-2025  9:57pm
-# Modified :
+# Modified :  23-May-2025  2:50pm
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -63,6 +63,7 @@ $currentDate =~ s/PM/pm/;
 my $noGitHub               = 0;
 my $noXcode                = 0;
 my $closedSource           = 0;
+my $inFileLicense		   = 0;
 my $numberArgumentsOptions = $#ARGV + 1;
 for (my $index = 0; $index < $numberArgumentsOptions; ++$index) {
     my $dashCheck = substr($ARGV[$index], 0, 1);
@@ -87,6 +88,12 @@ for (my $index = 0; $index < $numberArgumentsOptions; ++$index) {
             --$numberArgumentsOptions;
             --$index;
         }
+        elsif ($option eq "--inFileLicense" || $option eq "-lif") {
+            $inFileLicense = 1;
+            splice(@ARGV, $index, 1);
+            --$numberArgumentsOptions;
+            --$index;
+        }
         else {
             print "Unrecognized option given: $ARGV[$index]";
             exit(2);
@@ -99,8 +106,10 @@ my $numberArguments = $#ARGV + 1;
 
 if ($numberArguments != 3 && $numberArguments != 4) {
     print "*** Error: $BASE_PROGRAM_NAME <template name> <project name> <location of project> [company]\n\n";
-    print "-ng, --no-github: Do Not create a GitHub repository\n";
-    print "-nx, --no-xcode:  Do Not start Xcode after the project is generated\n";
+    print "-cs,  --closed:    Created a project with a closed source license\n";
+    print "-lif, --inFileLicense:    Add the source license to the files\n";
+    print "-ng,  --no-github: Do Not create a GitHub repository\n";
+    print "-nx,  --no-xcode:  Do Not start Xcode after the project is generated\n";
     exit(1);
 }
 
@@ -185,12 +194,18 @@ find(\%searchReplaceOptions, $projectDirectory);
 if ($closedSource == 0) {
     `rm -rf $projectDirectory/.github/Closed-LICENSE.markdown`;
     `mv $projectDirectory/.github/LICENSE.markdown $projectDirectory/`;
-    `mv $projectDirectory/BuildEnv/IDETemplateMacros-Open.plist $projectDirectory/$projectNameUnderscore\.xcodeproj/xcuserdata/$ENV{"USER"}.xcuserdatad/IDETemplateMacros.plist`;
+    
+    if ($inFileLicense == 1) {
+    	`mv $projectDirectory/BuildEnv/IDETemplateMacros-Open.plist $projectDirectory/$projectNameUnderscore\.xcodeproj/xcuserdata/$ENV{"USER"}.xcuserdatad/IDETemplateMacros.plist`;
+    }
 }
 else {
     `rm -rf $projectDirectory/.github/LICENSE.markdown `;
     `mv $projectDirectory/.github/Closed-LICENSE.markdown $projectDirectory/LICENSE.markdown`;
-    `mv $projectDirectory/BuildEnv/IDETemplateMacros-Closed.plist $projectDirectory/$projectNameUnderscore\.xcodeproj/xcuserdata/$ENV{"USER"}.xcuserdatad/IDETemplateMacros.plist`;
+
+    if ($inFileLicense == 1) {
+    	`mv $projectDirectory/BuildEnv/IDETemplateMacros-Closed.plist $projectDirectory/$projectNameUnderscore\.xcodeproj/xcuserdata/$ENV{"USER"}.xcuserdatad/IDETemplateMacros.plist`;
+    }
 }
 
 `rm -rf $projectDirectory/BuildEnv/IDETemplateMacros-*`;

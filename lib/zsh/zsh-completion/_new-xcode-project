@@ -38,9 +38,10 @@ _new-xcode-project() {
   	esac
 
 	_arguments \
+        {-cs,--closed}'[Closed source project]' \
+        {-lif,--inFileLicense}'[Add the source license to the files]' \
         {-ng,--no-github}'[No GitHub project]' \
         {-nx,--no-xcode}'[Do not start Xcode]' \
-        {-cs,--closed}'[Closed source project]' \
    		'1:templates:->templates' 				\
    		'2:.*:->proj' 							\
 		'3:.*:->loc'							\

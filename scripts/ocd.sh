@@ -5,7 +5,7 @@
 # Update system software and clean macOS settings
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :  17-May-2025  9:57pm
+# Created  :   1-Jun-2025  7:49pm
 # Modified :
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
@@ -42,11 +42,10 @@ kill-everything() {
 	"Alfred"
 	"Moom"
 	"SnippetsLab"
-	 "Slack"
-	 "ColorSnapper2"
-	 "Default Folder X"
-	 "Mona",
-	 "BBEdit")
+	"Slack"
+	"Mona",
+	"PasteBot"
+	"BBEdit")
 
 	for app in "${appsToKill[@]}"; do
 		killall "$app" &>/dev/null
@@ -67,6 +66,8 @@ tell application "System Events"
 
 	do shell script "Killall CrashReporter"
 end tell
+
+tell application "Terminal" to activate
 CLOSE_SCRIPT
 }
 
@@ -1274,25 +1275,6 @@ try
 end try
 
 (*****************************************************************************************
- * clean up ColorSnapper2
- ****************************************************************************************)
-if (system attribute "OCD_OPTION" as text) is equal to "" then
-	try
-		tell application "ColorSnapper2" to activate
-		repeat while application "ColorSnapper2" is not running
-			delay 0.1
-		end repeat
-
-		repeat 4 times
-			tell application "System Events" to tell process "ColorSnapper2"
-				set frontmost to true
-				key code 53
-			end tell
-		end repeat
-	end try
-end if
-
-(*****************************************************************************************
  * clean up Finder windows
  ****************************************************************************************)
 try
@@ -1337,6 +1319,11 @@ try
 	tell application "Finder" to delete ((POSIX file p) as alias)
 	tell application "Finder" to empty trash
 end try
+
+(*****************************************************************************************
+ * reset Terminal focus
+ ****************************************************************************************)
+tell application "Terminal" to activate
 END
 
 #*****************************************************************************************
@@ -1386,6 +1373,11 @@ sqlite3 "$(find "$HOME/Library/Mail" -name "Envelope Index")" vacuum
 
 kill-everything
 sudo diskutil resetUserPermissions / `id -u`	&>/dev/null
+#*****************************************************************************************
+#  refresh Safari icons
+#*****************************************************************************************
+refresh-safari-icons.sh
+
 #****************************************************************************************
 # Restart Time Machine while updating and cleaning
 #****************************************************************************************

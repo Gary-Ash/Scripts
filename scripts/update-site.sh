@@ -5,14 +5,13 @@
 # This script will update my Gee Dbl A website/blog
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :  17-May-2025  9:57pm
+# Created  :   1-Jun-2025  7:49pm
 # Modified :
 #
-# Copyright © 2024 By Gary Ash All rights reserved.
+# Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
-read -s "?Password: " password
-echo
+password="$(security find-internet-password -ws geedbla.com)"
 
 if [[ -n $password ]]; then
 	cd ~/Sites/geedbla.com || return

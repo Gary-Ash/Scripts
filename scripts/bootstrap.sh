@@ -5,10 +5,10 @@
 # Boot strap a new Mac setup
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :   1-Jun-2025  7:49pm
+# Created  :   8-Jun-2025  3:54pm
 # Modified :
 #
-# Copyright © 2024 By Gary Ash All rights reserved.
+# Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
 setZDOTDIR() {
@@ -83,4 +83,3 @@ else
 	sudo touch "$HOME/Downloads/etc/zshenv"
 	setZDOTDIR
 fi
-zcompile-lib

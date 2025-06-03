@@ -5,8 +5,8 @@
 # Update system software and clean macOS settings
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :   1-Jun-2025  7:49pm
-# Modified :   1-Jun-2025  9:43pm
+# Created  :   8-Jun-2025  3:54pm
+# Modified :
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -815,6 +815,8 @@ set deleteAnyway to {¬
 	"advancedsswift.com", ¬
 	"barebones.com", ¬
 	"batman-news.com", ¬
+	"gamedev.city", ¬
+	"matteomanferdini.com", ¬
 	"donnywals.com", ¬
 	"avanderlee.com", ¬
 	"jessesquires.com", ¬

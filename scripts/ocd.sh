@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Jun-2025  7:49pm
-# Modified :
+# Modified :   1-Jun-2025  9:43pm
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -43,8 +43,8 @@ kill-everything() {
 	"Moom"
 	"SnippetsLab"
 	"Slack"
-	"Mona",
-	"PasteBot"
+	"Mona"
+	"Pastebot"
 	"BBEdit")
 
 	for app in "${appsToKill[@]}"; do
@@ -812,6 +812,10 @@ set keepingSites to {¬
 	"superuser.com"}
 
 set deleteAnyway to {¬
+	"advancedsswift.com", ¬
+	"barebones.com", ¬
+	"batman-news.com", ¬
+	"donnywals.com", ¬
 	"avanderlee.com", ¬
 	"jessesquires.com", ¬
 	"t.co", ¬

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Jun-2025  7:49pm
-# Modified :
+# Modified :   2-Jun-2025  9:23pm
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -25,6 +25,8 @@ use Cwd qw(abs_path);
 use File::Path qw(make_path);
 use File::Copy;
 use POSIX qw(strftime);
+
+use Text::Wrap;
 
 #-----------------------------------------------------------------------------------------
 # constants
@@ -60,11 +62,13 @@ $currentDate =~ s/PM/pm/;
 #-----------------------------------------------------------------------------------------
 # parse command line arguments
 #-----------------------------------------------------------------------------------------
+my $licenseText = "";
 my $noGitHub               = 0;
 my $noXcode                = 0;
 my $closedSource           = 0;
-my $inFileLicense		   = 0;
+my $inFileLicense          = 0;
 my $numberArgumentsOptions = $#ARGV + 1;
+
 for (my $index = 0; $index < $numberArgumentsOptions; ++$index) {
     my $dashCheck = substr($ARGV[$index], 0, 1);
 
@@ -88,14 +92,14 @@ for (my $index = 0; $index < $numberArgumentsOptions; ++$index) {
             --$numberArgumentsOptions;
             --$index;
         }
-        elsif ($option eq "--inFileLicense" || $option eq "-lif") {
+        elsif ($option eq "--infilelicense" || $option eq "-lif") {
             $inFileLicense = 1;
             splice(@ARGV, $index, 1);
             --$numberArgumentsOptions;
             --$index;
         }
         else {
-            print "Unrecognized option given: $ARGV[$index]";
+            print "Unrecognized option given: $ARGV[$index]\n";
             exit(2);
         }
     }
@@ -181,6 +185,28 @@ if (!-e "$projectDirectory") {
     make_path($projectDirectory);
 }
 
+if ($inFileLicense == 1) {
+    if ($closedSource == 1) {
+        open(my $fh, '<', "$TEMPLATE_LOCATION/_github/Closed-LICENSE.markdown") or die "cannot open file Closed-LICENSE";
+        {
+            local $/;
+            $licenseText = <$fh>;
+        }
+        close($fh);
+    }
+    else {
+        open(my $fh, '<', "$TEMPLATE_LOCATION/_github/LICENSE.markdown") or die "cannot open file LICENSE";
+    {
+        local $/;
+        $licenseText = <$fh>;
+    }
+    close($fh);
+	my $p = index($licenseText, "\x{43}opyright ©");
+	$licenseText = substr($licenseText, $p);
+    }
+    $licenseText =~ s/\x{43}opyright © .*\n/\x{43}opyright © $currentYear By $company All rights reserved.\n/;
+}
+
 `cp -rf "$TEMPLATE_LOCATION/_BuildEnv" "$projectDirectory"`;
 `cp -rf "$TEMPLATE_LOCATION/_github" "$projectDirectory"`;
 `mv $projectDirectory/_BuildEnv $projectDirectory/BuildEnv`;
@@ -194,9 +220,9 @@ find(\%searchReplaceOptions, $projectDirectory);
 if ($closedSource == 0) {
     `rm -rf $projectDirectory/.github/Closed-LICENSE.markdown`;
     `mv $projectDirectory/.github/LICENSE.markdown $projectDirectory/`;
-    
+
     if ($inFileLicense == 1) {
-    	`mv $projectDirectory/BuildEnv/IDETemplateMacros-Open.plist $projectDirectory/$projectNameUnderscore\.xcodeproj/xcuserdata/$ENV{"USER"}.xcuserdatad/IDETemplateMacros.plist`;
+        `mv $projectDirectory/BuildEnv/IDETemplateMacros-Open.plist $projectDirectory/$projectNameUnderscore\.xcodeproj/xcuserdata/$ENV{"USER"}.xcuserdatad/IDETemplateMacros.plist`;
     }
 }
 else {
@@ -204,7 +230,7 @@ else {
     `mv $projectDirectory/.github/Closed-LICENSE.markdown $projectDirectory/LICENSE.markdown`;
 
     if ($inFileLicense == 1) {
-    	`mv $projectDirectory/BuildEnv/IDETemplateMacros-Closed.plist $projectDirectory/$projectNameUnderscore\.xcodeproj/xcuserdata/$ENV{"USER"}.xcuserdatad/IDETemplateMacros.plist`;
+        `mv $projectDirectory/BuildEnv/IDETemplateMacros-Closed.plist $projectDirectory/$projectNameUnderscore\.xcodeproj/xcuserdata/$ENV{"USER"}.xcuserdatad/IDETemplateMacros.plist`;
     }
 }
 
@@ -224,6 +250,25 @@ if ($noGitHub == 0) {
 
 if ($noXcode == 0) {
     system("open -a Xcode $projectDirectory/$projectName.xcodeproj &");
+}
+
+#*****************************************************************************************
+#  word wrap a string
+#*****************************************************************************************
+sub wrapText {
+    my ($text, $width, $prefix) = @_;
+
+    # Set the desired wrap width
+    local $Text::Wrap::columns = $width - length($prefix);
+
+    # Set the prefix for the first and subsequent lines
+    my $initial_tab     = $prefix;
+    my $subsequent_tab  = $prefix;
+
+    # Wrap the text with the specified settings
+    my $wrapped_text = wrap($initial_tab, $subsequent_tab, $text) . "\n";
+
+    return $wrapped_text;
 }
 
 #*****************************************************************************************
@@ -278,8 +323,16 @@ sub searchReplace {
 
             $source =~ s/\x{43}reated  :.*\n/\x{43}reated  :  $currentDate\n/g;
             $source =~ s/\x{4D}odified :.*\n/\x{4D}odified :\n/g;
-            $source =~ s/\x{43}opyright © .*\n/\x{43}opyright © $currentYear By $company All rights reserved.\n/;
 
+            if ($inFileLicense == 1) {
+            	if ($source =~ /(.*)\x{43}opyright © .*\n/) {
+					my $wrapped = wrapText($licenseText, 90,$1);
+					$source =~ s/(.*)\x{43}opyright © .*\n/$wrapped/;
+                }
+            }
+            else {
+                $source =~ s/\x{43}opyright © .*\n/\x{43}opyright © $currentYear By $company All rights reserved.\n/;
+            }
             open(my $sourcefile, ">$File::Find::name");
             print $sourcefile $source;
             close($sourcefile);

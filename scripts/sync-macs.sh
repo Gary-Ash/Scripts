@@ -5,7 +5,7 @@
 # This script will sync my Macs using the system that runs this script as the source.
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :   1-Jun-2025  7:49pm
+# Created  :   8-Jun-2025  3:54pm
 # Modified :
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
@@ -49,19 +49,19 @@ updateSyncedFolders() {
 
 updateBrew() {
 	brew bundle dump --brews --casks --taps --force --file="$HOME/Downloads/bundles.txt" &>/dev/null
-  	sshpass -p "$password" rsync -av  "$HOME/Downloads/bundles.txt" "$remote:$HOME/" &>/dev/null
-  	rm -f "$HOME/Downloads/bundles.txt" &>/dev/null
+	sshpass -p "$password" rsync -av "$HOME/Downloads/bundles.txt" "$remote:$HOME/" &>/dev/null
+	rm -f "$HOME/Downloads/bundles.txt" &>/dev/null
 
- 	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chmod -R 777 /Applications/*" &>/dev/null
- 	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew bundle --force --no-lock --file=$HOME/Downloads/bundles.txt &> /dev/null" &>/dev/null
- 	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew bundle cleanup --force --file=$HOME/Downloads/bundles.txt &> /dev/null" &>/dev/null
- 	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew update &> /dev/null" &>/dev/null
- 	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew upgrade &> /dev/null" &>/dev/null
- 	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew autoremove &> /dev/null" &>/dev/null
- 	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew link --overwrie node &> /dev/null" &>/dev/null
- 	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chown -R root:admin /Applications/*" &>/dev/null
- 	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chmod -R 775 /Applications/*" &>/dev/null
- 	sshpass -p "$password" ssh "$remote" "rm -f $HOME/bundles.txt" &>/dev/null
+	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chmod -R 777 /Applications/*" &>/dev/null
+	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew bundle --force --no-lock --file=$HOME/Downloads/bundles.txt &> /dev/null" &>/dev/null
+	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew bundle cleanup --force --file=$HOME/Downloads/bundles.txt &> /dev/null" &>/dev/null
+	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew update &> /dev/null" &>/dev/null
+	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew upgrade &> /dev/null" &>/dev/null
+	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew autoremove &> /dev/null" &>/dev/null
+	sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";brew link --overwrie node &> /dev/null" &>/dev/null
+	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chown -R root:admin /Applications/*" &>/dev/null
+	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chmod -R 775 /Applications/*" &>/dev/null
+	sshpass -p "$password" ssh "$remote" "rm -f $HOME/bundles.txt" &>/dev/null
 }
 
 updateRuby() {
@@ -184,7 +184,7 @@ updatePreferences() {
 }
 
 updateXcode() {
-	sshpass -p "$password" rsync -arz -E  --inplace \
+	sshpass -p "$password" rsync -arz -E --inplace \
 		--exclude="UserData/Capabilities" \
 		--exclude="UserData/IB Support" \
 		--exclude="UserData/Portal" \
@@ -246,7 +246,7 @@ updateApplications() {
 	done
 
 	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S chown -R root:admin /Applications/*" &>/dev/null
-	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S sudo diskutil resetUserPermissions / `id -u`" &>/dev/null
+	sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S sudo diskutil resetUserPermissions / $(id -u)" &>/dev/null
 }
 
 updatePhotos() {
@@ -331,7 +331,6 @@ dot-files() {
 	fi
 }
 
-
 #*****************************************************************************************
 # script main line
 #*****************************************************************************************
@@ -339,18 +338,18 @@ for computer in "${systems[@]}"; do
 	if [ "$me" != "$computer" ]; then
 		remote="$USER@$computer"
 
- 		updateSyncedFolders
- 		updateBrew
-  		updateRuby
-  		updatePython
- 		updatePreferences
-  		updateXcode
-  		updateSublime
-  		updateApplications
+		updateSyncedFolders
+		updateBrew
+		updateRuby
+		updatePython
+		updatePreferences
+		updateXcode
+		updateSublime
+		updateApplications
 
- 		sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S sudo diskutil resetUserPermissions / `id -u`" &>/dev/null
+		sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S sudo diskutil resetUserPermissions / $(id -u)" &>/dev/null
 
- 		#updatePhotos
+		#updatePhotos
 	fi
 done
 

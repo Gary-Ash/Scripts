@@ -51,20 +51,7 @@ my %searchReplaceOptions = (
     bydepth     => 0,
     follow_skip => 2,
 );
-my @ignoreExtensions = (
-"png",
-"tff",
-"jpg",
-"jpeg",
-"bmp",
-"psd",
-"mov",
-"mp3", 
-"ogg", 
-"mp4", 
-"caf", 
-"pbxproj",
-"xcuserstate");
+my @ignoreExtensions = ("png", "tff", "jpg", "jpeg", "bmp", "psd", "mov", "mp3", "ogg", "mp4", "caf", "pbxproj", "xcuserstate");
 
 my $SetFileDate = strftime("%D %I:%M %p",        localtime);
 my $currentDate = strftime("%e-%b-%Y  %-I:%M%p", localtime);

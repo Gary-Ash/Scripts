@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Jun-2025  3:54pm
-# Modified :
+# Modified :   9-Jun-2025  4:14pm
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -269,8 +269,8 @@ our @plistKeysToDelete = (
     "DownloadsFolderListViewSettingsVersion",                         "recent_viewed",                                                 "RecentsArrangeGroupViewBy",                                                                                             "IDEAppChooserRecentApplications-My Mac",
     "RecentRegions",                                                  "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS",     "lastSource",                                                                                                            "lastReplacement",
     "lastRegex",                                                      "TSARecentOpenedDocumentTimestamps",                             "TSAOpenedTemplates.Numbers",                                                                                            "RecentItemsData",
-    "TSAOpenedTemplates.Pages",										  "FindDialog_SearchReplaceHistory",							   "ApplicationSleepState",
-    "ApplicationAutoSaveState",
+    "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                               "ApplicationSleepState",                                                                                                 "ApplicationAutoSaveState",
+    "CurrentWorkspaceDocumentName",
 );
 
 our @itemsToDelete = (
@@ -318,8 +318,9 @@ our @itemsToDelete = (
     ["$HOME/triald-*.ips",                                                                                                                1],
     ["$HOME/.config/configstore",                                                                                                         0],
     ["$HOME/Pictures/Pixelmator Pro Sidecar Files/",                                                                                      0],
-  	["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Auto-Save Recovery", 											  0],
- 	["$HOME/Library/Containers/com.barebones.bbedit/Data/Sleep State.appstate",															  0],
+    ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Rescued Documents",                                               1],
+    ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Auto-Save Recovery",                                              0],
+    ["$HOME/Library/Containers/com.barebones.bbedit/Data/Sleep State.appstate",                                                           0],
     ["$HOME/Library/Autosave Information",                                                                                                0],
     ["$HOME/Library/Caches/org.carthage.CarthageKit",                                                                                     0],
     ["$HOME/Library/Saved Application State",                                                                                             0],
@@ -434,14 +435,14 @@ our @itemsToDelete = (
     ["$HOME/Library/Caches/com.apple.Music/SubscriptionPlayCache/",                                                                       0],
     ["$HOME/Library/Application Support/iTerm2/SavedState/lock",                                                                          0],
 
-    ["/Library/Logs",                                                                                                                     1],
-    ["/Library/Logs/DiagnosticReports",                                                                                                   1],
+    ["/Library/Logs",                   1],
+    ["/Library/Logs/DiagnosticReports", 1],
 
-    ["/private/var/folders/sf/_p_7qs4n7gg_r4yrrrvmphd00000gn/C/us.zoom.ZoomAutoUpdater",                                                  0],
-    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2",                                             0],
-    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2",                                             0],
-    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2Helper",                                       0],
-    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2Helper",                                       0],
+    ["/private/var/folders/sf/_p_7qs4n7gg_r4yrrrvmphd00000gn/C/us.zoom.ZoomAutoUpdater",            0],
+    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2",       0],
+    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2",       0],
+    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2Helper", 0],
+    ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2Helper", 0],
 );
 
 #*****************************************************************************************
@@ -522,12 +523,14 @@ sub sublimeText {
         open($configFile, ">:encoding(UTF-8)", $filename);
         print $configFile $json;
         close($configFile);
+
+        my $plistFile = "$HOME/Library/Preferences/com.sublimetext.4.plist";
+        my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
+        $plist->setObject_forKey_("$HOME/Developer/", "NSNavLastRootDirectory");
+        $plist->writeToFile_atomically_($plistFile, "0");
+
     }
 
-    my $plistFile = "$HOME/Library/Preferences/com.sublimetext.4.plist";
-    my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
-    $plist->setObject_forKey_("$HOME/Developer/", "NSNavLastRootDirectory");
-    $plist->writeToFile_atomically_($plistFile, "0");
 }
 
 #*****************************************************************************************
@@ -552,12 +555,12 @@ sub sublimeMerge {
         open($configFile, ">:encoding(UTF-8)", $filename);
         print $configFile $json;
         close($configFile);
-    }
 
-    my $plistFile = "$HOME/Library/Preferences/com.sublimemerge.plist";
-    my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
-    $plist->setObject_forKey_("$HOME/Developer/", "NSNavLastRootDirectory");
-    $plist->writeToFile_atomically_($plistFile, "0");
+        my $plistFile = "$HOME/Library/Preferences/com.sublimemerge.plist";
+        my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
+        $plist->setObject_forKey_("$HOME/Developer/", "NSNavLastRootDirectory");
+        $plist->writeToFile_atomically_($plistFile, "0");
+    }
 }
 
 #*****************************************************************************************
@@ -567,13 +570,13 @@ sub BBEdit {
     my $plistFile = "$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist";
     my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
     if ($plist && $$plist) {
-    	print "here";
         my $keyNamesArray = $plist->allKeys();
         my $items         = $keyNamesArray->count;
         for (my $index = 0; $index < $items; ++$index) {
             my $key = $keyNamesArray->objectAtIndex_($index)->UTF8String();
-            if (rindex($key, "InstaprojectWindowSavedBounds", 0) != -1 ||
-            	rindex($key, "ImageDisplayGrayLevel_", 0) != -1) {
+            if (   rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
+                || rindex($key, "ImageDisplayGrayLevel_", 0) != -1)
+            {
                 $plist->removeObjectForKey_($key);
             }
         }
@@ -812,7 +815,7 @@ set keepingSites to {¬
 	"superuser.com"}
 
 set deleteAnyway to {¬
-	"advancedsswift.com", ¬
+	"advancedswift.com", ¬
 	"barebones.com", ¬
 	"batman-news.com", ¬
 	"gamedev.city", ¬

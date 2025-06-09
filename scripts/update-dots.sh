@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Jun-2025  3:54pm
-# Modified :
+# Modified :   8-Jun-2025  8:31pm
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -230,7 +230,7 @@ dot-files() {
 #*****************************************************************************************
 # script main line
 #*****************************************************************************************
-format-project "/opt/geedbla"
+format-project.sh "/opt/geedbla"
 
 if [ $# -gt 0 ]; then
 	case $1 in

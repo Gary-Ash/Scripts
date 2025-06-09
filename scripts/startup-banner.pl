@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Jun-2025  3:54pm
-# Modified :
+# Modified :   8-Jun-2025 10:12pm
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -266,10 +266,7 @@ for my $text (@specs) {
     ++$specsLine;
 }
 
-if ($imageFileExists == 1) {
-    $specsLine += 1;
-}
-else {
+if ($imageFileExists == 0) {
     $specsLine += 4;
 }
 print "\033[$specsLine;1H\n";

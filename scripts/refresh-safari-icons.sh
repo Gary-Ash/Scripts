@@ -7,7 +7,7 @@
 # my web server and install them in my Safari browser folder
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :   8-Jun-2025  3:54pm
+# Created  :  23-Jun-2025  9:40pm
 # Modified :
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
@@ -16,7 +16,7 @@
 password="$(security find-internet-password -ws geedbla.com)"
 
 sshpass -p "$password" rsync -arz "$USER@geedbla.com:~/stuff/Safari/Safari.zip" "$HOME/Downloads/"
-unzip -q "$HOME/Downloads/Safari.zip" -d "$HOME/Downloads/Safari/" -x '__MACOSX/*'
+unzip -q "$HOME/Downloads/Safari.zip" -d "$HOME/Downloads/" -x '__MACOSX/*'
 
 cp -rf "$HOME/Downloads/Safari/"* "$HOME/Library/Safari/"
 rm -rf "$HOME/Downloads/Safari/"

@@ -5,7 +5,7 @@
 # This script will sync my Macs using the system that runs this script as the source.
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :   8-Jun-2025  3:54pm
+# Created  :  23-Jun-2025  9:40pm
 # Modified :
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
@@ -43,7 +43,7 @@ updateSyncedFolders() {
 
 	for pathToSync in "${toSync[@]}"; do
 		targetDirectory=$(dirname "$pathToSync")
-		rsync --rsh="sshpass -p $password ssh -l $USER" -arzE --inplace --delete "$pathToSync" "$remote:$targetDirectory/" &>/dev/null
+		rsync --rsh="sshpass -p $password ssh -l $USER" -arzE --delete "$pathToSync" "$remote:$targetDirectory/" &>/dev/null
 	done
 }
 

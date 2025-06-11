@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Jun-2025  3:54pm
-# Modified :   9-Jun-2025  4:14pm
+# Modified
 #
 # Copyright © 2024-2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -318,6 +318,7 @@ our @itemsToDelete = (
     ["$HOME/triald-*.ips",                                                                                                                1],
     ["$HOME/.config/configstore",                                                                                                         0],
     ["$HOME/Pictures/Pixelmator Pro Sidecar Files/",                                                                                      0],
+    ["$HOME/Library/Application Support/BBEdit/Workspaces", 																			  9],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Rescued Documents",                                               1],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Auto-Save Recovery",                                              0],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Sleep State.appstate",                                                           0],
@@ -337,9 +338,9 @@ our @itemsToDelete = (
     ["$HOME/Library/Developer/Xcode/Products",                                                                                            0],
     ["$HOME/Library/Caches/Homebrew",                                                                                                     0],
     ["$HOME/Library/Caches/Homebrew/Backup",                                                                                              0],
-    ["/$HOME/Library/Cookies/Hocom.kapeli.dashdoc.binarycookies",                                                                         0],
-    ["/$HOME/Library/Cookies/org.m0k.transmission.binarycookies",                                                                         0],
-    ["/$HOME/Library/Caches/com.apple.dt.Xcode",                                                                                          0],
+    ["$HOME/Library/Cookies/Hocom.kapeli.dashdoc.binarycookies",                                                                         0],
+    ["$HOME/Library/Cookies/org.m0k.transmission.binarycookies",                                                                         0],
+    ["$HOME/Library/Caches/com.apple.dt.Xcode",                                                                                          0],
     ["$HOME/Library/Autosave Information",                                                                                                0],
     ["$HOME/Library/Application Support/CrashReporter",                                                                                   0],
     ["$HOME/Pictures/iSkysoft VideoConverterUltimate",                                                                                    0],
@@ -1130,27 +1131,29 @@ end try
  ****************************************************************************************)
 try
 	tell application "Slack" to activate
-	delay 0.5
+	delay 1
 	try
 		set workspaces to 0
 
 		tell application "System Events" to tell process "Slack"
+			delay 1
+
 			tell application "Slack" to activate
 			keystroke "1" using {command down}
 
-			delay 0.1
+			delay 0.5
 
 			repeat until workspaces > 20
 				try
 					tell application "Slack" to activate
 
 					click menu item "All Unreads" of menu 1 of menu bar item "Go" of menu bar 1
-					delay 0.1
+					delay 0.08
 					tell application "Slack" to activate
 
 					repeat 30 times
 						key code 53
-						delay 0.01
+						delay 0.08
 					end repeat
 					delay 0.1
 					tell application "Slack" to activate

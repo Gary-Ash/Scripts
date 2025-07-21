@@ -5,10 +5,10 @@
 # Boot strap a new Mac setup
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :  23-Jun-2025  9:40pm
+# Created  :   4-Aug-2025  4:29pm
 # Modified :
 #
-# Copyright © 2024-2025 By Gary Ash All rights reserved.
+# Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
 setZDOTDIR() {
@@ -69,9 +69,9 @@ while read p; do
 done <"$HOME/Downloads/dotfiles/brew/gems.txt"
 
 # shellcheck disable=SC2162
-pip3 install --upgrade --break-system-package pip
+pip3 install --upgrade pip
 while read p; do
-	pip3 install --break-system-package "$p"
+	pip3 install "$p"
 done <"$HOME/Downloads/dotfiles/brew/python-packages.txt"
 
 compaudit | xargs chmod g-w

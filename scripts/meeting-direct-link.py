@@ -7,14 +7,13 @@
 # versions of those links
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :  23-Jun-2025  9:40pm
+# Created  :   4-Aug-2025  4:29pm
 # Modified :
 #
-# Copyright © 2024 By Gary Ash All rights reserved.
+# Copyright © 2025 By Gary Ash All rights reserved.
 # ****************************************************************************************
 import re
 import sys
-from urllib.parse import urlparse
 
 
 def is_convertible_zoom_url(url):

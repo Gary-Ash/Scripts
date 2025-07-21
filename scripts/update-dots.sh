@@ -5,10 +5,10 @@
 # This script automates the maintenance of my dot files repository
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :  23-Jun-2025  9:40pm
+# Created  :   4-Aug-2025  4:29pm
 # Modified :
 #
-# Copyright © 2024-2025 By Gary Ash All rights reserved.
+# Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
 #*****************************************************************************************
@@ -33,10 +33,12 @@ updateGitHub() {
 		rm -rf "$HOME/Downloads/dotfiles/"
 	fi
 
-	if git clone --quiet --recurse-submodules git@github.com:Gary-Ash/dotfiles.git "$HOME/Downloads/dotfiles/"; then
+	if git clone --quiet --recurse-submodules git@github.com:Gary-Ash/dot-files.git "$HOME/Downloads/dotfiles/"; then
 		cd "$HOME/Downloads/dotfiles/" || return 1
-		git-crypt unlock
 		git submodule update --recursive --remote
+
+		read -rs "?Enter the password to decrypt the repository: " password
+		transcrypt -c aes-256-cbc -p "$password"
 		buildRepository
 	else
 		echo "Unable to update the repository"
@@ -100,7 +102,7 @@ buildRepository() {
 		--exclude="sublime_geedbla_environment.txt" \
 		"$HOME/Library/Application Support/Sublime Text/Packages/User" "$HOME/Downloads/dotfiles/Sublime Text/Packages" &>/dev/null >/dev/null
 
-	rsync -arz -E "$HOME/Library/Application Support/BBEdit" "$HOME/Downloads/dotfiles" &>/dev/null
+	rsync -arz -E --exclude="*.pdf" "$HOME/Library/Application Support/BBEdit" "$HOME/Downloads/dotfiles" &>/dev/null
 
 	rsync -arz -E --exclude="Lib" \
 		--exclude="Index" \

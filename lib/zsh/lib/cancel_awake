@@ -5,10 +5,10 @@
 # his command will cancel the computer's "stay awake" mode
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :   8-Jun-2025  3:54pm
+# Created  :   4-Aug-2025  4:29pm
 # Modified :
 #
-# Copyright © 2024 By Gary Ash All rights reserved.
+# Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
 cancel_awake() {
 	if [[ -n $ZSH_VERSION ]]; then

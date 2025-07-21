@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# ****************************************************************************************
+#  wtf-autolayout.py
+#
+# This script parses an autolayout warning and passes it on to the www.wtfautolayout.com
+# website for further analysis and with any luck helpful advice to resolve the issue
+# ****************************************************************************************
+
 import sys
 import urllib.parse
 import subprocess

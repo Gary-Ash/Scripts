@@ -5,10 +5,10 @@
 # This script will sync my Macs using the system that runs this script as the source.
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :  23-Jun-2025  9:40pm
+# Created  :   4-Aug-2025  4:29pm
 # Modified :
 #
-# Copyright © 2024-2025 By Gary Ash All rights reserved.
+# Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
 #*****************************************************************************************
@@ -27,7 +27,6 @@ password=$(get_sudo_password)
 
 updateSyncedFolders() {
 	local toSync=(
-		"/opt/geedbla"
 		"$HOME/.config"
 		"$HOME/Desktop"
 		"$HOME/Sites"
@@ -36,7 +35,6 @@ updateSyncedFolders() {
 		"$HOME/Developer"
 		"$HOME/Library/Scripts"
 		"$HOME/Library/Script Libraries/"
-		"$HOME/Library/Application Support/BBEdit"
 		"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist"
 		"$HOME/Library/Containers/com.renfei.SnippetsLab/Data/Library/Preferences/com.renfei.SnippetsLab.plist"
 	)
@@ -138,7 +136,7 @@ updatePython() {
 	done
 
 	for pipToAdd in ${newPip[@]}; do
-		sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";pip3 install --break-system-packages \"$pipToAdd\" &> /dev/null"
+		sshpass -p "$password" ssh "$remote" "export PATH=\"$PATH\";pip3 install \"$pipToAdd\" &> /dev/null"
 	done
 
 	removedPips=()
@@ -183,6 +181,13 @@ updatePreferences() {
 	sshpass -p "$password" ssh "$remote" "find . -name \"Icon?\" -exec chflags hidden {} \; &> /dev/null"
 }
 
+updateGeeDblA() {
+	sshpass -p "$password" rsync -arz -E --inplace \
+		--exclude="venv" \
+		--delete \
+		"/opt/geedbla" "$remote:/opt/" &>/dev/null
+
+}
 updateXcode() {
 	sshpass -p "$password" rsync -arz -E --inplace \
 		--exclude="UserData/Capabilities" \
@@ -204,6 +209,16 @@ updateXcode() {
 		--exclude="/DocumentationCache" \
 		--delete \
 		"$HOME/Library/Developer/Xcode/" "$remote:$HOME/Library/Developer/Xcode/" &>/dev/null
+}
+
+updateBBEdit() {
+	if [[ -d "$HOME/Library/Application Support/BBEdit" ]]; then
+		sshpass -p "$password" rsync -arz -E --inplace --rsh=ssh \
+			--exclude="BBEdit User Manual *.pdf" \
+			--delete \
+			"$HOME/Library/Application Support/BBEdit" \
+			"$remote:$HOME/Library/Application\\ Support/" &>/dev/null
+	fi
 }
 
 updateSublime() {
@@ -344,8 +359,10 @@ for computer in "${systems[@]}"; do
 		updatePython
 		updatePreferences
 		updateXcode
+		updateBBEdit
 		updateSublime
 		updateApplications
+		updateGeeDblA
 
 		sshpass -p "$password" ssh -t "$remote" "echo $password | sudo -S sudo diskutil resetUserPermissions / $(id -u)" &>/dev/null
 

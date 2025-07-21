@@ -7,99 +7,158 @@
 # header comment block is detected
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :  23-Jun-2025  9:40pm
+# Created  :   4-Aug-2025  4:29pm
 # Modified :
 #
-# Copyright © 2024 By Gary Ash All rights reserved.
+# Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
-#****************************************************************************************
+#-----------------------------------------------------------------------------------------
 # libraries
-#****************************************************************************************
+#-----------------------------------------------------------------------------------------
 use strict;
 use warnings;
+
 use File::Find;
+use File::Spec;
 use File::Basename;
+
 use POSIX qw(strftime);
+use Cwd   qw(abs_path);
 
-my %processFilesOptions = (
-    wanted      => \&processFiles,
-    no_chdir    => 1,
-    bydepth     => 0,
-    follow_skip => 2,
-);
+#-----------------------------------------------------------------------------------------
+# constants
+#-----------------------------------------------------------------------------------------
+our $HOME              = $ENV{"HOME"};
+our $TEMPLATE_LOCATION = "$HOME/Developer/GeeDblA/ProjectTemplates/";
 
-our $SetFileDate = strftime "%D %I:%M %p",       localtime;
-our $currentDate = strftime "%e-%b-%Y %_I:%M%p", localtime;
-our $currentYear = strftime "%Y",                localtime;
-$currentDate =~ s/AM/am/;
-$currentDate =~ s/PM/pm/;
+#-----------------------------------------------------------------------------------------
+# regular expressions
+#-----------------------------------------------------------------------------------------
 
-if (@ARGV != 2 && @ARGV != 1) {
-    print "reset-date.pl \"company name\" <directory>\n";
-    exit(1);
-}
+# this will match copyright declarations an isolate the copyright holder into $1
+our $findFilesToProcess = qr/Copyright\s*(?:.*)\s*(?:\d{4}\s*-\s*\d{4}|\d{4}) By (.*) All rights reserved\./;
 
-my $company  = $ARGV[0];
-my $workRoot = (@ARGV == 2) ? $ARGV[1] : ".";
+#-----------------------------------------------------------------------------------------
+#  global variables
+#-----------------------------------------------------------------------------------------
 
-find(\%processFilesOptions, $workRoot);
-`xattr -cr $workRoot/*`;
-`find $workRoot/ -exec SetFile -d "$SetFileDate" -m "$SetFileDate" {} \\;`;
-`find "$workRoot/" \\( -name "*~" -or -name ".*~" -or -name "#*#" -or -name ".#*#" -or -name "*.o" -or -name "*(deleted*" -or -name "*conflicted*" -or -name "*.DS_Store" \\) -exec rm -frv {} \\;`;
+# command line arguments and optional switches
+our $workRoot    = ".";
+our $companyName = "Gary Ash";
 
-#*****************************************************************************************
-# process a source file
-#*****************************************************************************************
-sub processFiles {
-    return if $_ eq "." or $_ eq "..";
-    return if !-f $_;
-    return if index($_, '\r') > 0;
-    return if shouldIgnoreFile($_);
+# variables that hold the template substitution values
+my @companies;
+my $timestamp;
+my $setFileDateFormat;
+my $copyrightNotice;
 
-    if (open(my $sourcefile, "<$File::Find::name")) {
-        my $source = do { local $/; <$sourcefile> };
-        close($sourcefile);
+#=========================================================================================
 
-        $source =~ s/\x{43}reated  :\s*$|\x{43}reated  :\s*\d*-...-\d*\s*\d*:\d*.*/\x{43}reated  :  $currentDate/;
-        $source =~ s/\x{4D}odified :\s*$|\x{4D}odified :\s*\d*-...-\d*\s*\d*:\d*.*/\x{4D}odified :/;
-        $source =~ s/\x{43}opyright © [0-9\-]* .*$/Copyright © $currentYear By $company All rights reserved\./;
-
-        if (open($sourcefile, ">$File::Find::name")) {
-            print $sourcefile $source;
-            close($sourcefile);
-
-        }
-        else {
-            print "*** Unable to read the $File::Find::name - $!\n";
-        }
-    }
-    else {
-        print "*** Unable to read the $File::Find::name - $!\n";
-    }
-}
-
-# ******************************************************************************************
-# check the given file name to see if it should be ignore
-# ******************************************************************************************
-sub shouldIgnoreFile {
-    my ($filename) = @_;
-
-    my @ignoretheseFiles      = ("project.pbxproj",);
-    my @ignoretheseExtensions = (".xcscheme",);
-
-    my ($base, $dirs, $ext) = fileparse($filename);
-    for my $entry (@ignoretheseFiles) {
-        if ($base eq $entry) {
+sub isValidOrganization {
+    my $org = $_[0];
+    for my $anOrg (@companies) {
+        if (lc($org) eq lc($anOrg)) {
             return 1;
         }
     }
-
-    for my $entry (@ignoretheseExtensions) {
-        if ($ext eq $entry) {
-            return 1;
-        }
-    }
-
     return 0;
 }
+
+sub shouldIgnoreFile {
+    my ($filename) = @_;
+    my @ignoreExtensions = (".png", ".tff", "jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".xcuserstate");
+
+    (undef, undef, my $extension) = fileparse($filename, qr/\.[^.]*$/);
+
+    for my $ext (@ignoreExtensions) {
+        if ($ext eq $extension) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+sub parseCommandLine {
+    if (@ARGV != 2 && @ARGV != 1) {
+        print STDERR "reset-date.pl \"company name\" <directory>\n";
+        exit(1);
+    }
+
+    $companyName = $ARGV[0];
+    $workRoot    = (@ARGV == 2) ? $ARGV[1] : ".";
+    $workRoot    = abs_path($workRoot);
+}
+
+sub prepare {
+    #=====================================================================================
+    # get and format timestamp values
+    #=====================================================================================
+    $setFileDateFormat = strftime("%D %I:%M %p", localtime);
+
+    $timestamp = strftime("%e-%b-%Y  %-I:%M%p", localtime);
+    $timestamp =~ s/AM/am/;
+    $timestamp =~ s/PM/pm/;
+
+    my $currentYear = strftime("%Y", localtime);
+    $copyrightNotice = "Copyright © $currentYear By $companyName All rights reserved.";
+
+    my $companiesfh;
+    if (open($companiesfh, '<', "$TEMPLATE_LOCATION/_Files/organizations.txt") == 0) {
+        print STDERR "*** Error: Unable to open orginations file : $!\n";
+        exit(1);
+    }
+
+    while (<$companiesfh>) { chomp; push(@companies, $_); }
+    close($companiesfh);
+    push @companies, "CompanyName";
+}
+
+sub searchReplace {
+    if ($File::Find::name =~ /.*\/\.DS_Store/) {
+        unlink($File::Find::name);
+        return;
+    }
+
+    (undef, undef, my $extension) = fileparse($File::Find::name, qr/\.[^.]*$/);
+    if (index($File::Find::name, '\r') < 0 && -f $File::Find::name && !shouldIgnoreFile($File::Find::name)) {
+        my $sourcefile;
+
+        if (open($sourcefile, '+<', $File::Find::name)) {
+            my $source = do { local $/; <$sourcefile> };
+            if ($source =~ /$findFilesToProcess/ && isValidOrganization("$1")) {
+
+                if ($extension eq '.pbxproj') {
+                    $source =~ s/ORGANIZATIONNAME\s*=\s*.*;/ORGANIZATIONNAME = \"$companyName\";/;
+                    $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Created  :*[^\n|\\n]/Created  :  $timestamp/g;
+                    $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Modified :*[^\n|\\n]/Modified :/g;
+
+                    my $count = 0;
+                    while ($source =~ /$findFilesToProcess/ && isValidOrganization("$1")) {
+                        $source =~ s/$findFilesToProcess/$copyrightNotice/;
+
+                        if ((++$count) > 10) {
+                            last;
+                        }
+                    }
+                }
+                else {
+                    $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Created  :*[^\n|\\n]/Created  :  $timestamp/;
+                    $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Modified :*[^\n|\\n]/Modified :/;
+                    $source =~ s/$findFilesToProcess/$copyrightNotice/;
+                }
+                close($sourcefile);
+                open($sourcefile, '>', $File::Find::name);
+                print $sourcefile "$source";
+            }
+        }
+    }
+    system("SetFile -d \"$setFileDateFormat\" -m \"$setFileDateFormat\" \"$File::Find::name\" &> /dev/null");
+}
+
+#*****************************************************************************************
+# script main line
+#*****************************************************************************************
+parseCommandLine();
+prepare();
+find(\&searchReplace, "$workRoot");

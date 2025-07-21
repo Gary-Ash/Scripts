@@ -5,10 +5,10 @@
 # Update system software and clean macOS settings
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
-# Created  :  23-Jun-2025  9:40pm
-# Modified
+# Created  :   4-Aug-2025  4:29pm
+# Modified :
 #
-# Copyright © 2024-2025 By Gary Ash All rights reserved.
+# Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
 #*****************************************************************************************
@@ -32,7 +32,7 @@ finish() {
 #*****************************************************************************************
 # kill applications
 #*****************************************************************************************
-kill-everything() {
+killEverything() {
 	appsToKill=(
 	"Keyboard Maestro Engine"
 	"Dock"
@@ -95,7 +95,7 @@ defaults write com.apple.Safari IncludeInternalDebugMenu 1
 SUDO_PASSWORD=$(get_sudo_password)
 error_log="$TMPDIR/Error.txt"
 
-kill-everything
+killEverything
 
 cd ~ || return
 
@@ -136,8 +136,8 @@ fi
 # python 3 update
 #*********************************************************************************
 if command -v pip3 &>/dev/null; then
-	python3 -m pip install --upgrade --break-system-packages pip &>"$error_log"
-	pip3 install -U --break-system-packages $(pip3 freeze | cut -d = -f 1) &>"$error_log"
+	python3 -m pip install --upgrade pip &>"$error_log"
+	pip3 install -U $(pip3 freeze | cut -d = -f 1) &>"$error_log"
 fi
 
 #*****************************************************************************************
@@ -180,6 +180,7 @@ perl /opt/geedbla/scripts/load-simulator.pl
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
 #****************************************************************************************
+tmutil stopbackup
 sudo tmutil disable
 
 #*****************************************************************************************
@@ -240,37 +241,27 @@ use DateTime;
 our $HOME = $ENV{'HOME'};
 
 our @plistKeysToDelete = (
-    "NewBookmarksLocationUUID",                                       "RecentSearchStrings",                                           "FXRecentFolders",                                                                                                       "GoToField",
-    "RecentApplications",                                             "RecentDocuments",                                               "RecentServers",                                                                                                         "Hosts",
-    "ExpandedURLs",                                                   "last_textureFileName",                                          "FXRecentFolders",                                                                                                       "FXLastSearchScope",
-    "GoToField",                                                      "NSNavPanel",                                                    "NSNavRecentPlaces",                                                                                                     "NSNavLastRootDirectory",
-    "NSNavLastCurrentDirectory",                                      "RecentSearchStrings",                                           "LRUDocumentPaths",                                                                                                      "TSAOpenedTemplates.Pages",
-    "NSReplacePboard",                                                "ExpandedURLs",                                                  "SelectedURLs",                                                                                                          "NSReplacePboard",
-    "Apple CFPasteboard find",                                        "Apple CFPasteboard replace",                                    "Apple CFPasteboard general",                                                                                            "findHistory",
-    "replaceHistory",                                                 "MGRecentURLPropertyLists",                                      "OakFindPanelOptions",                                                                                                   "Folder Search Options",
-    "recentFileList",                                                 "RecentDirectories",                                             "NSRecentXCProjectDocuments",                                                                                            "last_dataFileName",
-    "lastSpritesFolder",                                              "main.lastFileName",                                             "defaults.settingsAbsPath",                                                                                              "main.lastFileName",
-    "DefaultCheckOutDirectory",                                       "RecentWorkingCopies",                                           "kProjectBasePath",                                                                                                      "LastOpenedScene",
-    "ABBookWindowController-MainBookWindow-personListController",     "IDEFileTemplateChooserAssistantSelectedTemplateCategory",       "IDEFileTemplateChooserAssistantSelectedTemplateName",                                                                   "IDERecentEditorDocuments",
-    "XCOpenWorkspaceDocuments",                                       "IDETemplateCompletionDefaultPath",                              "IDETemplateOptions",                                                                                                    "IDEDefaultPrimaryEditorFrameSizeForPaths",
-    "IDEDocViewerLastViewedURLKey",                                   "IDESourceControlRecentsFavoritesRepositoriesUserDefaultsKey",   "Xcode3ProjectTemplateChooserAssistantSelectedTemplateCategory",                                                         "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName",
-    "Xcode3TargetTemplateChooserAssistantSelectedTemplateCategory",   "Xcode3TargetTemplateChooserAssistantSelectedTemplateName",      "Xcode3ProjectTemplateChooserAssistantSelectedTemplateSection",                                                          "recentFileList",
-    "lastSpritesFolder",                                              "main.lastFileName",                                             "last_name",                                                                                                             "last_textureFileName",
-    "findRecentPlaces",                                               "RecentWebSearches",                                             "recentSearches",                                                                                                        "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_macOS",
-    "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_iOS",   "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_tvOS", "SGTRecentFileSearches",                                                                                                 "IDEFileTemplateChooserAssistantSelectedTemplateSection",
-    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_tvOS", "IDEFileTemplateChooserAssistantSelectedTemplateName_tvOS",      "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection3ProjectTemplateChooserAssistantSelectedTemplateName_macOS", "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_iOS",
-    "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection",    "DVTTextCompletionRecentCompletions",                            "GoToFieldHistory",                                                                                                      "HistoryColors",
-    "recentSearches",                                                 "recentSearchHints",                                             "IDETemplateCompletionDefaultPath",                                                                                      "SHKRecentServices",
-    "FavoriteColors",                                                 "LastSetWindowSizeForDocument",                                  "recentCatalogPaths",                                                                                                    "IDELastBreakpointActionClassName",
-    "RecentFindStrings",                                              "IDEFileTemplateChooserAssistantSelectedTemplateName_iOS",       "RecentReplaceStrings",                                                                                                  "IDESwiftMigrationAssistantReviewFilesSelectedChoice",
-    "IDERunActionSelectedTab",                                        "DVTIgnoredDevices",                                             "IBGlobalLastEditorDocumentClassName",                                                                                   "IBDocumentOutlineViewMode",
-    "IDELibrary.lastSelectedLibraryExtensionIDByEditorID",            "IBGlobalLastEditorTargetRuntime",                               "CurrentAlertPreferencesSelection",                                                                                      "DVTRecentCustomColors",
-    "IDEProvisioningTeamManagerLastSelectedTeamID",                   "BKRecentsLastCleared",                                          "BKPreviouslyOpenedBookIDs",                                                                                             "RecentMoveAndCopyDestinations",
-    "DownloadsFolderListViewSettingsVersion",                         "recent_viewed",                                                 "RecentsArrangeGroupViewBy",                                                                                             "IDEAppChooserRecentApplications-My Mac",
-    "RecentRegions",                                                  "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS",     "lastSource",                                                                                                            "lastReplacement",
-    "lastRegex",                                                      "TSARecentOpenedDocumentTimestamps",                             "TSAOpenedTemplates.Numbers",                                                                                            "RecentItemsData",
-    "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                               "ApplicationSleepState",                                                                                                 "ApplicationAutoSaveState",
-    "CurrentWorkspaceDocumentName",
+    "NewBookmarksLocationUUID",                                       "RecentSearchStrings",                                            "FXRecentFolders",                                                                                                       "GoToField",                                                     "RecentApplications",                                           "RecentDocuments",
+    "RecentServers",                                                  "Hosts",                                                          "ExpandedURLs",                                                                                                          "last_textureFileName",                                          "FXRecentFolders",                                              "FXLastSearchScope",
+    "GoToField",                                                      "NSNavPanel",                                                     "NSNavRecentPlaces",                                                                                                     "NSNavLastRootDirectory",                                        "NSNavLastCurrentDirectory",                                    "RecentSearchStrings",
+    "LRUDocumentPaths",                                               "TSAOpenedTemplates.Pages",                                       "NSReplacePboard",                                                                                                       "ExpandedURLs",                                                  "SelectedURLs",                                                 "NSReplacePboard",
+    "Apple CFPasteboard find",                                        "Apple CFPasteboard replace",                                     "Apple CFPasteboard general",                                                                                            "findHistory",                                                   "replaceHistory",                                               "MGRecentURLPropertyLists",
+    "OakFindPanelOptions",                                            "Folder Search Options",                                          "recentFileList",                                                                                                        "RecentDirectories",                                             "NSRecentXCProjectDocuments",                                   "last_dataFileName",
+    "lastSpritesFolder",                                              "main.lastFileName",                                              "defaults.settingsAbsPath",                                                                                              "main.lastFileName",                                             "DefaultCheckOutDirectory",                                     "RecentWorkingCopies",
+    "kProjectBasePath",                                               "LastOpenedScene",                                                "ABBookWindowController-MainBookWindow-personListController",                                                            "IDEFileTemplateChooserAssistantSelectedTemplateCategory",       "IDEFileTemplateChooserAssistantSelectedTemplateName",          "IDERecentEditorDocuments",
+    "XCOpenWorkspaceDocuments",                                       "IDETemplateCompletionDefaultPath",                               "IDETemplateOptions",                                                                                                    "IDEDefaultPrimaryEditorFrameSizeForPaths",                      "IDEDocViewerLastViewedURLKey",                                 "IDESourceControlRecentsFavoritesRepositoriesUserDefaultsKey",
+    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateCategory",  "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName",      "Xcode3TargetTemplateChooserAssistantSelectedTemplateCategory",                                                          "Xcode3TargetTemplateChooserAssistantSelectedTemplateName",      "Xcode3ProjectTemplateChooserAssistantSelectedTemplateSection", "recentFileList",
+    "lastSpritesFolder",                                              "main.lastFileName",                                              "last_name",                                                                                                             "last_textureFileName",                                          "findRecentPlaces",                                             "RecentWebSearches",
+    "recentSearches",                                                 "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_macOS", "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_iOS",                                                          "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_tvOS", "SGTRecentFileSearches",                                        "IDEFileTemplateChooserAssistantSelectedTemplateSection",
+    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_tvOS", "IDEFileTemplateChooserAssistantSelectedTemplateName_tvOS",       "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection3ProjectTemplateChooserAssistantSelectedTemplateName_macOS", "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_iOS", "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection",  "DVTTextCompletionRecentCompletions",
+    "GoToFieldHistory",                                               "HistoryColors",                                                  "recentSearches",                                                                                                        "recentSearchHints",                                             "IDETemplateCompletionDefaultPath",                             "SHKRecentServices",
+    "FavoriteColors",                                                 "LastSetWindowSizeForDocument",                                   "recentCatalogPaths",                                                                                                    "IDELastBreakpointActionClassName",                              "RecentFindStrings",                                            "IDEFileTemplateChooserAssistantSelectedTemplateName_iOS",
+    "RecentReplaceStrings",                                           "IDESwiftMigrationAssistantReviewFilesSelectedChoice",            "IDERunActionSelectedTab",                                                                                               "DVTIgnoredDevices",                                             "IBGlobalLastEditorDocumentClassName",                          "IBDocumentOutlineViewMode",
+    "IDELibrary.lastSelectedLibraryExtensionIDByEditorID",            "IBGlobalLastEditorTargetRuntime",                                "CurrentAlertPreferencesSelection",                                                                                      "DVTRecentCustomColors",                                         "IDEProvisioningTeamManagerLastSelectedTeamID",                 "BKRecentsLastCleared",
+    "BKPreviouslyOpenedBookIDs",                                      "RecentMoveAndCopyDestinations",                                  "DownloadsFolderListViewSettingsVersion",                                                                                "recent_viewed",                                                 "RecentsArrangeGroupViewBy",                                    "IDEAppChooserRecentApplications-My Mac",
+    "RecentRegions",                                                  "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS",      "lastSource",                                                                                                            "lastReplacement",                                               "lastRegex",                                                    "TSARecentOpenedDocumentTimestamps",
+    "TSAOpenedTemplates.Numbers",                                     "RecentItemsData",                                                "TSAOpenedTemplates.Pages",                                                                                              "FindDialog_SearchReplaceHistory",                               "ApplicationSleepState",                                        "ApplicationAutoSaveState",
+    "CurrentWorkspaceDocumentName",                                   "FindDialog_SelectedSourceNodes",
 );
 
 our @itemsToDelete = (
@@ -318,7 +309,7 @@ our @itemsToDelete = (
     ["$HOME/triald-*.ips",                                                                                                                1],
     ["$HOME/.config/configstore",                                                                                                         0],
     ["$HOME/Pictures/Pixelmator Pro Sidecar Files/",                                                                                      0],
-    ["$HOME/Library/Application Support/BBEdit/Workspaces", 																			  9],
+    ["$HOME/Library/Application Support/BBEdit/Workspaces",                                                                               9],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Rescued Documents",                                               1],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Auto-Save Recovery",                                              0],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Sleep State.appstate",                                                           0],
@@ -338,9 +329,9 @@ our @itemsToDelete = (
     ["$HOME/Library/Developer/Xcode/Products",                                                                                            0],
     ["$HOME/Library/Caches/Homebrew",                                                                                                     0],
     ["$HOME/Library/Caches/Homebrew/Backup",                                                                                              0],
-    ["$HOME/Library/Cookies/Hocom.kapeli.dashdoc.binarycookies",                                                                         0],
-    ["$HOME/Library/Cookies/org.m0k.transmission.binarycookies",                                                                         0],
-    ["$HOME/Library/Caches/com.apple.dt.Xcode",                                                                                          0],
+    ["$HOME/Library/Cookies/Hocom.kapeli.dashdoc.binarycookies",                                                                          0],
+    ["$HOME/Library/Cookies/org.m0k.transmission.binarycookies",                                                                          0],
+    ["$HOME/Library/Caches/com.apple.dt.Xcode",                                                                                           0],
     ["$HOME/Library/Autosave Information",                                                                                                0],
     ["$HOME/Library/Application Support/CrashReporter",                                                                                   0],
     ["$HOME/Pictures/iSkysoft VideoConverterUltimate",                                                                                    0],
@@ -1130,11 +1121,8 @@ end try
  * clean up slack
  ****************************************************************************************)
 try
-	tell application "Slack" to activate
-	delay 1
 	try
 		set workspaces to 0
-
 		tell application "System Events" to tell process "Slack"
 			delay 1
 
@@ -1144,23 +1132,20 @@ try
 			delay 0.5
 
 			repeat until workspaces > 20
-				try
-					tell application "Slack" to activate
+				tell application "Slack" to activate
+				keystroke "A" using {shift down, command down}
+				delay 0.5
+				tell application "Slack" to activate
 
-					click menu item "All Unreads" of menu 1 of menu bar item "Go" of menu bar 1
+				repeat 30 times
+					key code 53
 					delay 0.08
-					tell application "Slack" to activate
+				end repeat
+				delay 0.1
+				tell application "Slack" to activate
 
-					repeat 30 times
-						key code 53
-						delay 0.08
-					end repeat
-					delay 0.1
-					tell application "Slack" to activate
-
-					click menu item "Select Next Workspace" of menu of menu item "Workspace" of menu of menu bar item "File" of menu bar 1
-					set workspaces to workspaces + 1
-				end try
+				click menu item "Select Next Workspace" of menu of menu item "Workspace" of menu of menu bar item "File" of menu bar 1
+				set workspaces to workspaces + 1
 			end repeat
 
 			delay 0.1
@@ -1177,20 +1162,6 @@ try
 		tell application "Slack" to quit
 	end if
 end try
-
-(*****************************************************************************************
- * clean Marked 2
- ****************************************************************************************)
-try
-	tell application "Marked 2"
-		activate
-		tell application "System Events" to tell process "Marked 2"
-			click menu item "Clear Menu" of menu 1 of menu item "Open Recent" of menu 1 of menu bar item "File" of menu bar 1
-		end tell
-		quit
-	end tell
-end try
-
 (*****************************************************************************************
  * clean FaceTime
  ****************************************************************************************)
@@ -1383,7 +1354,7 @@ sudo purge &>/dev/null
 find "$HOME/Library/Developer" -type d -name "[A-Za-z0-9]* Device Logs" -exec rm -rfv {} \; &>/dev/null
 sqlite3 "$(find "$HOME/Library/Mail" -name "Envelope Index")" vacuum
 
-kill-everything
+killEverything
 sudo diskutil resetUserPermissions / `id -u`	&>/dev/null
 #*****************************************************************************************
 #  refresh Safari icons

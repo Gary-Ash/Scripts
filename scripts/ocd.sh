@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :
+# Modified :  14-Aug-2025  9:52pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1425,14 +1425,6 @@ rm -f "${HISTFILE}" &>/dev/null
 defaults delete com.apple.Safari IncludeInternalDebugMenu
 
 mkdir -p "$XDG_CACHE_HOME/zsh"
-#*****************************************************************************************
-# clean Z the directory tool
-#*****************************************************************************************
-if [[ -n"_Z_DATA" ]]; then
-	rm -rf "$_Z_DATA" &>/dev/null
-	touch "$_Z_DATA" &>/dev/null
-fi
-
 if [[ $OCD_OPTION == "" ]]; then
 	finish
 	history -p

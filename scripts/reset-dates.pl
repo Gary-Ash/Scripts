@@ -67,7 +67,7 @@ sub isValidOrganization {
 
 sub shouldIgnoreFile {
     my ($filename) = @_;
-    my @ignoreExtensions = (".png", ".tff", "jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".xcuserstate");
+    my @ignoreExtensions = (".png", ".tff", "jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".scpt", ".xcuserstate");
 
     (undef, undef, my $extension) = fileparse($filename, qr/\.[^.]*$/);
 

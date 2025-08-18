@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :
+# Modified :  19-Aug-2025  9:42pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -43,6 +43,13 @@ updateSyncedFolders() {
 		targetDirectory=$(dirname "$pathToSync")
 		rsync --rsh="sshpass -p $password ssh -l $USER" -arzE --delete "$pathToSync" "$remote:$targetDirectory/" &>/dev/null
 	done
+
+	sshpass -p "$password" rsync -arz -E \
+		--exclude="venv/" \
+		--exclude=".git/" \
+		--delete \
+		"/opt/geedbla/" "$remote:/opt/geedbla" #&>/dev/null
+
 }
 
 updateBrew() {

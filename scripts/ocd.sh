@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  14-Aug-2025  9:52pm
+# Modified :  18-Aug-2025  5:44pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1118,34 +1118,28 @@ try
 end try
 
 (*****************************************************************************************
- * clean up slack
+ * clean up Slack
  ****************************************************************************************)
 try
-	try
-		set workspaces to 0
-		tell application "System Events" to tell process "Slack"
-			delay 1
+	tell application "Slack" to activate
+	delay 0.1
 
+	try
+		tell application "System Events" to tell process "Slack"
 			tell application "Slack" to activate
 			keystroke "1" using {command down}
 
-			delay 0.5
+			delay 0.1
 
-			repeat until workspaces > 20
-				tell application "Slack" to activate
-				keystroke "A" using {shift down, command down}
-				delay 0.5
-				tell application "Slack" to activate
-
-				repeat 30 times
-					key code 53
-					delay 0.08
-				end repeat
-				delay 0.1
-				tell application "Slack" to activate
-
-				click menu item "Select Next Workspace" of menu of menu item "Workspace" of menu of menu bar item "File" of menu bar 1
-				set workspaces to workspaces + 1
+			repeat 10 times
+				try
+					tell application "Slack" to activate
+					click menu item "All Unreads" of menu 1 of menu bar item "Go" of menu bar 1
+					delay 0.01
+					tell application "Slack" to activate
+					key code 53 using {shift down}
+					click menu item "Select Next Workspace" of menu of menu item "Workspace" of menu of menu bar item "File" of menu bar 1
+				end try
 			end repeat
 
 			delay 0.1
@@ -1155,13 +1149,15 @@ try
 			click menu item "Close Window" of menu 1 of menu bar item "File" of menu bar 1
 		end tell
 	end try
+
+	try
+		if (system attribute "OCD_OPTION" as text) is not equal to "" then
+			tell application "Slack" to quit
+		end if
+	end try
+
 end try
 
-try
-	if (system attribute "OCD_OPTION" as text) is not equal to "" then
-		tell application "Slack" to quit
-	end if
-end try
 (*****************************************************************************************
  * clean FaceTime
  ****************************************************************************************)

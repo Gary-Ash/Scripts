@@ -1,4 +1,4 @@
-#compdef ocd
+#compdef ocd.sh
 #*****************************************************************************************
 # _ocd
 #
@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :
+# Modified :  24-Aug-2025  8:02pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************

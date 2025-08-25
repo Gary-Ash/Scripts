@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  18-Aug-2025  5:44pm
+# Modified :  24-Aug-2025  8:48pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -33,41 +33,51 @@ finish() {
 # kill applications
 #*****************************************************************************************
 killEverything() {
-	appsToKill=(
-	"Keyboard Maestro Engine"
-	"Dock"
-	"Safari"
-	"Finder"
-	"Dash"
-	"Alfred"
-	"Moom"
-	"SnippetsLab"
-	"Slack"
-	"Mona"
-	"Pastebot"
-	"BBEdit")
-
-	for app in "${appsToKill[@]}"; do
-		killall "$app" &>/dev/null
-	done
-
 	osascript <<"CLOSE_SCRIPT" &>/dev/null
 tell application "System Events"
-	set processList to the name of ¬
-		every process whose visible is true as string
+	set backgroundsToKill to ¬
+		{"Keyboard Maestro Engine", ¬
+			"Dock", ¬
+			"Safari", ¬
+			"Finder", ¬
+			"Dash", ¬
+			"Alfred", ¬
+			"Moom", ¬
+			"SnippetsLab", ¬
+			"Slack", ¬
+			"Mona", ¬
+			"Pastebot", ¬
+			"BBEdit"}
+
+	try
+		set processList to the name of ¬
+			every process whose visible is true as string
+	on error
+		set processList to {}
+	end try
 
 	set activeApp to name of first application process whose frontmost is true as string
 
-	repeat with processName in processList
+	repeat with processName in backgroundsToKill
 		if processName as string is not equal to activeApp then
-			do shell script "Killall " & quoted form of processName
+			try
+				do shell script "Killall " & quoted form of processName
+			end try
 		end if
 	end repeat
 
-	do shell script "Killall CrashReporter"
-end tell
+	repeat with processName in processList
+		if processName as string is not equal to activeApp then
+			try
+				do shell script "Killall " & quoted form of processName
+			end try
+		end if
+	end repeat
 
-tell application "Terminal" to activate
+	try
+		do shell script "Killall CrashReporter"
+	end try
+end tell
 CLOSE_SCRIPT
 }
 
@@ -866,6 +876,9 @@ set deleteAnyway to {¬
 	"upwork.com", ¬
 	"escapistmagazine.com"}
 
+tell application "System Events"
+	set theActiveApp to name of first application process whose frontmost is true as string
+end tell
 (*========================================================================================
  *
  *======================================================================================*)
@@ -1298,11 +1311,10 @@ try
 	tell application "Finder" to delete ((POSIX file p) as alias)
 	tell application "Finder" to empty trash
 end try
-
-(*****************************************************************************************
- * reset Terminal focus
- ****************************************************************************************)
-tell application "Terminal" to activate
+tell application "System Events"
+	set activeApp to name of first application process whose frontmost is true as string
+	do shell script "Killall " & quoted form of activeApp
+end tell
 END
 
 #*****************************************************************************************
@@ -1421,9 +1433,11 @@ rm -f "${HISTFILE}" &>/dev/null
 defaults delete com.apple.Safari IncludeInternalDebugMenu
 
 mkdir -p "$XDG_CACHE_HOME/zsh"
+history -p
+killEverything
+
 if [[ $OCD_OPTION == "" ]]; then
 	finish
-	history -p
 	perl /opt/geedbla/scripts/startup-banner.pl --light
 	osascript <<"END2"
 try
@@ -1450,21 +1464,27 @@ tell application "System Events"
     click group 1 of scroll area 1 of application process "Finder"
 end tell
 END2
-
-exit 0
-fi
-
+else
 #*****************************************************************************************
 # Prepare for shutdown or restart
 #*****************************************************************************************
 nohup osascript <<"SHUTDOWN" > /dev/null 2>&1&; disown
-try
-	do shell script "killall Terminal &>/dev/null"
-end
-delay 2
-if (system attribute "OCD_OPTION" as string) is equal to "off" then
-	tell application "System Events" to shut down
-else
-	tell application "System Events" to restart
-end if
+tell application "System Events"
+	set terminals to {"ghostty", "Terminal"}
+
+	repeat with processName in terminals
+		try
+			do shell script "killall " & quoted form of processName
+			delay 0.1
+		end try
+	end repeat
+
+	if (system attribute "OCD_OPTION" as string) is equal to "off" then
+		tell application "System Events" to shut down
+	else
+		tell application "System Events" to restart
+	end if
+end tell
 SHUTDOWN
+fi
+

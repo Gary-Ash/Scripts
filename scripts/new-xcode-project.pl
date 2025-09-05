@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :
+# Modified :   5-Sep-2025  4:54pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -357,11 +357,8 @@ sub createProjectFileStructure {
         },
         "$TEMPLATE_LOCATION/$projectTemplate"
     );
+	system("unzip -q $TEMPLATE_LOCATION/_Files/Assets.xcassets.zip -d $projectLocation/$projectName/$projectName/Resources/ -x '__MACOSX/*'");
 
-    if (dircopy("$TEMPLATE_LOCATION/_Files/Assets.xcassets", "$projectLocation/$projectName/$projectName/Resources/Assets.xcassets") == 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
-        exit(1);
-    }
     if (dircopy("$TEMPLATE_LOCATION/_Files/BuildEnv", "$projectLocation/$projectName/BuildEnv") == 0) {
         print STDERR "*** Error: disk errpr : $!\n";
         exit(1);

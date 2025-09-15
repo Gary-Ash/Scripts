@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  31-Aug-2025  7:39pm
+# Modified :  12-Sep-2025  6:36pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -252,7 +252,7 @@ for my $item (@specs) {
         $longest = $len;
     }
 }
-print "\ec\e[3J", `tput clear`;
+print  `tput clear`;
 displayLogo();
 
 my $specsColumn = int(($columns - $longest) / 2) + 10;

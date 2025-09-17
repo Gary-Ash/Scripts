@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :   5-Sep-2025  4:54pm
+# Modified :  22-Sep-2025 10:31pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -30,6 +30,8 @@ use File::Copy::Recursive qw(dircopy);
 use POSIX qw(strftime);
 
 use Cwd qw(cwd abs_path);
+
+use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 
 #-----------------------------------------------------------------------------------------
 # constants
@@ -64,7 +66,7 @@ our $companyName = "Gary Ash";
 our $setupGithub       = 1;
 our $openXcode         = 1;
 our $openSourceProject = 1;
-our $inFileLicense     = 1;
+our $inFileLicense     = 0;
 
 # variables that hold the template substitution values
 our @companies;
@@ -77,6 +79,59 @@ our $setFileDateFormat;
 #-----------------------------------------------------------------------------------------
 # utility subroutines
 #-----------------------------------------------------------------------------------------
+
+sub unzipFiles {
+    my ($zip_file, $target_dir) = @_;
+
+    # Check if zip file exists
+    die "Zip file '$zip_file' does not exist\n" unless -f $zip_file;
+
+    # Check if target directory exists
+    die "Target directory '$target_dir' does not exist\n" unless -d $target_dir;
+
+    # Create Archive::Zip object
+    my $zip = Archive::Zip->new();
+
+    # Read the zip file
+    unless ($zip->read($zip_file) == AZ_OK) {
+        die "Error reading zip file '$zip_file'\n";
+    }
+
+    # Extract all files
+    my @members = $zip->members();
+
+    foreach my $member (@members) {
+        my $filename    = $member->fileName();
+        my $output_path = File::Spec->catfile($target_dir, $filename);
+
+        if (not index($filename, '__MACOSX/')) {
+            next;
+        }
+        # Create directory structure if needed
+        if ($member->isDirectory()) {
+            unless (-d $output_path) {
+                mkdir($output_path) or die "Cannot create directory '$output_path': $!\n";
+            }
+        }
+        else {
+            # Ensure parent directory exists
+            my ($volume, $directories, $file) = File::Spec->splitpath($output_path);
+            my $parent_dir = File::Spec->catpath($volume, $directories, '');
+
+            unless (-d $parent_dir) {
+                system("mkdir", "-p", $parent_dir) == 0
+                  or die "Cannot create parent directory '$parent_dir': $!\n";
+            }
+
+            # Extract file
+            unless ($member->extractToFileNamed($output_path) == AZ_OK) {
+                die "Error extracting '$filename' to '$output_path'\n";
+            }
+        }
+    }
+
+    return scalar(@members);
+}
 
 sub wrapText {
     my ($text, $width, $prefix) = @_;
@@ -357,7 +412,9 @@ sub createProjectFileStructure {
         },
         "$TEMPLATE_LOCATION/$projectTemplate"
     );
-	system("unzip -q $TEMPLATE_LOCATION/_Files/Assets.xcassets.zip -d $projectLocation/$projectName/$projectName/Resources/ -x '__MACOSX/*'");
+    my $resourcesDir = `find "$projectLocation/$projectName"  -name "Resources" -type d -print`;
+    chomp($resourcesDir);
+    unzipFiles("$TEMPLATE_LOCATION/_Files/Assets.xcassets.zip", $resourcesDir);
 
     if (dircopy("$TEMPLATE_LOCATION/_Files/BuildEnv", "$projectLocation/$projectName/BuildEnv") == 0) {
         print STDERR "*** Error: disk errpr : $!\n";

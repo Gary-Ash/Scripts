@@ -252,7 +252,7 @@ for my $item (@specs) {
         $longest = $len;
     }
 }
-print  `tput clear`;
+print `tput clear`;
 displayLogo();
 
 my $specsColumn = int(($columns - $longest) / 2) + 10;

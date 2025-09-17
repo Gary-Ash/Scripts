@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :   2-Sep-2025  5:01pm
+# Modified :  16-Sep-2025  7:49pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -184,7 +184,7 @@ find "$HOME/Developer" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name
 
 SUDO_PASSWORD=$(get_sudo_password)
 start_persistant_sudo "$SUDO_PASSWORD"
-sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user
 
 perl /opt/geedbla/scripts/load-simulator.pl
 #****************************************************************************************
@@ -329,6 +329,8 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/Steam",                                                                                           0],
     ["$HOME/Library/Application Support/iLifeMediaBrowser",                                                                               0],
     ["$HOME/Library/Application Support/CrashReporter",                                                                                   0],
+    ["$HOME/Library/Application Support/CallHistoryDB",                                                                               0],
+    ["$HOME/Library/Application Support/CallHistoryTransactions",                                                                                   0],
     ["$HOME/Library/Application Support/dmd",                                                                                             0],
     ["$HOME/Library/Application Support/iMovie",                                                                                          0],
     ["$HOME/Library/Application Support/Translation",                                                                                     0],
@@ -1132,20 +1134,44 @@ end try
 
 (*****************************************************************************************
  * clean up Slack
- ****************************************************************************************)try	tell application "Slack" to activate	delay 0.5		try		tell application "System Events" to tell process "Slack"			tell application "Slack" to activate			delay 3						keystroke "1" using {command down}						repeat 10 times				try					tell application "Slack" to activate					click menu item "All Unreads" of menu 1 of menu bar item "Go" of menu bar 1					delay 0.5					tell application "Slack" to activate					key code 53 using {shift down}					click menu item "Select Next Workspace" of menu of menu item "Workspace" of menu of menu bar item "File" of menu bar 1				end try			end repeat						delay 0.3			tell application "Slack" to activate			keystroke "1" using {command down}			delay 0.3			click menu item "Close Window" of menu 1 of menu bar item "File" of menu bar 1		end tell	end try		try		if (system attribute "OCD_OPTION" as text) is not equal to "" then			tell application "Slack" to quit		end if	end try	end try
-(*****************************************************************************************
- * clean FaceTime
  ****************************************************************************************)
-try
-	tell application "FaceTime"
-		activate
-		tell application "System Events"
-			click menu item "Remove all Recents" of menu of menu bar item "FaceTime" of menu bar of process "FaceTime"
-		end tell
-		quit
-	end tell
-end try
+ try
+	tell application "Slack" to activate
+	delay 0.5
 
+	try
+		tell application "System Events" to tell process "Slack"
+			tell application "Slack" to activate
+			delay 3
+
+			keystroke "1" using {command down}
+
+			repeat 10 times
+				try
+					tell application "Slack" to activate
+					click menu item "All Unreads" of menu 1 of menu bar item "Go" of menu bar 1
+					delay 0.5
+					tell application "Slack" to activate
+					key code 53 using {shift down}
+					click menu item "Select Next Workspace" of menu of menu item "Workspace" of menu of menu bar item "File" of menu bar 1
+				end try
+			end repeat
+
+			delay 0.3
+			tell application "Slack" to activate
+			keystroke "1" using {command down}
+			delay 0.3
+			click menu item "Close Window" of menu 1 of menu bar item "File" of menu bar 1
+		end tell
+	end try
+
+	try
+		if (system attribute "OCD_OPTION" as text) is not equal to "" then
+			tell application "Slack" to quit
+		end if
+	end try
+
+end try
 
 (*****************************************************************************************
  * clean Xcode

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :   5-Sep-2025  4:54pm
+# Modified :  17-Sep-2025  3:50pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -64,7 +64,7 @@ our $companyName = "Gary Ash";
 our $setupGithub       = 1;
 our $openXcode         = 1;
 our $openSourceProject = 1;
-our $inFileLicense     = 1;
+our $inFileLicense     = 0;
 
 # variables that hold the template substitution values
 our @companies;

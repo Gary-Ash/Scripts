@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :
+# Modified :  23-Sep-2025  9:24pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -32,9 +32,6 @@ my $media         = "$HOME/Documents/GeeDblA/Resources/Development/Apple/Simulat
 
 find(\&getSimulators, $simulatorsLoc);
 find(\&addMedia,      $media);
-
-`killall com.apple.CoreSimulator.CoreSimulatorService &> /dev/null`;
-sleep(1);
 
 `xcrun simctl shutdown all;xcrun simctl delete unavailable;xcrun simctl erase all`;
 for my $key (keys %simulators) {

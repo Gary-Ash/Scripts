@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  16-Sep-2025  7:49pm
+# Modified :  25-Sep-2025  7:27pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -106,7 +106,6 @@ SUDO_PASSWORD=$(get_sudo_password)
 error_log="$TMPDIR/Error.txt"
 
 killEverything
-
 cd ~ || return
 
 #*****************************************************************************************
@@ -156,7 +155,6 @@ fi
 if command -v npm &>/dev/null; then
 	npm install -g npm@latest &>"$error_log"
 fi
-
 #*****************************************************************************************
 pkill -f '.*GradleDaemon.*'
 qlmanage -r &>/dev/null
@@ -187,10 +185,12 @@ start_persistant_sudo "$SUDO_PASSWORD"
 sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user
 
 perl /opt/geedbla/scripts/load-simulator.pl
+
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
 #****************************************************************************************
 tmutil stopbackup
+sleep 3
 sudo tmutil disable
 
 #*****************************************************************************************

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  22-Sep-2025 10:31pm
+# Modified :  28-Sep-2025  8:39pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -558,6 +558,6 @@ if ($openXcode) {
 }
 
 if ($setupGithub) {
-    system("cd \"$projectLocation/$projectName/\" && gh repo create \"$projectName\" --private --source=. --remote=upstream");
-    system("rm -rf ~/,local");
+    system("cd \"$projectLocation/$projectName/\" && gh repo create \"$projectName\" --private --source=. --remote=upstream &> /dev/null");
+    system("rm -rf ~/,local &> /dev/null");
 }

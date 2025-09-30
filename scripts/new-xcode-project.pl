@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  28-Sep-2025  8:39pm
+# Modified :   3-Oct-2025  7:48pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -67,6 +67,7 @@ our $setupGithub       = 1;
 our $openXcode         = 1;
 our $openSourceProject = 1;
 our $inFileLicense     = 0;
+our $bundleIdentifier  = "";
 
 # variables that hold the template substitution values
 our @companies;
@@ -221,7 +222,7 @@ sub checkForRequiredTools {
 sub help {
     my $scriptName = basename($PROGRAM_NAME);
 
-    print STDERR "$scriptName <template name> <project name> <location of project> [company]\n\n";
+    print STDERR "$scriptName <template name> <project name> <location of project> [company] [bundle ID]\n\n";
     print STDERR "-cs,\t---closed        \tCreated a project with a closed source license\n";
     print STDERR "-lif,\t--inFileLicense \tAdd the source license to the files\n";
     print STDERR "-ng,\t--no-github      \tDo Not create a GitHub repository\n";
@@ -229,9 +230,34 @@ sub help {
     exit(1);
 }
 
+sub validateBundleIdentifier() {
+    if ($bundleIdentifier eq '') {
+        createBundleIdentifier();
+        return;
+    }
+
+    if ($bundleIdentifier !~ /^(net|com|org)\.[a-z0-9]+$/) {
+        print STDERR "*** Error: Invalid bundle identifer - $bundleIdentifier\n";
+        help();
+    }
+}
+
+sub createBundleIdentifier() {
+    my $convertedCompanyName = lc($companyName);
+    my $convertedProjectName = $projectName;
+
+    $bundleIdentifier = "com.";
+    $convertedCompanyName =~ s/[^A-Za-z0-9]//g;
+    $convertedProjectName =~ s/[^A-Za-z0-9]//g;
+
+    $bundleIdentifier .= $convertedCompanyName;
+    $bundleIdentifier .= ".";
+    $bundleIdentifier .= $convertedProjectName;
+}
+
 sub parseCommandLine {
     my $nameIndex = 0;
-    my @names     = (\$projectTemplate, \$projectName, \$projectLocation, \$companyName);
+    my @names     = (\$projectTemplate, \$projectName, \$projectLocation, \$companyName, \$bundleIdentifier);
 
     if (scalar($#ARGV) > 1) {
         for (my $index = 0; $index < scalar($#ARGV) + 1; ++$index) {
@@ -263,7 +289,7 @@ sub parseCommandLine {
                 #  process a name or location argument
                 #=========================================================================
                 if ($nameIndex > scalar($#names)) {
-                    print STDERR "*** Error: Too much information -- $ARGV[$index]\n";
+                    print STDERR "*** Error: Too many arguments -- $ARGV[$index]\n";
                     help();
                 }
                 else {
@@ -328,6 +354,8 @@ sub parseCommandLine {
         print STDERR "*** Error: project or directory already exists\n";
         exit(1);
     }
+
+    validateBundleIdentifier();
 }
 
 #-----------------------------------------------------------------------------------------
@@ -495,6 +523,14 @@ sub searchReplace {
 
                 if ($extension eq '.pbxproj') {
                     $source =~ s/ORGANIZATIONNAME\s*=\s*.*;/ORGANIZATIONNAME = \"$companyName\";/;
+
+                    if ($source =~ /INFOPLIST_KEY_CFBundleDisplayName\s*=\s*.*;/) {
+                        $source =~ s/INFOPLIST_KEY_CFBundleDisplayName\s*=\s*.*;/INFOPLIST_KEY_CFBundleDisplayName = \"$projectName\";/g;
+                    }
+                    elsif ($source =~ /GENERATE_INFOPLIST_FILE = YES;/) {
+                        $source =~ s/GENERATE_INFOPLIST_FILE = YES;/GENERATE_INFOPLIST_FILE = YES;\n\t\t\tINFOPLIST_KEY_CFBundleDisplayName = \"$projectName\";/g;
+                    }
+                    $source =~ s/PRODUCT_BUNDLE_IDENTIFIER \s*=\s*.*;/PRODUCT_BUNDLE_IDENTIFIER  = $bundleIdentifier;/g;
                     $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Created  :*[^\n|\\n]/Created  :  $timestamp/g;
                     $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Modified :*[^\n|\\n]/Modified :/g;
 

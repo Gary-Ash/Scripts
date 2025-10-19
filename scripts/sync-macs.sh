@@ -15,8 +15,6 @@
 # load utilities from scripting libraries
 #*****************************************************************************************
 autoload get_sudo_password
-autoload start_persistant_sudo
-autoload stop_persistant_sudo
 
 #*****************************************************************************************
 # global variables

@@ -9,7 +9,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :
+# Modified :  21-Oct-2025  4:06pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -48,10 +48,7 @@ sub processFiles {
     open(my $sourcefile, "<$File::Find::name") || die "*** Unable to read the $File::Find::name - $!\n";
     my $source = do { local $/; <$sourcefile> };
     close($sourcefile);
-    $source =~ s/\w*\/\/___FILEHEADER___/___FILEHEADER___/g;
-    $source =~ s/\w*\/\/\w*___FILEHEADER___/___FILEHEADER___/g;
-    $source =~ s/\/\/___FILEHEADER___/___FILEHEADER___/g;
-    $source =~ s/\/\/\w*___FILEHEADER___/___FILEHEADER___/g;
+    $source =~ s{//\s*___FILEHEADER___}{___FILEHEADER___}g;
 
     open($sourcefile, ">$File::Find::name")
       || die "*** Unable to read the $File::Find::name - $!\n";

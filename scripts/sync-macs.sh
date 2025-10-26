@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  19-Aug-2025  9:42pm
+# Modified :  25-Oct-2025 11:05pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -200,6 +200,7 @@ updateXcode() {
 		--exclude="UserData/Portal" \
 		--exclude="UserData/Previews" \
 		--exclude="UserData/XcodeCloud" \
+		--exclude="UserData\CodingAssistant" \
 		--exclude="UserData/IDEEditorInteractivityHistory" \
 		--exclude="UserData/IDEFindNavigatorScopes.plist" \
 		--exclude="/Products" \

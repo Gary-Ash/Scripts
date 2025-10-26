@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :
+# Modified :  25-Oct-2025 11:04pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -62,6 +62,7 @@ buildRepository() {
 		--exclude="UserData/Portal" \
 		--exclude="UserData/Previews" \
 		--exclude="UserData/XcodeCloud" \
+		--exclude="UserData\CodingAssistant" \
 		--exclude="UserData/Provisioning Profiles" \
 		--exclude="UserData/IDEEditorInteractivityHistory" \
 		--exclude="UserData/rovisioning Profiles/" \
@@ -155,6 +156,7 @@ dot-files() {
 	local rawdotfiles
 	local ignore_these=(
 		"$HOME/.config/z"
+		"$HOME/.claude/projects/"
 		"$HOME/.config/zsh/.zsh_history"
 		"$HOME/.config/zsh/zcompdump*"
 		"$HOME/.config/github-copilot"

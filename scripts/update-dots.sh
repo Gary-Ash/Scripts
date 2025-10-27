@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  25-Oct-2025 11:04pm
+# Modified :  27-Oct-2025  4:47pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -28,7 +28,7 @@ updateGitHub() {
 		rm -rf "$HOME/Downloads/dotfiles/"
 	fi
 
-	if git clone --quiet --recurse-submodules git@github.com:Gary-Ash/dot-files.git "$HOME/Downloads/dotfiles/"; then
+	if git clone --quiet --recurse-submodules git@github.com:Gary-Ash/dotfiles.git "$HOME/Downloads/dotfiles/"; then
 		cd "$HOME/Downloads/dotfiles/" || return 1
 		git submodule update --recursive --remote
 

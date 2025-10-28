@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  27-Oct-2025  8:14pm
+# Modified :  27-Oct-2025  8:25pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -269,27 +269,27 @@ our @plistKeysToDelete = (
 # BBEdit
 #*****************************************************************************************
 sub BBEdit {
-my @files = (
-	"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist",
-	"$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",
-);
+    my @files = (
+    	"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist",
+    	"$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",)
+    ;
 
-foreach my $plistFile (@files) {
-    my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
-    if ($plist && $$plist) {
-        my $keyNamesArray = $plist->allKeys();
-        my $items         = $keyNamesArray->count;
-        for (my $index = 0; $index < $items; ++$index) {
-            my $key = $keyNamesArray->objectAtIndex_($index)->UTF8String();
-            if (   rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
-                || rindex($key, "ImageDisplayGrayLevel_", 0) != -1)
-            {
-                $plist->removeObjectForKey_($key);
+    foreach my $plistFile (@files) {
+        my $plist = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
+        if ($plist && $$plist) {
+            my $keyNamesArray = $plist->allKeys();
+            my $items         = $keyNamesArray->count;
+            for (my $index = 0; $index < $items; ++$index) {
+                my $key = $keyNamesArray->objectAtIndex_($index)->UTF8String();
+                if (   rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
+                    || rindex($key, "ImageDisplayGrayLevel_", 0) != -1)
+                {
+                    $plist->removeObjectForKey_($key);
+                }
             }
+            unlink($plistFile);
+            $plist->writeToFile_atomically_($plistFile, "0");
         }
-        unlink($plistFile);
-        $plist->writeToFile_atomically_($plistFile, "0");
-    }
     }
 }
 

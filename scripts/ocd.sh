@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  27-Oct-2025  8:25pm
+# Modified :  30-Oct-2025  4:32pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -270,9 +270,13 @@ our @plistKeysToDelete = (
     "IDELibrary.lastSelectedLibraryExtensionIDByEditorID",            "IBGlobalLastEditorTargetRuntime",                                "CurrentAlertPreferencesSelection",                                                                                      "DVTRecentCustomColors",                                         "IDEProvisioningTeamManagerLastSelectedTeamID",                 "BKRecentsLastCleared",
     "BKPreviouslyOpenedBookIDs",                                      "RecentMoveAndCopyDestinations",                                  "DownloadsFolderListViewSettingsVersion",                                                                                "recent_viewed",                                                 "RecentsArrangeGroupViewBy",                                    "IDEAppChooserRecentApplications-My Mac",
     "RecentRegions",                                                  "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS",      "lastSource",                                                                                                            "lastReplacement",                                               "lastRegex",                                                    "TSARecentOpenedDocumentTimestamps",
-    "TSAOpenedTemplates.Numbers",                                     "RecentItemsData",                                                "TSAOpenedTemplates.Pages",                                                                                              "FindDialog_SearchReplaceHistory",                               "ApplicationSleepState",                                        "ApplicationAutoSaveState",
-    "CurrentWorkspaceDocumentName",                                   "FindDialog_SelectedSourceNodes",									"NSOSPLastRootDirectory",
+    "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
+    "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
+    "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
+    "ApplicationAutoSaveState",
 );
+
+
 
 our @itemsToDelete = (
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments",                  0],
@@ -281,6 +285,7 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentApplications.sfl3",                     0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentServers.sfl3",                          0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentHosts.sfl3",                            0],
+    ["$HOME/Application Support/zoxide/", 																								  1],
     ["$HOME/Library/Preferences/com.googlecode.iterm2.private.plist",                                                                     0],
     ["$HOME/Library/Preferences/com.apple.dock.extra.plist",                                                                              0],
     ["$HOME/Library/Preferences/us.zoom.ZoomClips.plist",                                                                                 0],
@@ -373,6 +378,7 @@ our @itemsToDelete = (
     ["$HOME/Library/Developer/Xcode/Archives",                                                                                            0],
     ["$HOME/Library/Developer/Xcode/snapshots",                                                                                           0],
     ["$HOME/Library/Developer/Xcode/UserData/*.xcuserstate",                                                                              1],
+    ["$HOME/Library/Developer/Xcode/UserData/CodingAssistant",                                                                            1],
     ["$HOME/Library/Developer/Xcode/UserData/IDEEditorInteractivityHistory",                                                              0],
     ["$HOME/Library/Application Support/Alfred/Caches",                                                                                   1],
     ["$HOME/Library/Application Support/Alfred/Workflow Data",                                                                            1],
@@ -573,8 +579,8 @@ sub sublimeMerge {
 sub BBEdit {
     my @files = (
     	"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist",
-    	"$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",)
-    ;
+    	"$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",
+    );
 
     foreach my $plistFile (@files) {
         my $plist = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
@@ -650,7 +656,6 @@ sub plists {
         };
     }
     find(\&processFiles, "$HOME/Library/Containers/");
-    find(\&processFiles, "$HOME/Library/SyncedPreferences/");
 }
 
 #*****************************************************************************************

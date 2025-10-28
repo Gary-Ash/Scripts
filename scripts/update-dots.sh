@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  27-Oct-2025  8:25pm
+# Modified :  29-Oct-2025  3:42pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -57,12 +57,12 @@ buildRepository() {
 	done
 
 	dot-files "$HOME/Downloads/dotfiles/home" "*"
-	rsync -arz -E --exclude="UserData/IB Support" \
+	rsync -arcz -E --exclude="UserData/IB Support" \
 		--exclude="UserData/Capabilities" \
 		--exclude="UserData/Portal" \
 		--exclude="UserData/Previews" \
 		--exclude="UserData/XcodeCloud" \
-		--exclude="UserData\CodingAssistant" \
+		--exclude="UserData/CodingAssistant" \
 		--exclude="UserData/Provisioning Profiles" \
 		--exclude="UserData/IDEEditorInteractivityHistory" \
 		--exclude="UserData/rovisioning Profiles/" \
@@ -78,7 +78,7 @@ buildRepository() {
 		--exclude="/DocumentationCache" \
 		"$HOME/Library/Developer/Xcode/" "$HOME/Downloads/dotfiles/xcode/" &>/dev/null >/dev/null
 
-	rsync -arz -E --exclude="Index" \
+	rsync -arcz -E --exclude="Index" \
 		--exclude="Cache" \
 		--exclude="Installed Packages" \
 		--exclude="Lib" \
@@ -91,16 +91,16 @@ buildRepository() {
 		--exclude="Local/Session.sublime_session" \
 		"$HOME/Library/Application Support/Sublime Text" "$HOME/Downloads/dotfiles" &>/dev/null >/dev/null
 
-	rsync -arz -E --exclude="Package Control.cache" \
+	rsync -arcz -E --exclude="Package Control.cache" \
 		--exclude="oscrypto-ca-bundle.crt" \
 		--exclude="Package Control.last-run" \
 		--exclude="*-ca-bundle" \
 		--exclude="sublime_geedbla_environment.txt" \
 		"$HOME/Library/Application Support/Sublime Text/Packages/User" "$HOME/Downloads/dotfiles/Sublime Text/Packages" &>/dev/null >/dev/null
 
-	rsync -arz -E --exclude="*.pdf" "$HOME/Library/Application Support/BBEdit" "$HOME/Downloads/dotfiles" &>/dev/null
+	rsync -arcz -E --exclude="*.pdf" "$HOME/Library/Application Support/BBEdit" "$HOME/Downloads/dotfiles" &>/dev/null
 
-	rsync -arz -E --exclude="Lib" \
+	rsync -arcz -E --exclude="Lib" \
 		--exclude="Index" \
 		--exclude="Log" \
 		--exclude="Cache" \
@@ -207,7 +207,7 @@ dot-files() {
 			basecmd="sshpass -p ${password} rsync -az "
 			1="$USER@$computer:$HOME/"
 		else
-			basecmd="rsync -az "
+			basecmd="rsync -acz "
 		fi
 	fi
 	for exclude in "${ignore_these[@]}"; do
@@ -230,7 +230,7 @@ dot-files() {
 # script main line
 #*****************************************************************************************
 
-perl <<'PERL' &>/dev/null
+perl <<'PERL' #&>/dev/null
 #!/usr/bin/env perl
 #*****************************************************************************************
 # libraries used
@@ -238,6 +238,7 @@ perl <<'PERL' &>/dev/null
 use strict;
 use warnings;
 use Foundation;
+use File::Find;
 
 our $HOME = $ENV{'HOME'};
 
@@ -261,9 +262,37 @@ our @plistKeysToDelete = (
     "IDELibrary.lastSelectedLibraryExtensionIDByEditorID",            "IBGlobalLastEditorTargetRuntime",                                "CurrentAlertPreferencesSelection",                                                                                      "DVTRecentCustomColors",                                         "IDEProvisioningTeamManagerLastSelectedTeamID",                 "BKRecentsLastCleared",
     "BKPreviouslyOpenedBookIDs",                                      "RecentMoveAndCopyDestinations",                                  "DownloadsFolderListViewSettingsVersion",                                                                                "recent_viewed",                                                 "RecentsArrangeGroupViewBy",                                    "IDEAppChooserRecentApplications-My Mac",
     "RecentRegions",                                                  "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS",      "lastSource",                                                                                                            "lastReplacement",                                               "lastRegex",                                                    "TSARecentOpenedDocumentTimestamps",
-    "TSAOpenedTemplates.Numbers",                                     "RecentItemsData",                                                "TSAOpenedTemplates.Pages",                                                                                              "FindDialog_SearchReplaceHistory",                               "ApplicationSleepState",                                        "ApplicationAutoSaveState",
-    "CurrentWorkspaceDocumentName",                                   "FindDialog_SelectedSourceNodes",									"NSOSPLastRootDirectory",
+    "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
+    "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
+    "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
+    "ApplicationAutoSaveState",
 );
+
+
+#*****************************************************************************************
+# process the plists in the Containers folder
+#*****************************************************************************************
+sub processFiles {
+    if ($File::Find::name =~ /\.plist$/) {
+        eval {
+            my $plistData = NSMutableDictionary->dictionaryWithContentsOfFile_($File::Find::name);
+            foreach my $key (@plistKeysToDelete) {
+                $plistData->removeObjectForKey_($key);
+            }
+
+            my $valuesDic = $plistData->objectForKey_("values");
+            if ($valuesDic && $$valuesDic) {
+                my $valuesDicM = $valuesDic->mutableCopy;
+                foreach my $key (@plistKeysToDelete) {
+                    $valuesDicM->removeObjectForKey_($key);
+                }
+                $plistData->setObject_forKey_($valuesDicM, "values");
+            }
+
+            $plistData->writeToFile_atomically_($File::Find::name, "0");
+        };
+    }
+}
 
 #*****************************************************************************************
 # BBEdit
@@ -271,8 +300,8 @@ our @plistKeysToDelete = (
 sub BBEdit {
     my @files = (
     	"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist",
-    	"$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",)
-    ;
+    	"$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",
+    );
 
     foreach my $plistFile (@files) {
         my $plist = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
@@ -308,13 +337,12 @@ sub plists {
         };
     }
     find(\&processFiles, "$HOME/Library/Containers/");
-    find(\&processFiles, "$HOME/Library/SyncedPreferences/");
 }
 
 #*****************************************************************************************
 # script main line
 #*****************************************************************************************
-plist();
+plists();
 BBEdit();
 PERL
 

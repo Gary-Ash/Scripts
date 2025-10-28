@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  25-Oct-2025 11:05pm
+# Modified :  28-Oct-2025 11:00pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -187,20 +187,20 @@ updatePreferences() {
 }
 
 updateGeeDblA() {
-	sshpass -p "$password" rsync -arz -E --inplace \
+	sshpass -p "$password" rsync -arcz -E \
 		--exclude="venv" \
 		--delete \
 		"/opt/geedbla" "$remote:/opt/" &>/dev/null
 
 }
 updateXcode() {
-	sshpass -p "$password" rsync -arz -E --inplace \
+	sshpass -p "$password" rsync -arcz -E --inplace \
 		--exclude="UserData/Capabilities" \
 		--exclude="UserData/IB Support" \
 		--exclude="UserData/Portal" \
 		--exclude="UserData/Previews" \
 		--exclude="UserData/XcodeCloud" \
-		--exclude="UserData\CodingAssistant" \
+		--exclude="UserData/CodingAssistant" \
 		--exclude="UserData/IDEEditorInteractivityHistory" \
 		--exclude="UserData/IDEFindNavigatorScopes.plist" \
 		--exclude="/Products" \
@@ -219,7 +219,7 @@ updateXcode() {
 
 updateBBEdit() {
 	if [[ -d "$HOME/Library/Application Support/BBEdit" ]]; then
-		sshpass -p "$password" rsync -arz -E --inplace --rsh=ssh \
+		sshpass -p "$password" rsync -arcz -E --rsh=ssh \
 			--exclude="BBEdit User Manual *.pdf" \
 			--delete \
 			"$HOME/Library/Application Support/BBEdit" \
@@ -229,7 +229,7 @@ updateBBEdit() {
 
 updateSublime() {
 	if [[ -d "$HOME/Library/Application Support/Sublime Text" ]]; then
-		sshpass -p "$password" rsync -arz -E --inplace --rsh=ssh \
+		sshpass -p "$password" rsync -arcz -E --rsh=ssh \
 			--exclude="Index" \
 			--exclude="Cache" \
 			--exclude="User/oscrypto-ca-bundle.crt" \
@@ -239,7 +239,7 @@ updateSublime() {
 	fi
 
 	if [[ -d "$HOME/Library/Application Support/Sublime Merge" ]]; then
-		sshpass -p "$password" rsync -arz -E --inplace --rsh=ssh \
+		sshpass -p "$password" rsync -arcz -E --rsh=ssh \
 			--exclude="Cache" \
 			--exclude="User/oscrypto-ca-bundle.crt" \
 			--delete \
@@ -333,7 +333,7 @@ dot-files() {
 			basecmd="sshpass -p \"${password}\""" rsync -az "
 			1="\"$USER@$computer:$HOME/\""
 		else
-			basecmd="rsync -az "
+			basecmd="rsync -azc "
 		fi
 	fi
 	for exclude in "${ignore_these[@]}"; do

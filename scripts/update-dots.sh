@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  27-Oct-2025  4:47pm
+# Modified :  27-Oct-2025  8:14pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -229,6 +229,95 @@ dot-files() {
 #*****************************************************************************************
 # script main line
 #*****************************************************************************************
+
+perl <<'PERL' &>/dev/null
+#!/usr/bin/env perl
+#*****************************************************************************************
+# libraries used
+#*****************************************************************************************
+use strict;
+use warnings;
+use Foundation;
+
+our $HOME = $ENV{'HOME'};
+
+our @plistKeysToDelete = (
+    "NewBookmarksLocationUUID",                                       "RecentSearchStrings",                                            "FXRecentFolders",                                                                                                       "GoToField",                                                     "RecentApplications",                                           "RecentDocuments",
+    "RecentServers",                                                  "Hosts",                                                          "ExpandedURLs",                                                                                                          "last_textureFileName",                                          "FXRecentFolders",                                              "FXLastSearchScope",
+    "GoToField",                                                      "NSNavPanel",                                                     "NSNavRecentPlaces",                                                                                                     "NSNavLastRootDirectory",                                        "NSNavLastCurrentDirectory",                                    "RecentSearchStrings",
+    "LRUDocumentPaths",                                               "TSAOpenedTemplates.Pages",                                       "NSReplacePboard",                                                                                                       "ExpandedURLs",                                                  "SelectedURLs",                                                 "NSReplacePboard",
+    "Apple CFPasteboard find",                                        "Apple CFPasteboard replace",                                     "Apple CFPasteboard general",                                                                                            "findHistory",                                                   "replaceHistory",                                               "MGRecentURLPropertyLists",
+    "OakFindPanelOptions",                                            "Folder Search Options",                                          "recentFileList",                                                                                                        "RecentDirectories",                                             "NSRecentXCProjectDocuments",                                   "last_dataFileName",
+    "lastSpritesFolder",                                              "main.lastFileName",                                              "defaults.settingsAbsPath",                                                                                              "main.lastFileName",                                             "DefaultCheckOutDirectory",                                     "RecentWorkingCopies",
+    "kProjectBasePath",                                               "LastOpenedScene",                                                "ABBookWindowController-MainBookWindow-personListController",                                                            "IDEFileTemplateChooserAssistantSelectedTemplateCategory",       "IDEFileTemplateChooserAssistantSelectedTemplateName",          "IDERecentEditorDocuments",
+    "XCOpenWorkspaceDocuments",                                       "IDETemplateCompletionDefaultPath",                               "IDETemplateOptions",                                                                                                    "IDEDefaultPrimaryEditorFrameSizeForPaths",                      "IDEDocViewerLastViewedURLKey",                                 "IDESourceControlRecentsFavoritesRepositoriesUserDefaultsKey",
+    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateCategory",  "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName",      "Xcode3TargetTemplateChooserAssistantSelectedTemplateCategory",                                                          "Xcode3TargetTemplateChooserAssistantSelectedTemplateName",      "Xcode3ProjectTemplateChooserAssistantSelectedTemplateSection", "recentFileList",
+    "lastSpritesFolder",                                              "main.lastFileName",                                              "last_name",                                                                                                             "last_textureFileName",                                          "findRecentPlaces",                                             "RecentWebSearches",
+    "recentSearches",                                                 "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_macOS", "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_iOS",                                                          "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_tvOS", "SGTRecentFileSearches",                                        "IDEFileTemplateChooserAssistantSelectedTemplateSection",
+    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_tvOS", "IDEFileTemplateChooserAssistantSelectedTemplateName_tvOS",       "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection3ProjectTemplateChooserAssistantSelectedTemplateName_macOS", "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_iOS", "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection",  "DVTTextCompletionRecentCompletions",
+    "GoToFieldHistory",                                               "HistoryColors",                                                  "recentSearches",                                                                                                        "recentSearchHints",                                             "IDETemplateCompletionDefaultPath",                             "SHKRecentServices",
+    "FavoriteColors",                                                 "LastSetWindowSizeForDocument",                                   "recentCatalogPaths",                                                                                                    "IDELastBreakpointActionClassName",                              "RecentFindStrings",                                            "IDEFileTemplateChooserAssistantSelectedTemplateName_iOS",
+    "RecentReplaceStrings",                                           "IDESwiftMigrationAssistantReviewFilesSelectedChoice",            "IDERunActionSelectedTab",                                                                                               "DVTIgnoredDevices",                                             "IBGlobalLastEditorDocumentClassName",                          "IBDocumentOutlineViewMode",
+    "IDELibrary.lastSelectedLibraryExtensionIDByEditorID",            "IBGlobalLastEditorTargetRuntime",                                "CurrentAlertPreferencesSelection",                                                                                      "DVTRecentCustomColors",                                         "IDEProvisioningTeamManagerLastSelectedTeamID",                 "BKRecentsLastCleared",
+    "BKPreviouslyOpenedBookIDs",                                      "RecentMoveAndCopyDestinations",                                  "DownloadsFolderListViewSettingsVersion",                                                                                "recent_viewed",                                                 "RecentsArrangeGroupViewBy",                                    "IDEAppChooserRecentApplications-My Mac",
+    "RecentRegions",                                                  "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS",      "lastSource",                                                                                                            "lastReplacement",                                               "lastRegex",                                                    "TSARecentOpenedDocumentTimestamps",
+    "TSAOpenedTemplates.Numbers",                                     "RecentItemsData",                                                "TSAOpenedTemplates.Pages",                                                                                              "FindDialog_SearchReplaceHistory",                               "ApplicationSleepState",                                        "ApplicationAutoSaveState",
+    "CurrentWorkspaceDocumentName",                                   "FindDialog_SelectedSourceNodes",									"NSOSPLastRootDirectory",
+);
+
+#*****************************************************************************************
+# BBEdit
+#*****************************************************************************************
+sub BBEdit {
+my @files = (
+	"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist",
+	"$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",
+);
+
+foreach my $plistFile (@files) {
+    my $plist     = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
+    if ($plist && $$plist) {
+        my $keyNamesArray = $plist->allKeys();
+        my $items         = $keyNamesArray->count;
+        for (my $index = 0; $index < $items; ++$index) {
+            my $key = $keyNamesArray->objectAtIndex_($index)->UTF8String();
+            if (   rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
+                || rindex($key, "ImageDisplayGrayLevel_", 0) != -1)
+            {
+                $plist->removeObjectForKey_($key);
+            }
+        }
+        unlink($plistFile);
+        $plist->writeToFile_atomically_($plistFile, "0");
+    }
+    }
+}
+
+#*****************************************************************************************
+# process the plists in the Preferences folder
+#*****************************************************************************************
+sub plists {
+    `killall Dock Finder`;
+    foreach my $plistFile (glob "$HOME/Library/Preferences/*.plist") {
+        eval {
+            my $plistData = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
+            foreach my $key (@plistKeysToDelete) {
+                $plistData->removeObjectForKey_($key);
+            }
+            $plistData->writeToFile_atomically_($plistFile, "0");
+        };
+    }
+    find(\&processFiles, "$HOME/Library/Containers/");
+    find(\&processFiles, "$HOME/Library/SyncedPreferences/");
+}
+
+#*****************************************************************************************
+# script main line
+#*****************************************************************************************
+plist();
+BBEdit();
+PERL
+
 format-project.sh "/opt/geedbla"
 
 if [ $# -gt 0 ]; then

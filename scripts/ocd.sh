@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  25-Sep-2025  7:27pm
+# Modified :  27-Oct-2025  8:00pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -271,7 +271,7 @@ our @plistKeysToDelete = (
     "BKPreviouslyOpenedBookIDs",                                      "RecentMoveAndCopyDestinations",                                  "DownloadsFolderListViewSettingsVersion",                                                                                "recent_viewed",                                                 "RecentsArrangeGroupViewBy",                                    "IDEAppChooserRecentApplications-My Mac",
     "RecentRegions",                                                  "IDEFileTemplateChooserAssistantSelectedTemplateName_macOS",      "lastSource",                                                                                                            "lastReplacement",                                               "lastRegex",                                                    "TSARecentOpenedDocumentTimestamps",
     "TSAOpenedTemplates.Numbers",                                     "RecentItemsData",                                                "TSAOpenedTemplates.Pages",                                                                                              "FindDialog_SearchReplaceHistory",                               "ApplicationSleepState",                                        "ApplicationAutoSaveState",
-    "CurrentWorkspaceDocumentName",                                   "FindDialog_SelectedSourceNodes",
+    "CurrentWorkspaceDocumentName",                                   "FindDialog_SelectedSourceNodes",									"NSOSPLastRootDirectory",
 );
 
 our @itemsToDelete = (

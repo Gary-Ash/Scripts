@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  30-Oct-2025  4:32pm
+# Modified :   9-Nov-2025  8:09pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -171,6 +171,7 @@ while read -r gitDir; do
 	git gc --aggressive --prune=now &>/dev/null
 done < <(echo "${raw}")
 
+
 find "$HOME/Developer" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 find "$HOME/Documents" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 
@@ -180,11 +181,12 @@ find "/Users/Shared/CleanMyMac_5/" -depth 1 ! -name ".licence" -exec rm -rfv {} 
 find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 find "$HOME/Developer" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 
+perl /opt/geedbla/scripts/load-simulator.pl
+
 SUDO_PASSWORD=$(get_sudo_password)
 start_persistant_sudo "$SUDO_PASSWORD"
 sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user
 
-perl /opt/geedbla/scripts/load-simulator.pl
 
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
@@ -222,8 +224,7 @@ emulate sh -c 'rm -rf "$(getconf DARWIN_USER_DIR)/com.apple.notificationcenter/"
 #*****************************************************************************************
 # clean system Finder settings crap
 #*****************************************************************************************
-sudo find /usr/local -type f -name ".DS_Store" -delete &>/dev/null
-sudo find /opt -type f -name ".DS_Store" -delete &>/dev/null
+sudo find / -xdev -type f -name ".DS_Store" ! -path "$HOME/.DS_Store" -delete &> /dev/null
 
 echo -n '' | pbcopy
 
@@ -334,8 +335,8 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/Steam",                                                                                           0],
     ["$HOME/Library/Application Support/iLifeMediaBrowser",                                                                               0],
     ["$HOME/Library/Application Support/CrashReporter",                                                                                   0],
-    ["$HOME/Library/Application Support/CallHistoryDB",                                                                               0],
-    ["$HOME/Library/Application Support/CallHistoryTransactions",                                                                                   0],
+    ["$HOME/Library/Application Support/CallHistoryDB",                                                                                   0],
+    ["$HOME/Library/Application Support/CallHistoryTransactions",                                                                         0],
     ["$HOME/Library/Application Support/dmd",                                                                                             0],
     ["$HOME/Library/Application Support/iMovie",                                                                                          0],
     ["$HOME/Library/Application Support/Translation",                                                                                     0],

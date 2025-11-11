@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  28-Oct-2025 11:00pm
+# Modified :  10-Nov-2025  4:15pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -187,12 +187,9 @@ updatePreferences() {
 }
 
 updateGeeDblA() {
-	sshpass -p "$password" rsync -arcz -E \
-		--exclude="venv" \
-		--delete \
-		"/opt/geedbla" "$remote:/opt/" &>/dev/null
-
+	sshpass -p "$password" rsync -arcz -E --delete "/opt/geedbla" "$remote:/opt/" &>/dev/null
 }
+
 updateXcode() {
 	sshpass -p "$password" rsync -arcz -E --inplace \
 		--exclude="UserData/Capabilities" \

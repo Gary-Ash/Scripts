@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :   9-Nov-2025  8:09pm
+# Modified :  19-Nov-2025  3:15pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -274,7 +274,7 @@ our @plistKeysToDelete = (
     "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
     "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
-    "ApplicationAutoSaveState",
+    "ApplicationAutoSaveState",										  "LastOpenByNameString",
 );
 
 

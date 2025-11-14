@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  15-Sep-2025  9:27pm
+# Modified :  13-Nov-2025  7:26pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -25,9 +25,8 @@ $| = 1;
 #*****************************************************************************************
 # global variables
 #*****************************************************************************************
-my $theme           = 1;
-my $columns         = `tput cols`;
-my $imageFileExists = 0;
+my $theme   = 1;
+my $columns = `tput cols`;
 
 #*****************************************************************************************
 # parse command line
@@ -253,7 +252,6 @@ for my $item (@specs) {
     }
 }
 print `tput clear`;
-displayLogo();
 
 my $specsColumn = int(($columns - $longest) / 2) + 10;
 for my $text (@specs) {
@@ -267,62 +265,50 @@ for my $text (@specs) {
     ++$specsLine;
 }
 
-if ($imageFileExists == 0) {
-    $specsLine += 4;
-}
-print "\033[$specsLine;1H\n";
+displayLogo();
 
 sub displayLogo {
-    my $filename = "/opt/geedbla/pictures/apple-logo.png";
+    my $filename         = "/opt/geedbla/pictures/apple-logo.png";
+    my $graphics_program = "/opt/homebrew/bin/viu";
 
-    if (-e $filename && (defined $ENV{"TERM_PROGRAM"} && $ENV{"TERM_PROGRAM"} ne "Apple_Terminal")) {
-        $imageFileExists = 1;
+    if (   -e $filename
+        && -e $graphics_program
+        && (defined $ENV{"TERM_PROGRAM"} && $ENV{"TERM_PROGRAM"} ne "Apple_Terminal"))
+    {
+        print "\033[0;0H";
         system("viu -w 38 -h 10 $filename");
     }
     else {
-        my $logoLine = 0;
-        while (defined(my $logoText = <DATA>)) {
-            chomp $logoText;
-            my $commaIndex = index($logoText, ",");
-            my $color      = substr($logoText, 0, $commaIndex);
-            $color =~ s/\s+$//;
+        print "\033[0;0H
+\033[38;5;034m                                        @@
+\033[38;5;034m                                    @@@@@@
+\033[38;5;034m                                 @@@@@@@@
+\033[38;5;034m                               @@@@@@@@@@
+\033[38;5;034m                              @@@@@@@@@@
+\033[38;5;034m                             @@@@@@@@@@
+\033[38;5;034m                             @@@@@@@@
+\033[38;5;034m                            @@@@@@
+\033[38;5;034m                            @@
+\033[38;5;034m           @@@@@@@@@@@@        @@@@@@@@@@@@@@@
+\033[38;5;034m        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;034m      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;034m    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;226m   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;226m  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;208m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;208m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;196m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;196m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;196m  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;196m   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;129m    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;129m     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;129m      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;038m        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;038m          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;038m            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+\033[38;5;038m              @@@@@@@@@          @@@@@@@@@
 
-            $color = "\033[38;5;160m" if ($color eq "RED");
-            $color = "\033[38;5;40m"  if ($color eq "GREEN");
-            $color = "\033[38;5;33m"  if ($color eq "BLUE");
-            $color = "\033[38;5;226m" if ($color eq "YELLOW" && $theme == 0);
-            $color = "\033[38;5;142m" if ($color eq "YELLOW" && $theme == 1);
-            $color = "\033[38;5;208m" if ($color eq "ORANGE");
-            $color = "\033[38;5;129m" if ($color eq "PURPLE");
-
-            $logoText = substr($logoText, $commaIndex + 1);
-
-            print "\033[${logoLine};4H${color}${logoText}${normalInfoText}";
-            ++$logoLine;
-        }
-        $imageFileExists = 0;
-    }
-    if ($batteryData =~ /InternalBattery/) {
-        --$specsLine;
+";
     }
 }
-
-#*****************************************************************************************
-# Data
-#*****************************************************************************************
-__DATA__
-GREEN,            ###
-GREEN,           ###
-GREEN,         ###
-GREEN,  #######    #######
-YELLOW,######################
-YELLOW,#####################
-ORANGE,####################
-ORANGE,####################
-RED   ,#####################
-RED   ,######################
-PURPLE, ####################
-PURPLE,  ##################
-BLUE  ,   ################
-BLUE  ,     ####    #####
-####

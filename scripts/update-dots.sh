@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  29-Oct-2025  3:42pm
+# Modified :  19-Nov-2025  3:32pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -156,13 +156,14 @@ dot-files() {
 	local rawdotfiles
 	local ignore_these=(
 		"$HOME/.config/z"
-		"$HOME/.claude/projects/"
+		"$HOME/.claude/"
 		"$HOME/.config/zsh/.zsh_history"
 		"$HOME/.config/zsh/zcompdump*"
 		"$HOME/.config/github-copilot"
 		"$HOME/.config/thefuck/__pycache__"
 		"$HOME/.config/iterm2"
-		"$HOME/.config/.swiftpm"
+		"$HOME/.config/.swiftpm/"
+		"$HOME/.config/swiftpm/"
 		"$HOME/.dropbox"
 		"$HOME/.hawtjni"
 		"$HOME/.gem"
@@ -265,7 +266,7 @@ our @plistKeysToDelete = (
     "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
     "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
-    "ApplicationAutoSaveState",
+    "ApplicationAutoSaveState",										  "LastOpenByNameString",
 );
 
 

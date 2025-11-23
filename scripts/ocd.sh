@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  19-Nov-2025  3:15pm
+# Modified :   2-Dec-2025  9:56pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -29,6 +29,17 @@ finish() {
 	fi
 }
 
+is_crashreporter_running() {
+  local caller_lineno="$1"
+
+  if pgrep -x "CrashReporter.app" >/dev/null; then
+  	echo "Line number $caller_lineno"
+    return 1   # true / success — CrashReporter is running
+  else
+    return 0  # false / failure — CrashReporter is not running
+  fi
+}
+
 #*****************************************************************************************
 # kill applications
 #*****************************************************************************************
@@ -38,6 +49,7 @@ tell application "System Events"
 	set backgroundsToKill to ¬
 		{"Keyboard Maestro Engine", ¬
 			"Dock", ¬
+			"Bartender 6", ¬
 			"Safari", ¬
 			"Finder", ¬
 			"Dash", ¬
@@ -79,6 +91,7 @@ tell application "System Events"
 	end try
 end tell
 CLOSE_SCRIPT
+is_crashreporter_running "$LINENO"
 }
 
 #-----------------------------------------------------------------------------------------
@@ -112,11 +125,6 @@ cd ~ || return
 # brew
 #*****************************************************************************************
 if command -v brew &>/dev/null; then
-	SUDO_PASSWORD=$(get_sudo_password)
-	start_persistant_sudo "$SUDO_PASSWORD"
-	sudo chmod -R 777 /Applications/* &>/dev/null
-	stop_persistant_sudo
-
 	brew update &>"$error_log"
 	brew upgrade &>"$error_log"
 	brew upgrade --cask &>"$error_log"
@@ -124,6 +132,7 @@ if command -v brew &>/dev/null; then
 	brew cleanup &>"$error_log"
 	rm -rf $(brew --cache) &>/dev/null
 
+is_crashreporter_running "$LINENO"
 	SUDO_PASSWORD=$(get_sudo_password)
 	start_persistant_sudo "$SUDO_PASSWORD"
 
@@ -131,6 +140,8 @@ if command -v brew &>/dev/null; then
 	sudo chown -R root:admin /Applications/* &>/dev/null
 	sudo chmod -R 775 /Applications/* &>/dev/null
 	stop_persistant_sudo
+
+	is_crashreporter_running "$LINENO"
 fi
 
 #*********************************************************************************
@@ -140,7 +151,7 @@ if command -v gem &>/dev/null; then
 	gem update &>"$error_log"
 	gem cleanup &>"$error_log"
 fi
-
+is_crashreporter_running "$LINENO"
 #*********************************************************************************
 # python 3 update
 #*********************************************************************************
@@ -148,7 +159,7 @@ if command -v pip3 &>/dev/null; then
 	python3 -m pip install --upgrade pip &>"$error_log"
 	pip3 install -U $(pip3 freeze | cut -d = -f 1) &>"$error_log"
 fi
-
+is_crashreporter_running "$LINENO"
 #*****************************************************************************************
 # npm update
 #*****************************************************************************************
@@ -159,7 +170,11 @@ fi
 pkill -f '.*GradleDaemon.*'
 qlmanage -r &>/dev/null
 
+start_persistant_sudo
+
 find "$HOME" -name "Icon?" -exec chflags hidden {} \; &>/dev/null
+is_crashreporter_running "$LINENO"
+
 #*****************************************************************************************
 # clean my git projects
 #*****************************************************************************************
@@ -171,30 +186,25 @@ while read -r gitDir; do
 	git gc --aggressive --prune=now &>/dev/null
 done < <(echo "${raw}")
 
-
 find "$HOME/Developer" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 find "$HOME/Documents" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
-
+is_crashreporter_running "$LINENO"
 find "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Preferencesc" -name "Keyboard Maestro Macros \(*.kmsync" -delete &>/dev/null
 find "$HOME/Library/Application Support/AddressBook" -name "*.abbu.tbz" -delete &>/dev/null
 find "/Users/Shared/CleanMyMac_5/" -depth 1 ! -name ".licence" -exec rm -rfv {} \; &>/dev/null
 find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 find "$HOME/Developer" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
+is_crashreporter_running "$LINENO"
+perl /opt/geedbla/scripts/load-simulator.pl &
 
-perl /opt/geedbla/scripts/load-simulator.pl
-
-SUDO_PASSWORD=$(get_sudo_password)
-start_persistant_sudo "$SUDO_PASSWORD"
 sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user
-
-
+is_crashreporter_running "$LINENO"
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
 #****************************************************************************************
 tmutil stopbackup
-sleep 3
 sudo tmutil disable
-
+is_crashreporter_running "$LINENO"
 #*****************************************************************************************
 # empty trash
 #*****************************************************************************************
@@ -203,6 +213,7 @@ emulate sh -c 'sudo rm -rf /Volumes/*/.Trashes' &>/dev/null
 emulate sh -c 'sudo rm -rf ~/.Trash /Volumes/*/.Trashes' &>/dev/null
 
 rm -rf "$HOME/Library/Mobile Documents/com~apple~CloudDocs/.Trash"
+is_crashreporter_running "$LINENO"
 
 #*****************************************************************************************
 # clean up Time Machine local backups and turn it back on
@@ -213,19 +224,12 @@ for snapshot in ${snapshots[*]}; do
 	snapshot="${snapshot%% *}"
 	sudo tmutil deletelocalsnapshots "$snapshot" &>/dev/null
 done
-
-#*****************************************************************************************
-# notification center clean
-#*****************************************************************************************
-sudo killall "NotificationCenter"
-sudo killall usernoted
-emulate sh -c 'rm -rf "$(getconf DARWIN_USER_DIR)/com.apple.notificationcenter/"* &>/dev/null'
-
+is_crashreporter_running "$LINENO"
 #*****************************************************************************************
 # clean system Finder settings crap
 #*****************************************************************************************
 sudo find / -xdev -type f -name ".DS_Store" ! -path "$HOME/.DS_Store" -delete &> /dev/null
-
+is_crashreporter_running "$LINENO"
 echo -n '' | pbcopy
 
 sudo /usr/bin/perl <<'PERL' &>/dev/null
@@ -735,12 +739,14 @@ sub processFiles {
     }
 }
 PERL
+is_crashreporter_running "$LINENO"
 
 #*****************************************************************************************
 # get Safari bookmarks get use a tool to hunt junk cookies in the Safari cleaner
 #*****************************************************************************************
 getBookmarks() {
 	perl <<"GEETBOOKMARKS"
+#!/usr/bin/env perl
 use strict;
 use Foundation;
 
@@ -901,7 +907,7 @@ try
 	tell application "Safari" to quit
 	delay 3
 	tell application "Safari" to activate
-	delay 3
+	delay 2
 
 	set defaultDelim to AppleScript's text item delimiters
 	set AppleScript's text item delimiters to " "
@@ -1011,8 +1017,11 @@ repeat while true
 			set txt to (get value of static text 1 of UI element 1 of r) as string
 		on error msg number errNum
 			if errNum = -1719 then
+				set txt to ""
+				set rowIndex to rowIndex - 1
+
 				if deleteFlag = 1 then
-					set rowIndex to 1
+					set rowIndex to 0
 					set deleteFlag to 0
 				else
 					set AppleScript's text item delimiters to defaultDelim
@@ -1351,7 +1360,7 @@ sudo find "$DTMP" -name "sources-*" -exec rm -rfv {} \; &>/dev/null
 sudo find "$DTMP" -name "com.apple.test.* " -exec rm -rfv {} \; &>/dev/null
 
 rm -rf ${DTMP}xcrun_db &>/dev/null
-xcrun simctl --set previews delete all &>/dev/null
+/Applications/Xcode.app/Contents/Developer/usr/bin/simctl --set previews delete all &>/dev/null
 
 printf "\ec\e[3J"
 dscacheutil -flushcache &>/dev/null
@@ -1361,6 +1370,7 @@ sudo purge &>/dev/null
 
 find "$HOME/Library/Developer" -type d -name "[A-Za-z0-9]* Device Logs" -exec rm -rfv {} \; &>/dev/null
 sqlite3 "$(find "$HOME/Library/Mail" -name "Envelope Index")" vacuum
+is_crashreporter_running "$LINENO"
 
 killEverything
 sudo diskutil resetUserPermissions / `id -u`	&>/dev/null
@@ -1438,8 +1448,8 @@ killEverything
 
 if [[ $OCD_OPTION == "" ]]; then
 	finish
-	perl /opt/geedbla/scripts/startup-banner.pl --light
-	osascript <<"END2"
+	perl /opt/geedbla/scripts/startup-banner.pl --dark
+	osascript <<"END2" 		&>/dev/null
 try
     tell application "Keyboard Maestro Engine" to launch
     try

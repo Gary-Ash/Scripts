@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  23-Sep-2025  9:24pm
+# Modified :  26-Nov-2025  3:04pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -33,19 +33,19 @@ my $media         = "$HOME/Documents/GeeDblA/Resources/Development/Apple/Simulat
 find(\&getSimulators, $simulatorsLoc);
 find(\&addMedia,      $media);
 
-`xcrun simctl shutdown all;xcrun simctl delete unavailable;xcrun simctl erase all`;
+`/Applications/Xcode.app/Contents/Developer/usr/bin/simctl shutdown all;/Applications/Xcode.app/Contents/Developer/usr/bin/simctl delete unavailable;/Applications/Xcode.app/Contents/Developer/usr/bin/simctl erase all`;
 for my $key (keys %simulators) {
-    if (system("xcrun simctl boot \"$key\" &> /dev/null") == 0) {
-        if (system("xcrun simctl addmedia booted $mediaList") != 0) {
+    if (system("/Applications/Xcode.app/Contents/Developer/usr/bin/simctl boot \"$key\" &> /dev/null") == 0) {
+        if (system("/Applications/Xcode.app/Contents/Developer/usr/bin/simctl addmedia booted $mediaList") != 0) {
             exit(1);
         }
-        if (system("xcrun simctl shutdown booted") != 0) {
+        if (system("/Applications/Xcode.app/Contents/Developer/usr/bin/simctl shutdown booted") != 0) {
             exit(1);
         }
 
     }
 }
-`xcrun simctl shutdown all`;
+`/Applications/Xcode.app/Contents/Developer/usr/bin/simctl shutdown all`;
 
 #*****************************************************************************************
 # this routine will load a hash with names and UUIDs of the currently defined simulators

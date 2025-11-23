@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  19-Nov-2025  3:15pm
+# Modified :  22-Nov-2025  6:33pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1012,7 +1012,7 @@ repeat while true
 		on error msg number errNum
 			if errNum = -1719 then
 				if deleteFlag = 1 then
-					set rowIndex to 1
+					set rowIndex to rowIndex - 1
 					set deleteFlag to 0
 				else
 					set AppleScript's text item delimiters to defaultDelim

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  19-Nov-2025  3:15pm
+# Modified :  24-Nov-2025  9:59pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -112,11 +112,6 @@ cd ~ || return
 # brew
 #*****************************************************************************************
 if command -v brew &>/dev/null; then
-	SUDO_PASSWORD=$(get_sudo_password)
-	start_persistant_sudo "$SUDO_PASSWORD"
-	sudo chmod -R 777 /Applications/* &>/dev/null
-	stop_persistant_sudo
-
 	brew update &>"$error_log"
 	brew upgrade &>"$error_log"
 	brew upgrade --cask &>"$error_log"
@@ -159,6 +154,8 @@ fi
 pkill -f '.*GradleDaemon.*'
 qlmanage -r &>/dev/null
 
+start_persistant_sudo
+
 find "$HOME" -name "Icon?" -exec chflags hidden {} \; &>/dev/null
 #*****************************************************************************************
 # clean my git projects
@@ -171,7 +168,6 @@ while read -r gitDir; do
 	git gc --aggressive --prune=now &>/dev/null
 done < <(echo "${raw}")
 
-
 find "$HOME/Developer" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 find "$HOME/Documents" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 
@@ -181,12 +177,9 @@ find "/Users/Shared/CleanMyMac_5/" -depth 1 ! -name ".licence" -exec rm -rfv {} 
 find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 find "$HOME/Developer" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 
-perl /opt/geedbla/scripts/load-simulator.pl
+perl /opt/geedbla/scripts/load-simulator.pl &
 
-SUDO_PASSWORD=$(get_sudo_password)
-start_persistant_sudo "$SUDO_PASSWORD"
 sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user
-
 
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
@@ -203,7 +196,6 @@ emulate sh -c 'sudo rm -rf /Volumes/*/.Trashes' &>/dev/null
 emulate sh -c 'sudo rm -rf ~/.Trash /Volumes/*/.Trashes' &>/dev/null
 
 rm -rf "$HOME/Library/Mobile Documents/com~apple~CloudDocs/.Trash"
-
 #*****************************************************************************************
 # clean up Time Machine local backups and turn it back on
 #*****************************************************************************************
@@ -213,13 +205,6 @@ for snapshot in ${snapshots[*]}; do
 	snapshot="${snapshot%% *}"
 	sudo tmutil deletelocalsnapshots "$snapshot" &>/dev/null
 done
-
-#*****************************************************************************************
-# notification center clean
-#*****************************************************************************************
-sudo killall "NotificationCenter"
-sudo killall usernoted
-emulate sh -c 'rm -rf "$(getconf DARWIN_USER_DIR)/com.apple.notificationcenter/"* &>/dev/null'
 
 #*****************************************************************************************
 # clean system Finder settings crap
@@ -741,6 +726,7 @@ PERL
 #*****************************************************************************************
 getBookmarks() {
 	perl <<"GEETBOOKMARKS"
+#!/usr/bin/env perl
 use strict;
 use Foundation;
 
@@ -901,7 +887,7 @@ try
 	tell application "Safari" to quit
 	delay 3
 	tell application "Safari" to activate
-	delay 3
+	delay 2
 
 	set defaultDelim to AppleScript's text item delimiters
 	set AppleScript's text item delimiters to " "
@@ -1011,8 +997,11 @@ repeat while true
 			set txt to (get value of static text 1 of UI element 1 of r) as string
 		on error msg number errNum
 			if errNum = -1719 then
+				set txt to ""
+				set rowIndex to rowIndex - 1
+
 				if deleteFlag = 1 then
-					set rowIndex to 1
+					set rowIndex to 0
 					set deleteFlag to 0
 				else
 					set AppleScript's text item delimiters to defaultDelim

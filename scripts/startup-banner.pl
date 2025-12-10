@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  13-Nov-2025  7:26pm
+# Modified :  10-Dec-2025  5:09pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -252,6 +252,7 @@ for my $item (@specs) {
     }
 }
 print `tput clear`;
+displayLogo();
 
 my $specsColumn = int(($columns - $longest) / 2) + 10;
 for my $text (@specs) {
@@ -265,7 +266,7 @@ for my $text (@specs) {
     ++$specsLine;
 }
 
-displayLogo();
+print "\n\n";
 
 sub displayLogo {
     my $filename         = "/opt/geedbla/pictures/apple-logo.png";

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :   2-Dec-2025  9:56pm
+# Modified :  11-Dec-2025  6:06pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -32,9 +32,9 @@ finish() {
 is_crashreporter_running() {
   local caller_lineno="$1"
 
-  if pgrep -x "CrashReporter.app" >/dev/null; then
+  if ! pgrep -f "CrashReporter" >/dev/null; then
   	echo "Line number $caller_lineno"
-    return 1   # true / success — CrashReporter is running
+    exit 1   # true / success — CrashReporter is running
   else
     return 0  # false / failure — CrashReporter is not running
   fi

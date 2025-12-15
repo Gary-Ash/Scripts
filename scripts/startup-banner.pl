@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  10-Dec-2025  5:09pm
+# Modified :  14-Dec-2025  7:01pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -266,18 +266,29 @@ for my $text (@specs) {
     ++$specsLine;
 }
 
-print "\n\n";
+print "\n\n\n";
+
+sub detect_format {
+    my ($file) = @_;
+    return 100 if $file =~ /\.png$/i;
+    return 24  if $file =~ /\.(jpg|jpeg)$/i;
+    return 100;
+}
 
 sub displayLogo {
-    my $filename         = "/opt/geedbla/pictures/apple-logo.png";
-    my $graphics_program = "/opt/homebrew/bin/viu";
+    my $filename = "/opt/geedbla/pictures/apple-logo.png";
 
-    if (   -e $filename
-        && -e $graphics_program
+    if (-e $filename
         && (defined $ENV{"TERM_PROGRAM"} && $ENV{"TERM_PROGRAM"} ne "Apple_Terminal"))
     {
-        print "\033[0;0H";
-        system("viu -w 38 -h 10 $filename");
+        open my $fh, '<', $filename or die "Cannot open $filename: $!\n";
+        binmode $fh;
+        my $image_data = do { local $/; <$fh> };
+        close $fh;
+
+        my $encoded = encode_base64($image_data, '');
+        my $format  = detect_format($filename);
+        print "\033[0;0H\033_Ga=T,f=$format;${encoded}\033\\";
     }
     else {
         print "\033[0;0H

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  11-Dec-2025  6:06pm
+# Modified :  17-Dec-2025 11:16pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1249,7 +1249,9 @@ try
 	end repeat
 	tell application "Messages" to quit
 end try
+END
 
+osascript <<END2 2>/dev/null 1>&2
 (*****************************************************************************************
  * clean up Pastebot
  ****************************************************************************************)
@@ -1324,7 +1326,7 @@ tell application "System Events"
 	set activeApp to name of first application process whose frontmost is true as string
 	do shell script "Killall " & quoted form of activeApp
 end tell
-END
+END2
 
 #*****************************************************************************************
 # clear the icon cache

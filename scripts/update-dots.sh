@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  19-Nov-2025  3:32pm
+# Modified :  19-Dec-2025  4:33pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -76,9 +76,11 @@ buildRepository() {
 		--exclude="/DerivedData" \
 		--exclude="/DocumentationIndex" \
 		--exclude="/DocumentationCache" \
-		"$HOME/Library/Developer/Xcode/" "$HOME/Downloads/dotfiles/xcode/" &>/dev/null >/dev/null
+		"$HOME/Library/Developer/Xcode/" "$HOME/Downloads/dotfiles/xcode/" &>/dev/null
 
-	rsync -arcz -E --exclude="Index" \
+	rsync -arcz -E \
+		--delete \
+		--exclude="Index" \
 		--exclude="Cache" \
 		--exclude="Installed Packages" \
 		--exclude="Lib" \
@@ -89,18 +91,27 @@ buildRepository() {
 		--exclude="Local/Backup Session.sublime_session" \
 		--exclude="Local/Auto Save Session.sublime_session" \
 		--exclude="Local/Session.sublime_session" \
-		"$HOME/Library/Application Support/Sublime Text" "$HOME/Downloads/dotfiles" &>/dev/null >/dev/null
+		"$HOME/Library/Application Support/Sublime Text" "$HOME/Downloads/dotfiles" &>/dev/null
 
-	rsync -arcz -E --exclude="Package Control.cache" \
+	rsync -arcz -E \
+		--delete \
+		--exclude="Package Control.cache" \
 		--exclude="oscrypto-ca-bundle.crt" \
 		--exclude="Package Control.last-run" \
 		--exclude="*-ca-bundle" \
 		--exclude="sublime_geedbla_environment.txt" \
-		"$HOME/Library/Application Support/Sublime Text/Packages/User" "$HOME/Downloads/dotfiles/Sublime Text/Packages" &>/dev/null >/dev/null
+		"$HOME/Library/Application Support/Sublime Text/Packages/User" "$HOME/Downloads/dotfiles/Sublime Text/Packages" &>/dev/null
 
-	rsync -arcz -E --exclude="*.pdf" "$HOME/Library/Application Support/BBEdit" "$HOME/Downloads/dotfiles" &>/dev/null
+	rsync -arcz -E --rsh=ssh \
+		--exclude="BBEdit User Manual *.pdf" \
+		--exclude="'Scripts/Diff Unsaved Changes in Kaleidoscope.sh'" \
+		--delete \
+		"$HOME/Library/Application Support/BBEdit" \
+		"$remote:$HOME/Library/Application\\ Support/" &>/dev/null
 
-	rsync -arcz -E --exclude="Lib" \
+	rsync -arcz -E \
+		--delete \
+		--exclude="Lib" \
 		--exclude="Index" \
 		--exclude="Log" \
 		--exclude="Cache" \
@@ -108,10 +119,10 @@ buildRepository() {
 		--exclude="User/oscrypto-ca-bundle.crt" \
 		--exclude="Local/Session.sublime_session" \
 		--delete \
-		"$HOME/Library/Application Support/Sublime Merge" "$HOME/Downloads/dotfiles" &>/dev/null >/dev/null
+		"$HOME/Library/Application Support/Sublime Merge" "$HOME/Downloads/dotfiles" &>/dev/null
 
 	for preference_file in "${preference_files[@]}"; do
-		rsync -arz -E "$HOME/Library/Preferences/$preference_file" "$HOME/Downloads/dotfiles/preferences" &>/dev/null >/dev/null
+		rsync -arz -E "$HOME/Library/Preferences/$preference_file" "$HOME/Downloads/dotfiles/preferences" &>/dev/null
 	done
 
 	mkdir -p "$HOME/Downloads/package-temp" || return
@@ -231,7 +242,7 @@ dot-files() {
 # script main line
 #*****************************************************************************************
 
-perl <<'PERL' #&>/dev/null
+perl <<'PERL' #&>>>>/dev/null
 #!/usr/bin/env perl
 #*****************************************************************************************
 # libraries used

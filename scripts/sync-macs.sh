@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  10-Nov-2025  4:15pm
+# Modified :  19-Dec-2025  3:55pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -191,7 +191,8 @@ updateGeeDblA() {
 }
 
 updateXcode() {
-	sshpass -p "$password" rsync -arcz -E --inplace \
+	sshpass -p "$password" rsync -arcz -E \
+		--delete \
 		--exclude="UserData/Capabilities" \
 		--exclude="UserData/IB Support" \
 		--exclude="UserData/Portal" \
@@ -210,7 +211,6 @@ updateXcode() {
 		--exclude="/DerivedData" \
 		--exclude="/DocumentationIndex" \
 		--exclude="/DocumentationCache" \
-		--delete \
 		"$HOME/Library/Developer/Xcode/" "$remote:$HOME/Library/Developer/Xcode/" &>/dev/null
 }
 
@@ -218,6 +218,7 @@ updateBBEdit() {
 	if [[ -d "$HOME/Library/Application Support/BBEdit" ]]; then
 		sshpass -p "$password" rsync -arcz -E --rsh=ssh \
 			--exclude="BBEdit User Manual *.pdf" \
+			--exclude="'Scripts/Diff Unsaved Changes in Kaleidoscope.sh'" \
 			--delete \
 			"$HOME/Library/Application Support/BBEdit" \
 			"$remote:$HOME/Library/Application\\ Support/" &>/dev/null

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   4-Aug-2025  4:29pm
-# Modified :  17-Dec-2025 11:16pm
+# Modified :  29-Dec-2025  9:34pm
 #
 # Copyright © 2025 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -32,7 +32,7 @@ finish() {
 is_crashreporter_running() {
   local caller_lineno="$1"
 
-  if ! pgrep -f "CrashReporter" >/dev/null; then
+  if ! pgrep -f "CrashReporter*" >/dev/null; then
   	echo "Line number $caller_lineno"
     exit 1   # true / success — CrashReporter is running
   else
@@ -202,7 +202,7 @@ is_crashreporter_running "$LINENO"
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
 #****************************************************************************************
-tmutil stopbackup
+sudo tmutil stopbackup
 sudo tmutil disable
 is_crashreporter_running "$LINENO"
 #*****************************************************************************************
@@ -224,11 +224,6 @@ for snapshot in ${snapshots[*]}; do
 	snapshot="${snapshot%% *}"
 	sudo tmutil deletelocalsnapshots "$snapshot" &>/dev/null
 done
-is_crashreporter_running "$LINENO"
-#*****************************************************************************************
-# clean system Finder settings crap
-#*****************************************************************************************
-sudo find / -xdev -type f -name ".DS_Store" ! -path "$HOME/.DS_Store" -delete &> /dev/null
 is_crashreporter_running "$LINENO"
 echo -n '' | pbcopy
 
@@ -280,8 +275,6 @@ our @plistKeysToDelete = (
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
     "ApplicationAutoSaveState",										  "LastOpenByNameString",
 );
-
-
 
 our @itemsToDelete = (
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments",                  0],
@@ -460,6 +453,9 @@ our @itemsToDelete = (
     ["/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2Helper", 0],
 );
 
+my $home_dir = $ENV{HOME} || (getpwuid($<))[7];
+my $downloads_dir = File::Spec->catdir($home_dir, 'Downloads');
+
 #*****************************************************************************************
 # script main line
 #*****************************************************************************************
@@ -473,6 +469,22 @@ deleteFilesAndFolders();
 xcode();
 sublimeText();
 sublimeMerge();
+
+sub process_DS_Store_files {
+    return unless $_ eq '.DS_Store';
+
+    my $full_path = $File::Find::name;
+
+	return if ($full_path =~ /$home_dir\/\.DS_Store/);
+	return if ($full_path =~ /$downloads_dir\/\.DS_Store/);
+
+    unlink($full_path);
+}
+
+find({
+    wanted => \&process_DS_Store_files,
+    no_chdir => 1,
+}, "/");
 
 #*****************************************************************************************
 # Books
@@ -834,7 +846,8 @@ set keepingSites to {¬
 	"apple.stackexchange.com", ¬
 	"twitch.tv", ¬
 	"twitter.com", ¬
-	"superuser.com"}
+	"superuser.com", ¬
+	"fuckingapproachableswiftconcurrency.com"}
 
 set deleteAnyway to {¬
 	"advancedswift.com", ¬
@@ -907,7 +920,7 @@ try
 	tell application "Safari" to quit
 	delay 3
 	tell application "Safari" to activate
-	delay 2
+	delay 4
 
 	set defaultDelim to AppleScript's text item delimiters
 	set AppleScript's text item delimiters to " "

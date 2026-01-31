@@ -1,0 +1,51 @@
+#compdef _new-xcode-project new-xcode-project.pl
+#*****************************************************************************************
+# new-xcode-project
+#
+# The is a completion script for my Xcode project generator
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   8-Feb-2026  2:48pm
+# Modified :
+#
+# Copyright © 2026 By Gary Ash All rights reserved.
+#*****************************************************************************************
+
+_new-xcode-project() {
+ 	case "$state" in
+   		templates)
+		    setopt localoptions extendedglob
+
+		    local -a _descriptions
+			local raw_names=("${(@f)$(find "$HOME/Developer/GeeDblA/ProjectTemplates" -type d -depth 1 -not -name "_*"  -not -name ".*")}")
+			for template in "${raw_names[@]}"; do
+				name=$(basename "$template")
+				desc=$(<"${template}/.ProjectDescription")
+				_descriptions+="$name:$desc"
+			done
+	       _describe 'templates' _descriptions
+		;;
+
+	   	proj)
+			;;
+
+	   	loc)
+		_path_files -/
+		;;
+
+		org)
+		;;
+  	esac
+
+	_arguments \
+        {-cs,--closed}'[Closed source project]' \
+        {-lif,--inFileLicense}'[Add the source license to the files]' \
+        {-ng,--no-github}'[No GitHub project]' \
+        {-nx,--no-xcode}'[Do not start Xcode]' \
+   		'1:templates:->templates' 				\
+   		'2:.*:->proj' 							\
+		'3:.*:->loc'							\
+		'4:.*:->org'							\
+		'*::arg:->args'
+
+}

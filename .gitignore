@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Editor backup/swap files
+*~
+*.swp
+*.swo
+*.bak
+\#*\#
+.#*
+
+# Python
+*.pyc
+*.pyo
+__pycache__/
+*.egg-info/
+.eggs/
+*.egg
+
+# Perl
+*.pm~
+blib/
+pm_to_blib
+MYMETA.*
+
+# Logs
+*.log
+*.zwc

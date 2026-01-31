@@ -1,0 +1,50 @@
+#compdef jekyll
+#*****************************************************************************************
+# _jekyll
+#
+# This file provides tab completion for the Jekyll static blogging system
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   8-Feb-2026  2:48pm
+# Modified :
+#
+# Copyright © 2026 By Gary Ash All rights reserved.
+#*****************************************************************************************
+_jekyll() {
+	local context="$curcontext" state line
+
+	_arguments -C \
+	'1:command:->command' \
+	'*::options:->options'
+
+	case $state in
+	(command)
+		local -a commands
+		commands=(
+			  "docs":"Display documentation."
+			  "clean":"Clean the site (removes site output and metadata file) without building."
+			  "import":"Import your web site."
+			  "build":"Build your site"
+			  "doctor":"Search site and print specific deprecation warnings."
+			  "help":"Show the help message, optionally for a given subcommand."
+			  "new":"Creates a new Jekyll site scaffold in PATH."
+			  "new-theme":"Creates a new Jekyll theme scaffold."
+			  "server":"Serve your site locally."
+		)
+     _describe -t commands 'commands' commands
+     ;;
+
+	(options)
+		_arguments '--config[Configuration file]:filename:_files' \
+				   '--destination[Destination directory]:directory:_directories' \
+				   '--source[Source directory]:directory:_directories' \
+				   '--layouts[Layouts directory]:directory:_directories' \
+				   '--plugibs[Plug-ins directory]:directory:_directories' \
+				   '--version[Display Jekyll version]' \
+				   '--help[Display Jekyll help message]' \
+				   '--trace[Display a back trace on error]' \
+   				   '--version[Display Jekyll version]' \
+   				   '--safe[Safe mode]:flag:_values flag false true'
+   	esac
+}
+_jekyll "%@"

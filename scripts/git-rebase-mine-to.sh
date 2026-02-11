@@ -7,12 +7,12 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
-if [ -n "$1" ]; then
+if [ -n "${1:-}" ]; then
 	branchTo="$1"
 	currentBranch="$(git rev-parse --abbrev-ref HEAD)"
 	git checkout "${branchTo}"

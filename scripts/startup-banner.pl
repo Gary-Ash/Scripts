@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -34,10 +34,10 @@ my $columns = `tput cols`;
 while (scalar(@ARGV)) {
     my $argument = shift @ARGV;
 
-    if ($argument =~ /-l|--light/) {
+    if ($argument =~ /^(-l|--light)$/) {
         $theme = 1;
     }
-    elsif ($argument =~ /-d|--dark/) {
+    elsif ($argument =~ /^(-d|--dark)$/) {
         $theme = 0;
     }
     else {
@@ -49,7 +49,7 @@ while (scalar(@ARGV)) {
 #*****************************************************************************************
 # visual theme variables
 #*****************************************************************************************
-my $boldText       = "\033[1;m";
+my $boldText       = "\033[1m";
 my $headingText    = "$boldText\033[38;5;255m";
 my $highlightText  = "$boldText\033[38;5;255m";
 my $normalInfoText = "\x1b[0m";

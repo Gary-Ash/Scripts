@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -209,7 +209,7 @@ buildRepository() {
 	mv "$DOTFILES_DIR/home/.claude.json1" "$DOTFILES_DIR/home/.claude.json"
 	cp -f /opt/geedbla/scripts/bootstrap.sh "$DOTFILES_DIR"
 	rm -rf "$package_temp"
-	find "$DOTFILES_DIR" -type d -empty -not -path "./.git/*" -exec touch {}/.gitkeep \;
+	find "$DOTFILES_DIR" -type d -empty -not -path "*/.git/*" -exec touch {}/.gitkeep \;
 }
 
 #****************************************************************************************

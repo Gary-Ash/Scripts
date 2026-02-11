@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -73,7 +73,7 @@ tell application "System Events"
 	repeat with processName in backgroundsToKill
 		if processName as string is not equal to activeApp then
 			try
-				do shell script "Killall " & quoted form of processName
+				do shell script "killall " & quoted form of processName
 				delay 0.5
 			end try
 		end if
@@ -144,7 +144,7 @@ fi
 #*********************************************************************************
 if command -v pip3 &>/dev/null; then
 	python3 -m pip install --upgrade pip &>"$error_log"
-	pip3 install -U "$(pip3 freeze | cut -d = -f 1)" &>"$error_log"
+	pip3 freeze | cut -d = -f 1 | xargs pip3 install -U &>"$error_log"
 fi
 
 #*****************************************************************************************
@@ -166,14 +166,14 @@ raw=$(find "$HOME/Developer" -type d -name ".git")
 raw+=$(find "$HOME/Documents" -type d -name ".git")
 
 while read -r gitDir; do
-	cd "$gitDir" || exit 1
+	cd "$(dirname "$gitDir")" || exit 1
 	git gc --aggressive --prune=now &>/dev/null
 done < <(echo "${raw}")
 
 find "$HOME/Developer" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 find "$HOME/Documents" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 
-find "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Preferencesc" -name "Keyboard Maestro Macros \(*.kmsync" -delete &>/dev/null
+find "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Preferences" -name "Keyboard Maestro Macros \(*.kmsync" -delete &>/dev/null
 find "$HOME/Library/Application Support/AddressBook" -name "*.abbu.tbz" -delete &>/dev/null
 find "/Users/Shared/CleanMyMac_5/" -depth 1 ! -name ".licence" -exec rm -rfv {} \; &>/dev/null
 find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
@@ -209,9 +209,9 @@ sudo tmutil stopbackup
 #*****************************************************************************************
 # empty trash
 #*****************************************************************************************
-emulate sh -c 'sudo rm -rf ~/.Trash/* ' &>/dev/null
-emulate sh -c 'sudo rm -rf /Volumes/*/.Trashes' &>/dev/null
-emulate sh -c 'sudo rm -rf ~/.Trash /Volumes/*/.Trashes' &>/dev/null
+sudo rm -rf ~/.Trash/* &>/dev/null
+sudo rm -rf /Volumes/*/.Trashes &>/dev/null
+sudo rm -rf ~/.Trash /Volumes/*/.Trashes &>/dev/null
 rm -rf "$HOME/Library/Mobile Documents/com~apple~CloudDocs/.Trash"
 
 #*****************************************************************************************
@@ -1355,7 +1355,7 @@ sudo touch /Applications/* &>/dev/null
 
 find "$HOME/Library/Application Support/com.stclairsoft.DefaultFolderX5/Default Set" ! -name "DefaultFolders.plist" -delete &>/dev/null
 
-rm -rf "$HOME/Movies/Motion\ Templates" &>/dev/null
+rm -rf "$HOME/Movies/Motion Templates" &>/dev/null
 rm -f "$error_log"
 sudo find /private/ -type d -name "org.llvm*" -exec rm -rf {} \; &>/dev/null
 sudo find /private/ -type d -name "com.apple.dt.Xcode" -exec rm -rf {} \; &>/dev/null
@@ -1368,7 +1368,7 @@ sudo chown -R root:admin /Applications/* &>/dev/null
 sudo xattr -cr /Applications/* &>/dev/null
 
 CACHE="$(getconf DARWIN_USER_CACHE_DIR)"
-sudo rm -rf "${CACHE}com.apple.DeveloperTools "												&>/dev/null
+sudo rm -rf "${CACHE}com.apple.DeveloperTools"												&>/dev/null
 sudo rm -rf "${CACHE}org.llvm.clang.$(whoami)/ModuleCache" 									&>/dev/null
 sudo rm -rf "${CACHE}org.llvm.clang/ModuleCache" 											&>/dev/null
 sudo find "$HOME/Library/Caches" -type d -name "com.apple.dt.*" -exec rm -rf {} \; 			&>/dev/null
@@ -1378,7 +1378,7 @@ sudo find "$DTMP" -name "*.swift" -exec rm -rfv {} \; &>/dev/null
 sudo find "$DTMP" -name "ibtool*" -exec rm -rfv {} \; &>/dev/null
 sudo find "$DTMP" -name "*IBTOOLD*" -exec rm -rfv {} \; &>/dev/null
 sudo find "$DTMP" -name "sources-*" -exec rm -rfv {} \; &>/dev/null
-sudo find "$DTMP" -name "com.apple.test.* " -exec rm -rfv {} \; &>/dev/null
+sudo find "$DTMP" -name "com.apple.test.*" -exec rm -rfv {} \; &>/dev/null
 
 rm -rf "${DTMP}xcrun_db" &>/dev/null
 /Applications/Xcode.app/Contents/Developer/usr/bin/simctl --set previews delete all &>/dev/null

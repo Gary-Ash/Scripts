@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -55,7 +55,7 @@ defaults write com.apple.SafariTechnologyPreview WebKitMediaPlaybackAllowsInline
 defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
 defaults write com.apple.SafariTechnologyPreview com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
 
-if [[ -f "./xcode/SystemCodeSnippets.codesnippets" ]]; then
+if [[ -f "$HOME/Documents/GeeDblA/Resources/Apple/SystemCodeSnippets.codesnippets" ]]; then
 	cp -f "$HOME/Documents/GeeDblA/Resources/Apple/SystemCodeSnippets.codesnippets" "/Applications/Xcode.app/Contents/PlugIns/IDESourceEditor.framework/Versions/A/Resources/"
 fi
 

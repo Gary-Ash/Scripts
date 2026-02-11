@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  7:45pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -31,7 +31,7 @@ finish() {
 
 sync_directories() {
 	local target_system="$1"
-	local directories_to_sync=(~/.claude ~/.config ~/Developer ~/Documents /opt/geedbla ~/Library/"Application Support"/BBEdit)
+	local directories_to_sync=(~/.claude ~/.config ~/Developer ~/Documents /opt/bin /opt/geedbla ~/Library/"Application Support"/BBEdit)
 	local files_to_sync=(~/.claude.json)
 
 	for dir in "${directories_to_sync[@]}"; do
@@ -47,36 +47,60 @@ sync_directories() {
 
 sync_ruby_gems() {
 	local target_system="$1"
+	local host_gem_list
+	local target_gem_list
 	local host_gems
 	local target_gems
 	local gems_to_remove
+	local gems_to_install
 	local rbenv_init='export RBENV_ROOT=/opt/venv/ruby && export PATH="${RBENV_ROOT}/bin:${PATH}" && eval "$(rbenv init -)"'
 
-	host_gems="$(gem list --no-versions | sort)"
-	target_gems="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${rbenv_init} && gem list --no-versions | sort'")"
+	eval "${rbenv_init}"
+
+	host_gem_list="$(gem list | sort)"
+	target_gem_list="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${rbenv_init} && gem list | sort'")"
+
+	host_gems="$(echo "${host_gem_list}" | sed 's/ (.*//' | sort)"
+	target_gems="$(echo "${target_gem_list}" | sed 's/ (.*//' | sort)"
+
 	gems_to_remove="$(comm -23 <(echo "${target_gems}") <(echo "${host_gems}") | tr '\n' ' ')"
+	gems_to_install="$(comm -23 <(echo "${host_gem_list}") <(echo "${target_gem_list}") | sed 's/ (.*//' | sort -u | tr '\n' ' ')"
 
 	if [[ -n "${gems_to_remove}" ]]; then
 		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${rbenv_init} && gem uninstall -aIx ${gems_to_remove}'"
 	fi
-	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${rbenv_init} && gem install $(echo "${host_gems}" | tr '\n' ' ')'"
+	if [[ -n "${gems_to_install}" ]]; then
+		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${rbenv_init} && gem install --force ${gems_to_install}'"
+	fi
 }
 
 sync_pip_packages() {
 	local target_system="$1"
+	local host_freeze
+	local target_freeze
 	local host_packages
 	local target_packages
 	local packages_to_remove
+	local packages_to_install
 	local venv_init='source /opt/venv/python3/bin/activate'
 
-	host_packages="$(pip3 list --format=freeze | cut -d= -f1 | sort)"
-	target_packages="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${venv_init} && pip3 list --format=freeze | cut -d= -f1 | sort'")"
+	source /opt/venv/python3/bin/activate
+
+	host_freeze="$(pip3 list --format=freeze | sort)"
+	target_freeze="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${venv_init} && pip3 list --format=freeze | sort'")"
+
+	host_packages="$(echo "${host_freeze}" | cut -d= -f1 | sort)"
+	target_packages="$(echo "${target_freeze}" | cut -d= -f1 | sort)"
+
 	packages_to_remove="$(comm -23 <(echo "${target_packages}") <(echo "${host_packages}") | tr '\n' ' ')"
+	packages_to_install="$(comm -23 <(echo "${host_freeze}") <(echo "${target_freeze}") | tr '\n' ' ')"
 
 	if [[ -n "${packages_to_remove}" ]]; then
 		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${venv_init} && pip3 uninstall -qy ${packages_to_remove}'"
 	fi
-	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${venv_init} && pip3 install -q $(pip3 list --format=freeze | tr '\n' ' ')'"
+	if [[ -n "${packages_to_install}" ]]; then
+		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${venv_init} && pip3 install -q ${packages_to_install}'"
+	fi
 }
 
 sync_homebrew_packages() {

@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -38,9 +38,6 @@ searchTerms=(
 	"statvfs"
 	"fstatfs"
 	"fstatvfs"
-	"getattrlist"
-	"fgetattrlist"
-	"getattrlistat"
 	"activeInputModes"
 	"UserDefaults"
 )
@@ -52,5 +49,5 @@ if [ -z "$search_dir" ]; then
 fi
 
 for pattern in "${searchTerms[@]}"; do
-	find "$search_dir" -type f \( -name "*.swift" -o -name "*.m" \) -exec grep -H -Fw "$pattern\(" {} +
+	find "$search_dir" -type f \( -name "*.swift" -o -name "*.m" \) -exec grep -H -w "$pattern(" {} +
 done

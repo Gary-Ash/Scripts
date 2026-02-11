@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -19,7 +19,6 @@ use warnings;
 use File::Find;
 use File::Basename;
 
-no warnings 'experimental::smartmatch';
 
 #*****************************************************************************************
 # main line
@@ -43,7 +42,7 @@ sub processFiles {
     my @extensions = ("c", "cc", "cpp", "cs", "cxx", "swift", "m", "mm", "h", "hh", "hpp", "hxx", "pch");
     my $ext        = (fileparse($File::Find::name, qr/\.[^.]*/))[2];
     $ext = substr($ext, 1);
-    if ($ext ~~ @extensions) {
+    if (grep { $_ eq $ext } @extensions) {
         open(my $sourcefile, "<$File::Find::name")
           || die "**** Unable to read $File::Find::name - $!\n";
         my $source = do { local $/; <$sourcefile> };

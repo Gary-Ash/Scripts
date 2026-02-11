@@ -8,7 +8,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -67,7 +67,7 @@ sub isValidOrganization {
 
 sub shouldIgnoreFile {
     my ($filename) = @_;
-    my @ignoreExtensions = (".png", ".tff", "jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".xcuserstate");
+    my @ignoreExtensions = (".png", ".ttf", "jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".xcuserstate");
 
     (undef, undef, my $extension) = fileparse($filename, qr/\.[^.]*$/);
 
@@ -162,7 +162,7 @@ sub searchReplace {
         return;
     }
 
-    if (index($File::Find::name, '\r') < 0 && -f $File::Find::name && !shouldIgnoreFile($File::Find::name)) {
+    if (index($File::Find::name, "\r") < 0 && -f $File::Find::name && !shouldIgnoreFile($File::Find::name)) {
         my $sourcefile;
 
         if (open($sourcefile, '+<', $File::Find::name)) {

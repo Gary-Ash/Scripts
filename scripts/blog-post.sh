@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -31,7 +31,7 @@ timestamp=$(date +"%Y-%m-%d %H:%M:%S %z")
 n=1
 name="$1"
 while [ -f "$name" ]; do
-	++n
+	((n++))
 	name="$1-$n"
 done
 

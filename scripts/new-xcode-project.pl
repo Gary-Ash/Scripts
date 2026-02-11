@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  12-Feb-2026
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -46,11 +46,11 @@ our $TEMPLATE_LOCATION = "$HOME/Developer/GeeDblA/ProjectTemplates/";
 # this will match copyright declarations an isolate the copyright holder into $1
 our $findFilesToProcess = qr/Copyright\s*(?:.*)\s*(?:\d{4}\s*-\s*\d{4}|\d{4}) By (.*) All rights reserved\./;
 
-# this maches the copyright declaration found in non Xcode project files
+# this matches the copyright declaration found in non Xcode project files
 # $1 contains the comment leader of the line containing the copyright
 our $nonProjectFileCopyright = qr/(.*)Copyright\s*(?:.*)\s*(\d{4}\s*-\s*\d{4}|\d{4})\s*By\s*(.*) All rights reserved\./;
 
-# this maches the copyright declaration found in Xcode project files
+# this matches the copyright declaration found in Xcode project files
 our $projectFileCopyright = qr/(?:\\n)(.{0,3}\s*)Copyright\s*(?:.*)\s*(?:\d{4}\s*-\s*\d{4}|\d{4})\s*By\s*CompanyName All rights reserved\./;
 
 #-----------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ sub unzipFiles {
         my $filename    = $member->fileName();
         my $output_path = File::Spec->catfile($target_dir, $filename);
 
-        if (not index($filename, '__MACOSX/')) {
+        if (index($filename, '__MACOSX/') >= 0) {
             next;
         }
         # Create directory structure if needed
@@ -147,28 +147,17 @@ sub wrapText {
 }
 
 sub isValidOrganization {
-    my $org = $_[0];
-
-    for my $anOrg (@companies) {
-        if (lc($org) eq lc($anOrg)) {
-            return 1;
-        }
-    }
-    return 0;
+    my $org = lc($_[0]);
+    return grep { lc($_) eq $org } @companies;
 }
 
 sub shouldIgnoreFile {
     my ($filename) = @_;
-    my @ignoreExtensions = (".png", ".tff", "jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".scpt", ".xcuserstate");
+    my %ignoreExtensions = map { $_ => 1 } (".png", ".ttf", ".jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".scpt", ".xcuserstate");
 
     (undef, undef, my $extension) = fileparse($filename, qr/\.[^.]*$/);
 
-    for my $ext (@ignoreExtensions) {
-        if ($ext eq $extension) {
-            return 1;
-        }
-    }
-    return 0;
+    return $ignoreExtensions{$extension} // 0;
 }
 
 #-----------------------------------------------------------------------------------------
@@ -259,8 +248,8 @@ sub parseCommandLine {
     my $nameIndex = 0;
     my @names     = (\$projectTemplate, \$projectName, \$projectLocation, \$companyName, \$bundleIdentifier);
 
-    if (scalar($#ARGV) > 1) {
-        for (my $index = 0; $index < scalar($#ARGV) + 1; ++$index) {
+    if (@ARGV >= 3) {
+        for (my $index = 0; $index <= $#ARGV; ++$index) {
             my $dashCheck = substr($ARGV[$index], 0, 1);
             if ($dashCheck eq "-") {
                 #=========================================================================
@@ -307,11 +296,6 @@ sub parseCommandLine {
     #=====================================================================================
     #  validate the chosen template exits
     #=====================================================================================
-    if (!-d "$TEMPLATE_LOCATION/$projectTemplate") {
-        print STDERR "*** Error: invalid template name\n";
-        exit(1);
-    }
-
     if (!-d "$TEMPLATE_LOCATION/$projectTemplate") {
         print STDERR "*** Error: invalid template name\n";
         exit(1);
@@ -366,18 +350,19 @@ sub prepareTemplateVariables {
     #=====================================================================================
     # get and format timestamp values
     #=====================================================================================
-    $setFileDateFormat = strftime("%D %I:%M %p", localtime);
+    my @now = localtime;
+    $setFileDateFormat = strftime("%D %I:%M %p", @now);
 
-    $timestamp = strftime("%e-%b-%Y  %-I:%M%p", localtime);
+    $timestamp = strftime("%e-%b-%Y  %-I:%M%p", @now);
     $timestamp =~ s/AM/am/;
     $timestamp =~ s/PM/pm/;
 
-    my $currentYear = strftime("%Y", localtime);
+    my $currentYear = strftime("%Y", @now);
     $copyrightNotice = "Copyright © $currentYear By $companyName All rights reserved.";
 
     my $companiesfh;
-    if (open($companiesfh, '<', "$TEMPLATE_LOCATION/_Files/organizations.txt") == 0) {
-        print STDERR "*** Error: Unable to open orginations file : $!\n";
+    unless (open($companiesfh, '<', "$TEMPLATE_LOCATION/_Files/organizations.txt")) {
+        print STDERR "*** Error: Unable to open organizations file: $!\n";
         exit(1);
     }
 
@@ -396,23 +381,20 @@ sub prepareTemplateVariables {
         }
 
         my $licenseFH;
-        if (open($licenseFH, '+<', $licenseFilePath) == 0) {
-            print STDERR "*** Error: Unable to read the  : $!\n";
+        unless (open($licenseFH, '<', $licenseFilePath)) {
+            print STDERR "*** Error: Unable to read the license file: $!\n";
             exit(1);
         }
 
         local $/;
         $licenseText = <$licenseFH>;
+        close($licenseFH);
         utf8::upgrade($licenseText);
 
         my $p = index($licenseText, "Copyright");
         $licenseText = substr($licenseText, $p);
         $licenseText =~ s/$findFilesToProcess/$copyrightNotice/;
         $licenseText =~ s/^\s+|\s+$//g;
-        seek($licenseFH, 0, 0);
-        print $licenseFH "$licenseText";
-
-        close($licenseFH);
 
     }
 }
@@ -440,16 +422,21 @@ sub createProjectFileStructure {
         },
         "$TEMPLATE_LOCATION/$projectTemplate"
     );
-    my $resourcesDir = `find "$projectLocation/$projectName"  -name "Resources" -type d -print`;
-    chomp($resourcesDir);
+    my $resourcesDir;
+    find(sub {
+        if (-d $_ && $_ eq "Resources") {
+            $resourcesDir = $File::Find::name;
+        }
+    }, "$projectLocation/$projectName");
+    die "*** Error: Resources directory not found\n" unless defined $resourcesDir;
     unzipFiles("$TEMPLATE_LOCATION/_Files/Assets.xcassets.zip", $resourcesDir);
 
     if (dircopy("$TEMPLATE_LOCATION/_Files/BuildEnv", "$projectLocation/$projectName/BuildEnv") == 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
+        print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }
     if (copy("$TEMPLATE_LOCATION/_Files/.swiftlint.yml", "$projectLocation/$projectName/") == 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
+        print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }
 
@@ -458,7 +445,7 @@ sub createProjectFileStructure {
         $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Closed.markdown";
     }
     if (copy($licenseFilePath, "$projectLocation/$projectName/LICENSE.markdown") == 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
+        print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }
 
@@ -472,36 +459,33 @@ sub createProjectFileStructure {
         }
     }
     if (copy($IDETemplateMacrosFile, "$projectLocation/$projectName/$projectName.xcodeproj/xcuserdata/IDETemplateMacros.plist") == 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
+        print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }
 
     if (copy("$TEMPLATE_LOCATION/_Files/.xcodesamplecode.plist", "$projectLocation/$projectName/$projectName.xcodeproj/xcuserdata/") == 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
+        print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }
 
-    if (make_path("$projectLocation/$projectName/Documentation") == 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
-        exit(1);
-    }
+    make_path("$projectLocation/$projectName/Documentation");
 
     my $readmefh;
-    if (open($readmefh, '>', "$projectLocation/$projectName/README.markdown") == 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
+    unless (open($readmefh, '>', "$projectLocation/$projectName/README.markdown")) {
+        print STDERR "*** Error: disk error: $!\n";
         exit(1);
     }
     print $readmefh "\n";
     close($readmefh);
 
     if (system("git init \"$projectLocation/$projectName/\" &> /dev/null") != 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
+        print STDERR "*** Error: disk error : $!\n";
         exit(1);
 
     }
 
     if (system("cd \"$projectLocation/$projectName/\" && git checkout -b develop &> /dev/null") != 0) {
-        print STDERR "*** Error: disk errpr : $!\n";
+        print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }
 }
@@ -513,7 +497,7 @@ sub searchReplace {
     }
 
     (undef, undef, my $extension) = fileparse($File::Find::name, qr/\.[^.]*$/);
-    if (index($File::Find::name, '\r') < 0 && -f $File::Find::name && !shouldIgnoreFile($File::Find::name)) {
+    if (index($File::Find::name, "\r") < 0 && -f $File::Find::name && !shouldIgnoreFile($File::Find::name)) {
         my $sourcefile;
 
         if (open($sourcefile, '+<', "$File::Find::name")) {
@@ -531,8 +515,8 @@ sub searchReplace {
                         $source =~ s/GENERATE_INFOPLIST_FILE = YES;/GENERATE_INFOPLIST_FILE = YES;\n\t\t\tINFOPLIST_KEY_CFBundleDisplayName = \"$projectName\";/g;
                     }
                     $source =~ s/PRODUCT_BUNDLE_IDENTIFIER \s*=\s*.*;/PRODUCT_BUNDLE_IDENTIFIER  = $bundleIdentifier;/g;
-                    $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Created  :*[^\n|\\n]/Created  :  $timestamp/g;
-                    $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Modified :*[^\n|\\n]/Modified :/g;
+                    $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n]|Created  :*[^\n]/Created  :  $timestamp/g;
+                    $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n]|Modified :*[^\n]/Modified :/g;
 
                     our $count = 0;
                     while ($source =~ /$projectFileCopyright/) {
@@ -543,7 +527,6 @@ sub searchReplace {
                             $wrapped =~ s{'}{\\'}g;
                             $wrapped =~ s{"}{\\"}g;
                             $wrapped =~ s{\n}{\\n}g;
-                            $wrapped =~ s{“}{\\“}g;
                             $wrapped = "\\n" . $wrapped;
                             $source =~ s/$projectFileCopyright/$wrapped/;
                         }
@@ -556,8 +539,8 @@ sub searchReplace {
                     }
                 }
                 else {
-                    $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Created  :*[^\n|\\n]/Created  :  $timestamp/;
-                    $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Modified :*[^\n|\\n]/Modified :/;
+                    $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n]|Created  :*[^\n]/Created  :  $timestamp/;
+                    $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n]|Modified :*[^\n]/Modified :/;
 
                     if ($inFileLicense) {
                         if ($source =~ /$nonProjectFileCopyright/) {
@@ -590,10 +573,10 @@ createProjectFileStructure();
 
 find(\&searchReplace, "$projectLocation/$projectName");
 if ($openXcode) {
-    system("open -a Xcode $projectLocation/$projectName/$projectName.xcodeproj &");
+    system("open -a Xcode \"$projectLocation/$projectName/$projectName.xcodeproj\" &");
 }
 
 if ($setupGithub) {
     system("cd \"$projectLocation/$projectName/\" && gh repo create \"$projectName\" --private --source=. --remote=upstream &> /dev/null");
-    system("rm -rf ~/,local &> /dev/null");
+    system("rm -rf ~/.local &> /dev/null");
 }

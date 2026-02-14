@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  14-Feb-2026  2:01pm
+# Modified :  15-Feb-2026  1:23pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1489,13 +1489,13 @@ else
 #*****************************************************************************************
 # Prepare for shutdown or restart
 #*****************************************************************************************
-osascript <<"SHUTDOWN" >/dev/null 2>&1 &
+nohup osascript <<"SHUTDOWN" >/dev/null 2>&1 &
 tell application "System Events"
 	set terminals to {"ghostty", "Terminal"}
 	repeat with processName in terminals
 		try
 			do shell script "killall " & quoted form of processName
-			delay 0.1
+			delay 0.2
 		end try
 	end repeat
 	if (system attribute "OCD_OPTION" as string) is equal to "off" then
@@ -1506,5 +1506,7 @@ tell application "System Events"
 end tell
 SHUTDOWN
 disown
+exit 0
+
 fi
 

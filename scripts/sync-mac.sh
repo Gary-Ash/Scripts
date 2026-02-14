@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  12-Feb-2026  7:45pm
+# Modified :  14-Feb-2026  2:51pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -42,6 +42,26 @@ sync_directories() {
 	for file in "${files_to_sync[@]}"; do
 		local remote_file="${file// /\\ }"
 		SSHPASS="${sudo_password}" sshpass -e rsync -azq "${file}" "${target_system}:${remote_file}"
+	done
+}
+
+sync_mail_archive() {
+	local target_system="$1"
+	local mail_dir=~/Library/Mail
+	local remote_dir="${mail_dir// /\\ }"
+	local pref_files=(
+		~/Library/Preferences/com.apple.mail.plist
+		~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist
+	)
+
+	SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${mail_dir}/" "${target_system}:${remote_dir}/"
+
+	for file in "${pref_files[@]}"; do
+		if [[ -f "$file" ]]; then
+			local remote_file="${file// /\\ }"
+			# We use rsync without --delete here as these are individual files
+			SSHPASS="${sudo_password}" sshpass -e rsync -azq "${file}" "${target_system}:${remote_file}"
+		fi
 	done
 }
 
@@ -161,6 +181,7 @@ main() {
 		if [[ "${system}" != "${current_host}" ]]; then
 			target_system="${USER}@${system}"
 			sync_directories "${target_system}"
+			sync_mail_archive "${target_system}"
 			sync_ruby_gems "${target_system}"
 			sync_pip_packages "${target_system}"
 			sync_homebrew_packages "${target_system}"

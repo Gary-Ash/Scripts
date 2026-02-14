@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  12-Feb-2026  4:00pm
+# Modified :  14-Feb-2026  2:01pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1191,23 +1191,24 @@ try
 			tell application "Slack" to activate
 			delay 3
 
-			keystroke "1" using {command down}
-
-			repeat 10 times
+			repeat with n from 0 to 9
 				try
+					key code (18 + n) using {command down}
+					delay 0.1
+
 					tell application "Slack" to activate
 					click menu item "All Unreads" of menu 1 of menu bar item "Go" of menu bar 1
-					delay 0.5
-					tell application "Slack" to activate
+					delay 0.1
 					key code 53 using {shift down}
-					click menu item "Select Next Workspace" of menu of menu item "Workspace" of menu of menu bar item "File" of menu bar 1
+					delay 0.1
 				end try
 			end repeat
 
 			delay 0.5
 			tell application "Slack" to activate
 			keystroke "1" using {command down}
-			delay 120
+			delay 0.2
+			key code 53
 			tell application "Slack" to quit
 		end tell
 	end try

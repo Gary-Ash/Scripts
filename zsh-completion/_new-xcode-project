@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  20-Feb-2026  5:24pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -17,7 +17,7 @@ _new-xcode-project() {
 		    setopt localoptions extendedglob
 
 		    local -a _descriptions
-			local raw_names=("${(@f)$(find "$HOME/Developer/GeeDblA/ProjectTemplates" -type d -depth 1 -not -name "_*"  -not -name ".*")}")
+			local raw_names=("${(@f)$(find "/opt/geedbla/templates/Xcode" -type d -depth 1 -not -name "_*"  -not -name ".*")}")
 			for template in "${raw_names[@]}"; do
 				name=$(basename "$template")
 				desc=$(<"${template}/.ProjectDescription")

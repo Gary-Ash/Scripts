@@ -1,0 +1,1465 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 90;
+	objects = {
+
+/* Begin PBXFileReference section */
+		AB38B2AA2E808F91004739F1 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		AB38B2AB2E808F91004739F1 /* LICENSE.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.markdown; sourceTree = "<group>"; };
+		AB38B2AC2E808F91004739F1 /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.markdown; sourceTree = "<group>"; };
+		ABB2F2D32E8080780079BC3D /* 2DGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2DGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABB2F2E42E8080780079BC3D /* 2DGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2DGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABB2F2F42E8080780079BC3D /* 2DGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 2DGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		ABB2F3092E8080780079BC3D /* Exceptions for "2DGame Shared" folder in "2DGame iOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				GameScene.swift,
+				Resources/Actions.sks,
+				Resources/GameScene.sks,
+			);
+			target = ABB2F2D22E8080780079BC3D /* 2DGame iOS */;
+		};
+		ABB2F30D2E8080780079BC3D /* Exceptions for "2DGame Shared" folder in "2DGame tvOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				GameScene.swift,
+				Resources/Actions.sks,
+				Resources/GameScene.sks,
+			);
+			target = ABB2F2E32E8080780079BC3D /* 2DGame tvOS */;
+		};
+		ABB2F3112E8080780079BC3D /* Exceptions for "2DGame Shared" folder in "2DGame macOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				GameScene.swift,
+				Resources/Actions.sks,
+				Resources/GameScene.sks,
+			);
+			target = ABB2F2F32E8080780079BC3D /* 2DGame macOS */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		ABB2F2CA2E8080760079BC3D /* 2DGame Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				ABB2F3092E8080780079BC3D /* Exceptions for "2DGame Shared" folder in "2DGame iOS" target */,
+				ABB2F30D2E8080780079BC3D /* Exceptions for "2DGame Shared" folder in "2DGame tvOS" target */,
+				ABB2F3112E8080780079BC3D /* Exceptions for "2DGame Shared" folder in "2DGame macOS" target */,
+			);
+			path = "2DGame Shared";
+			sourceTree = "<group>";
+		};
+		ABB2F2D52E8080780079BC3D /* 2DGame iOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "2DGame iOS";
+			sourceTree = "<group>";
+		};
+		ABB2F2E52E8080780079BC3D /* 2DGame tvOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "2DGame tvOS";
+			sourceTree = "<group>";
+		};
+		ABB2F2F52E8080780079BC3D /* 2DGame macOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "2DGame macOS";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ABB2F2D02E8080780079BC3D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		ABB2F2E12E8080780079BC3D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		ABB2F2F12E8080780079BC3D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ABB2F2C52E8080750079BC3D = {
+			isa = PBXGroup;
+			children = (
+				ABB2F2CA2E8080760079BC3D /* 2DGame Shared */,
+				ABB2F2D52E8080780079BC3D /* 2DGame iOS */,
+				ABB2F2E52E8080780079BC3D /* 2DGame tvOS */,
+				ABB2F2F52E8080780079BC3D /* 2DGame macOS */,
+				AB38B2AA2E808F91004739F1 /* .swiftlint.yml */,
+				AB38B2AB2E808F91004739F1 /* LICENSE.markdown */,
+				AB38B2AC2E808F91004739F1 /* README.markdown */,
+				ABB2F2D42E8080780079BC3D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ABB2F2D42E8080780079BC3D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ABB2F2D32E8080780079BC3D /* 2DGame.app */,
+				ABB2F2E42E8080780079BC3D /* 2DGame.app */,
+				ABB2F2F42E8080780079BC3D /* 2DGame.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ABB2F2D22E8080780079BC3D /* 2DGame iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABB2F30A2E8080780079BC3D /* Build configuration list for PBXNativeTarget "2DGame iOS" */;
+			buildPhases = (
+				ABB2F2CF2E8080780079BC3D /* Sources */,
+				AB38B2A22E808C84004739F1 /* SwiftLint Project */,
+				AB38B2A32E808CBB004739F1 /* Increment Build Number */,
+				AB38B2A42E808D7C004739F1 /* Stamp Icon of Beta Builds */,
+				ABB2F2D02E8080780079BC3D /* Frameworks */,
+				ABB2F2D12E8080780079BC3D /* Resources */,
+				AB38B2A52E808D99004739F1 /* Restore Icon */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				ABB2F2D52E8080780079BC3D /* 2DGame iOS */,
+			);
+			name = "2DGame iOS";
+			productName = "2DGame iOS";
+			productReference = ABB2F2D32E8080780079BC3D /* 2DGame.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ABB2F2E32E8080780079BC3D /* 2DGame tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABB2F30E2E8080780079BC3D /* Build configuration list for PBXNativeTarget "2DGame tvOS" */;
+			buildPhases = (
+				ABB2F2E02E8080780079BC3D /* Sources */,
+				AB38B2A62E808E59004739F1 /* SwiftLint Project */,
+				AB38B2A72E808E5E004739F1 /* Increment Build Number */,
+				AB38B2A82E808E70004739F1 /* Stamp Icon of Beta Builds */,
+				ABB2F2E12E8080780079BC3D /* Frameworks */,
+				ABB2F2E22E8080780079BC3D /* Resources */,
+				AB38B2A92E808E74004739F1 /* Restore Icon */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				ABB2F2E52E8080780079BC3D /* 2DGame tvOS */,
+			);
+			name = "2DGame tvOS";
+			productName = "2DGame tvOS";
+			productReference = ABB2F2E42E8080780079BC3D /* 2DGame.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ABB2F2F32E8080780079BC3D /* 2DGame macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABB2F3122E8080780079BC3D /* Build configuration list for PBXNativeTarget "2DGame macOS" */;
+			buildPhases = (
+				ABB2F2F02E8080780079BC3D /* Sources */,
+				AB38B2AD2E808FD0004739F1 /* SwiftLint Project */,
+				AB38B2AE2E808FD5004739F1 /* Increment Build Number */,
+				AB38B2AF2E808FD9004739F1 /* Stamp Icon of Beta Builds */,
+				ABB2F2F12E8080780079BC3D /* Frameworks */,
+				ABB2F2F22E8080780079BC3D /* Resources */,
+				AB38B2B02E808FDE004739F1 /* Restore Icon */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				ABB2F2F52E8080780079BC3D /* 2DGame macOS */,
+			);
+			name = "2DGame macOS";
+			productName = "2DGame macOS";
+			productReference = ABB2F2F42E8080780079BC3D /* 2DGame.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ABB2F2C62E8080750079BC3D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2620;
+				ORGANIZATIONNAME = "CompanyName";
+				TargetAttributes = {
+					ABB2F2D22E8080780079BC3D = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					ABB2F2E32E8080780079BC3D = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					ABB2F2F32E8080780079BC3D = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = ABB2F2C92E8080750079BC3D /* Build configuration list for PBXProject "2DGame" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = ABB2F2C52E8080750079BC3D;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 90;
+			productRefGroup = ABB2F2D42E8080780079BC3D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ABB2F2D22E8080780079BC3D /* 2DGame iOS */,
+				ABB2F2E32E8080780079BC3D /* 2DGame tvOS */,
+				ABB2F2F32E8080780079BC3D /* 2DGame macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ABB2F2D12E8080780079BC3D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		ABB2F2E22E8080780079BC3D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		ABB2F2F22E8080780079BC3D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AB38B2A22E808C84004739F1 /* SwiftLint Project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "SwiftLint Project";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# swiftlint-project.sh",
+				"#",
+				"# This script will run SwiftLint over the current project",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v swiftlint; then",
+				"\tbrew install swiftlint",
+				"fi",
+				" ",
+				"cd \"${SRCROOT}\"",
+				"swiftlint --fix --config \"${PROJECT_DIR}/.swiftlint.yml\" .",
+				"",
+			);
+		};
+		AB38B2A32E808CBB004739F1 /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Increment Build Number";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# increment-build-number.sh",
+				"#",
+				"# This script increments macOS/iOS build number in the project Info.plist",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [[ ${CONFIGURATION} == \"Release\" || ${CONFIGURATION} == \"TestFlight\" ]]; then",
+				"\tcd \"${PROJECT_DIR}\" || exit",
+				"\tagvtool bump",
+				"fi",
+				"",
+			);
+		};
+		AB38B2A42E808D7C004739F1 /* Stamp Icon of Beta Builds */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Stamp Icon of Beta Builds";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# stamp-beta-version.sh",
+				"#",
+				"# This script is meant to be run during the app build process, it make copy of the app's",
+				"# icon resources and then modifies the app icon to include a Beta stamp and version numbers",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [[ ${CONFIGURATION} != \"TestFlight\" ]]; then",
+				"\texit 0",
+				"fi",
+				" ",
+				"buildInformation=\"text 0,0 \\'v${MARKETING_VERSION} Build ${CURRENT_PROJECT_VERSION}\\'\"",
+				" ",
+				"#*****************************************************************************************",
+				"#  make sure the PATH includes Home Brew so that we can access the ImageMagick tools",
+				"#*****************************************************************************************",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"elif [ -f \"/usr/local/bin/brew\" ]; then",
+				"\texport PATH=\"/usr/local/bin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v magick &>/dev/null; then",
+				"\tbrew install imagemagick",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  find the app icon graphics and make backups",
+				"#*****************************************************************************************",
+				"appIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)",
+				"tvOSappIconDir=$(find \"${SRCROOT}/\" -type d -name \"Brand Assets.brandassets\" -print)",
+				" ",
+				"if [[ -n $appIconDir ]]; then",
+				"\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"",
+				"\tcp -rf \"${appIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\"",
+				"fi",
+				" ",
+				"if [[ -n ${tvOSappIconDir} ]]; then",
+				"\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"",
+				"\tcp -rf \"${tvOSappIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\"",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  add the Beta flag, version, and build information to the AppStore icon",
+				"#*****************************************************************************************",
+				"find \"$appIconDir\" -name \"*.png\" -type f -print |",
+				"\twhile IFS= read -r file; do",
+				"\t\tdimWidth=$(magick identify -format \"%w\" \"${file}\")",
+				"\t\tdimHeight=$(magick identify -format \"%h\" \"${file}\")",
+				" ",
+				"\t\tbetaPoint=$((72 * dimHeight / 1024))",
+				"\t\tbuildPoint=$((35 * dimHeight / 1024))",
+				"\t\tbetaX=$((80 * dimWidth / 1024))",
+				"\t\tbetaY=$((200 * dimHeight / 1024))",
+				" ",
+				"\t\techo \"${file} rotate -25 text ${betaX},${betaY} ' Beta '\"",
+				" ",
+				"\t\tmagick \"${file}\" \\",
+				"\t\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\",
+				"\t\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\",
+				"\t\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\",
+				"\t\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${file}\"",
+				"	done",
+				" ",
+				"#*****************************************************************************************",
+				"#  if there are tvOS assets add those to the list icons",
+				"#*****************************************************************************************",
+				"if [[ -n ${tvOSappIconDir} ]]; then",
+				"\tfind \"$tvOSappIconDir/App Icon - App Store.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/App Icon.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/Top Shelf Image Wide.imageset\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/Top Shelf Image.imageset\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  finish prepping the last of icons",
+				"#*****************************************************************************************",
+				"for icon in \"${icons[@]}\"; do",
+				"\tdimWidth=$(magick identify -format \"%w\" \"${icon}\")",
+				"\tdimHeight=$(magick identify -format \"%h\" \"${icon}\")",
+				" ",
+				"\tbetaPoint=$((72 * dimHeight / 1024))",
+				"\tbuildPoint=$((35 * dimHeight / 1024))",
+				"\tbetaX=$((80 * dimWidth / 1024))",
+				"\tbetaY=$((200 * dimHeight / 1024))",
+				" ",
+				"\techo \"${icon} rotate -25 text ${betaX},${betaY} ' Beta '\"",
+				" ",
+				"\tmagick \"${icon}\" \\",
+				"\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\",
+				"\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\",
+				"\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\",
+				"\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${icon}\"",
+				"done",
+				"",
+			);
+		};
+		AB38B2A52E808D99004739F1 /* Restore Icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Restore Icon";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# restore-stamped-icon.sh",
+				"#",
+				"# This script will restore the copy of the app's original icon resources",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				"if [[ ${CONFIGURATION} == \"TestFlight\" ]]; then",
+				"\tappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)",
+				"\ttvOSappIconDir=$(find \"${SRCROOT}\" -type d -name \"Brand Assets.brandassets\" -print)",
+				"",
+				"\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" ]]; then",
+				"\t\trm -rf \"${appIconDir}\"",
+				"\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" \"${appIconDir}\"",
+				"	fi",
+				"",
+				"\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" ]]; then",
+				"\t\trm -rf \"${tvOSappIconDir}\"",
+				"\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" \"${tvOSappIconDir}\"",
+				"	fi",
+				"",
+				"fi",
+				"",
+			);
+		};
+		AB38B2A62E808E59004739F1 /* SwiftLint Project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "SwiftLint Project";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# swiftlint-project.sh",
+				"#",
+				"# This script will run SwiftLint over the current project",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v swiftlint; then",
+				"\tbrew install swiftlint",
+				"fi",
+				" ",
+				"cd \"${SRCROOT}\"",
+				"swiftlint --fix --config \"${PROJECT_DIR}/.swiftlint.yml\" .",
+				"",
+			);
+		};
+		AB38B2A72E808E5E004739F1 /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Increment Build Number";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# increment-build-number.sh",
+				"#",
+				"# This script increments macOS/iOS build number in the project Info.plist",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [[ ${CONFIGURATION} == \"Release\" || ${CONFIGURATION} == \"TestFlight\" ]]; then",
+				"\tcd \"${PROJECT_DIR}\" || exit",
+				"\tagvtool bump",
+				"fi",
+				"",
+			);
+		};
+		AB38B2A82E808E70004739F1 /* Stamp Icon of Beta Builds */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Stamp Icon of Beta Builds";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# stamp-beta-version.sh",
+				"#",
+				"# This script is meant to be run during the app build process, it make copy of the app's",
+				"# icon resources and then modifies the app icon to include a Beta stamp and version numbers",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [[ ${CONFIGURATION} != \"TestFlight\" ]]; then",
+				"\texit 0",
+				"fi",
+				" ",
+				"buildInformation=\"text 0,0 \\'v${MARKETING_VERSION} Build ${CURRENT_PROJECT_VERSION}\\'\"",
+				" ",
+				"#*****************************************************************************************",
+				"#  make sure the PATH includes Home Brew so that we can access the ImageMagick tools",
+				"#*****************************************************************************************",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"elif [ -f \"/usr/local/bin/brew\" ]; then",
+				"\texport PATH=\"/usr/local/bin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v magick &>/dev/null; then",
+				"\tbrew install imagemagick",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  find the app icon graphics and make backups",
+				"#*****************************************************************************************",
+				"appIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)",
+				"tvOSappIconDir=$(find \"${SRCROOT}/\" -type d -name \"Brand Assets.brandassets\" -print)",
+				" ",
+				"if [[ -n $appIconDir ]]; then",
+				"\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"",
+				"\tcp -rf \"${appIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\"",
+				"fi",
+				" ",
+				"if [[ -n ${tvOSappIconDir} ]]; then",
+				"\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"",
+				"\tcp -rf \"${tvOSappIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\"",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  add the Beta flag, version, and build information to the AppStore icon",
+				"#*****************************************************************************************",
+				"find \"$appIconDir\" -name \"*.png\" -type f -print |",
+				"\twhile IFS= read -r file; do",
+				"\t\tdimWidth=$(magick identify -format \"%w\" \"${file}\")",
+				"\t\tdimHeight=$(magick identify -format \"%h\" \"${file}\")",
+				" ",
+				"\t\tbetaPoint=$((72 * dimHeight / 1024))",
+				"\t\tbuildPoint=$((35 * dimHeight / 1024))",
+				"\t\tbetaX=$((80 * dimWidth / 1024))",
+				"\t\tbetaY=$((200 * dimHeight / 1024))",
+				" ",
+				"\t\techo \"${file} rotate -25 text ${betaX},${betaY} ' Beta '\"",
+				" ",
+				"\t\tmagick \"${file}\" \\",
+				"\t\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\",
+				"\t\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\",
+				"\t\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\",
+				"\t\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${file}\"",
+				"	done",
+				" ",
+				"#*****************************************************************************************",
+				"#  if there are tvOS assets add those to the list icons",
+				"#*****************************************************************************************",
+				"if [[ -n ${tvOSappIconDir} ]]; then",
+				"\tfind \"$tvOSappIconDir/App Icon - App Store.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/App Icon.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/Top Shelf Image Wide.imageset\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/Top Shelf Image.imageset\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  finish prepping the last of icons",
+				"#*****************************************************************************************",
+				"for icon in \"${icons[@]}\"; do",
+				"\tdimWidth=$(magick identify -format \"%w\" \"${icon}\")",
+				"\tdimHeight=$(magick identify -format \"%h\" \"${icon}\")",
+				" ",
+				"\tbetaPoint=$((72 * dimHeight / 1024))",
+				"\tbuildPoint=$((35 * dimHeight / 1024))",
+				"\tbetaX=$((80 * dimWidth / 1024))",
+				"\tbetaY=$((200 * dimHeight / 1024))",
+				" ",
+				"\techo \"${icon} rotate -25 text ${betaX},${betaY} ' Beta '\"",
+				" ",
+				"\tmagick \"${icon}\" \\",
+				"\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\",
+				"\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\",
+				"\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\",
+				"\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${icon}\"",
+				"done",
+				"",
+			);
+		};
+		AB38B2A92E808E74004739F1 /* Restore Icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Restore Icon";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# restore-stamped-icon.sh",
+				"#",
+				"# This script will restore the copy of the app's original icon resources",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				"if [[ ${CONFIGURATION} == \"TestFlight\" ]]; then",
+				"\tappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)",
+				"\ttvOSappIconDir=$(find \"${SRCROOT}\" -type d -name \"Brand Assets.brandassets\" -print)",
+				"",
+				"\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" ]]; then",
+				"\t\trm -rf \"${appIconDir}\"",
+				"\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" \"${appIconDir}\"",
+				"	fi",
+				"",
+				"\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" ]]; then",
+				"\t\trm -rf \"${tvOSappIconDir}\"",
+				"\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" \"${tvOSappIconDir}\"",
+				"	fi",
+				"",
+				"fi",
+				"",
+			);
+		};
+		AB38B2AD2E808FD0004739F1 /* SwiftLint Project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "SwiftLint Project";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# swiftlint-project.sh",
+				"#",
+				"# This script will run SwiftLint over the current project",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v swiftlint; then",
+				"\tbrew install swiftlint",
+				"fi",
+				" ",
+				"cd \"${SRCROOT}\"",
+				"swiftlint --fix --config \"${PROJECT_DIR}/.swiftlint.yml\" .",
+				"",
+			);
+		};
+		AB38B2AE2E808FD5004739F1 /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Increment Build Number";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# increment-build-number.sh",
+				"#",
+				"# This script increments macOS/iOS build number in the project Info.plist",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [[ ${CONFIGURATION} == \"Release\" || ${CONFIGURATION} == \"TestFlight\" ]]; then",
+				"\tcd \"${PROJECT_DIR}\" || exit",
+				"\tagvtool bump",
+				"fi",
+				"",
+			);
+		};
+		AB38B2AF2E808FD9004739F1 /* Stamp Icon of Beta Builds */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Stamp Icon of Beta Builds";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# stamp-beta-version.sh",
+				"#",
+				"# This script is meant to be run during the app build process, it make copy of the app's",
+				"# icon resources and then modifies the app icon to include a Beta stamp and version numbers",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [[ ${CONFIGURATION} != \"TestFlight\" ]]; then",
+				"\texit 0",
+				"fi",
+				" ",
+				"buildInformation=\"text 0,0 \\'v${MARKETING_VERSION} Build ${CURRENT_PROJECT_VERSION}\\'\"",
+				" ",
+				"#*****************************************************************************************",
+				"#  make sure the PATH includes Home Brew so that we can access the ImageMagick tools",
+				"#*****************************************************************************************",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"elif [ -f \"/usr/local/bin/brew\" ]; then",
+				"\texport PATH=\"/usr/local/bin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v magick &>/dev/null; then",
+				"\tbrew install imagemagick",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  find the app icon graphics and make backups",
+				"#*****************************************************************************************",
+				"appIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)",
+				"tvOSappIconDir=$(find \"${SRCROOT}/\" -type d -name \"Brand Assets.brandassets\" -print)",
+				" ",
+				"if [[ -n $appIconDir ]]; then",
+				"\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"",
+				"\tcp -rf \"${appIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\"",
+				"fi",
+				" ",
+				"if [[ -n ${tvOSappIconDir} ]]; then",
+				"\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"",
+				"\tcp -rf \"${tvOSappIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\"",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  add the Beta flag, version, and build information to the AppStore icon",
+				"#*****************************************************************************************",
+				"find \"$appIconDir\" -name \"*.png\" -type f -print |",
+				"\twhile IFS= read -r file; do",
+				"\t\tdimWidth=$(magick identify -format \"%w\" \"${file}\")",
+				"\t\tdimHeight=$(magick identify -format \"%h\" \"${file}\")",
+				" ",
+				"\t\tbetaPoint=$((72 * dimHeight / 1024))",
+				"\t\tbuildPoint=$((35 * dimHeight / 1024))",
+				"\t\tbetaX=$((80 * dimWidth / 1024))",
+				"\t\tbetaY=$((200 * dimHeight / 1024))",
+				" ",
+				"\t\techo \"${file} rotate -25 text ${betaX},${betaY} ' Beta '\"",
+				" ",
+				"\t\tmagick \"${file}\" \\",
+				"\t\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\",
+				"\t\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\",
+				"\t\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\",
+				"\t\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${file}\"",
+				"	done",
+				" ",
+				"#*****************************************************************************************",
+				"#  if there are tvOS assets add those to the list icons",
+				"#*****************************************************************************************",
+				"if [[ -n ${tvOSappIconDir} ]]; then",
+				"\tfind \"$tvOSappIconDir/App Icon - App Store.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/App Icon.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/Top Shelf Image Wide.imageset\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/Top Shelf Image.imageset\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  finish prepping the last of icons",
+				"#*****************************************************************************************",
+				"for icon in \"${icons[@]}\"; do",
+				"\tdimWidth=$(magick identify -format \"%w\" \"${icon}\")",
+				"\tdimHeight=$(magick identify -format \"%h\" \"${icon}\")",
+				" ",
+				"\tbetaPoint=$((72 * dimHeight / 1024))",
+				"\tbuildPoint=$((35 * dimHeight / 1024))",
+				"\tbetaX=$((80 * dimWidth / 1024))",
+				"\tbetaY=$((200 * dimHeight / 1024))",
+				" ",
+				"\techo \"${icon} rotate -25 text ${betaX},${betaY} ' Beta '\"",
+				" ",
+				"\tmagick \"${icon}\" \\",
+				"\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\",
+				"\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\",
+				"\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\",
+				"\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${icon}\"",
+				"done",
+				"",
+			);
+		};
+		AB38B2B02E808FDE004739F1 /* Restore Icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "Restore Icon";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# restore-stamped-icon.sh",
+				"#",
+				"# This script will restore the copy of the app's original icon resources",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm,
+				"# Modified :,
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				"if [[ ${CONFIGURATION} == \"TestFlight\" ]]; then",
+				"\tappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)",
+				"\ttvOSappIconDir=$(find \"${SRCROOT}\" -type d -name \"Brand Assets.brandassets\" -print)",
+				"",
+				"\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" ]]; then",
+				"\t\trm -rf \"${appIconDir}\"",
+				"\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" \"${appIconDir}\"",
+				"	fi",
+				"",
+				"\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" ]]; then",
+				"\t\trm -rf \"${tvOSappIconDir}\"",
+				"\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" \"${tvOSappIconDir}\"",
+				"	fi",
+				"",
+				"fi",
+				"",
+			);
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ABB2F2CF2E8080780079BC3D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		ABB2F2E02E8080780079BC3D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		ABB2F2F02E8080780079BC3D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		ABB2F30B2E8080780079BC3D /* Debug configuration for PBXNativeTarget "2DGame iOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.geedbla.-DGame";
+				PRODUCT_NAME = 2DGame;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ABB2F30C2E8080780079BC3D /* Release configuration for PBXNativeTarget "2DGame iOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.geedbla.-DGame";
+				PRODUCT_NAME = 2DGame;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		ABB2F30F2E8080780079BC3D /* Debug configuration for PBXNativeTarget "2DGame tvOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "tvOS App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.2DGame;
+				PRODUCT_NAME = 2DGame;
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
+			};
+			name = Debug;
+		};
+		ABB2F3102E8080780079BC3D /* Release configuration for PBXNativeTarget "2DGame tvOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "tvOS App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.2DGame;
+				PRODUCT_NAME = 2DGame;
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		ABB2F3132E8080780079BC3D /* Debug configuration for PBXNativeTarget "2DGame macOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.2DGame;
+				PRODUCT_NAME = 2DGame;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		ABB2F3142E8080780079BC3D /* Release configuration for PBXNativeTarget "2DGame macOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.2DGame;
+				PRODUCT_NAME = 2DGame;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		ABB2F3152E8080780079BC3D /* Debug configuration for PBXProject "2DGame" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		ABB2F3162E8080780079BC3D /* Release configuration for PBXProject "2DGame" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		ABB2F3172E8081190079BC3D /* TestFlight configuration for PBXProject "2DGame" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = TestFlight;
+		};
+		ABB2F3182E8081190079BC3D /* TestFlight configuration for PBXNativeTarget "2DGame iOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.geedbla.-DGame";
+				PRODUCT_NAME = 2DGame;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = TestFlight;
+		};
+		ABB2F3192E8081190079BC3D /* TestFlight configuration for PBXNativeTarget "2DGame tvOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "tvOS App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.2DGame;
+				PRODUCT_NAME = 2DGame;
+				SDKROOT = appletvos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 18.6;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = TestFlight;
+		};
+		ABB2F31A2E8081190079BC3D /* TestFlight configuration for PBXNativeTarget "2DGame macOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.2DGame;
+				PRODUCT_NAME = 2DGame;
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = TestFlight;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ABB2F2C92E8080750079BC3D /* Build configuration list for PBXProject "2DGame" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABB2F3152E8080780079BC3D /* Debug configuration for PBXProject "2DGame" */,
+				ABB2F3162E8080780079BC3D /* Release configuration for PBXProject "2DGame" */,
+				ABB2F3172E8081190079BC3D /* TestFlight configuration for PBXProject "2DGame" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		ABB2F30A2E8080780079BC3D /* Build configuration list for PBXNativeTarget "2DGame iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABB2F30B2E8080780079BC3D /* Debug configuration for PBXNativeTarget "2DGame iOS" */,
+				ABB2F30C2E8080780079BC3D /* Release configuration for PBXNativeTarget "2DGame iOS" */,
+				ABB2F3182E8081190079BC3D /* TestFlight configuration for PBXNativeTarget "2DGame iOS" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		ABB2F30E2E8080780079BC3D /* Build configuration list for PBXNativeTarget "2DGame tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABB2F30F2E8080780079BC3D /* Debug configuration for PBXNativeTarget "2DGame tvOS" */,
+				ABB2F3102E8080780079BC3D /* Release configuration for PBXNativeTarget "2DGame tvOS" */,
+				ABB2F3192E8081190079BC3D /* TestFlight configuration for PBXNativeTarget "2DGame tvOS" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		ABB2F3122E8080780079BC3D /* Build configuration list for PBXNativeTarget "2DGame macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABB2F3132E8080780079BC3D /* Debug configuration for PBXNativeTarget "2DGame macOS" */,
+				ABB2F3142E8080780079BC3D /* Release configuration for PBXNativeTarget "2DGame macOS" */,
+				ABB2F31A2E8081190079BC3D /* TestFlight configuration for PBXNativeTarget "2DGame macOS" */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ABB2F2C62E8080750079BC3D /* Project object */;
+}

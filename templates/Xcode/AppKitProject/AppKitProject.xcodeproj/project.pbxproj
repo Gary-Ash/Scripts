@@ -1,0 +1,662 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		AB8575412E0B9BB200694020 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB8575272E0B9BB100694020 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AB85752E2E0B9BB100694020;
+			remoteInfo = AppKitProject;
+		};
+		AB85754B2E0B9BB200694020 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB8575272E0B9BB100694020 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AB85752E2E0B9BB100694020;
+			remoteInfo = AppKitProject;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		AB4346262E0C969500A67CFE /* LICENSE.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.markdown; sourceTree = "<group>"; };
+		AB4346272E0C969500A67CFE /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.markdown; sourceTree = "<group>"; };
+		AB85752F2E0B9BB100694020 /* AppKitProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppKitProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB8575402E0B9BB200694020 /* AppKitProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppKitProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB85754A2E0B9BB200694020 /* AppKitProjectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppKitProjectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		AB8575312E0B9BB100694020 /* AppKitProject */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AppKitProject;
+			sourceTree = "<group>";
+		};
+		AB8575432E0B9BB200694020 /* AppKitProjectTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AppKitProjectTests;
+			sourceTree = "<group>";
+		};
+		AB85754D2E0B9BB200694020 /* AppKitProjectUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AppKitProjectUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AB85752C2E0B9BB100694020 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB85753D2E0B9BB200694020 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB8575472E0B9BB200694020 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AB8575262E0B9BB100694020 = {
+			isa = PBXGroup;
+			children = (
+				AB8575312E0B9BB100694020 /* AppKitProject */,
+				AB8575432E0B9BB200694020 /* AppKitProjectTests */,
+				AB85754D2E0B9BB200694020 /* AppKitProjectUITests */,
+				AB4346262E0C969500A67CFE /* LICENSE.markdown */,
+				AB4346272E0C969500A67CFE /* README.markdown */,
+				AB8575302E0B9BB100694020 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AB8575302E0B9BB100694020 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AB85752F2E0B9BB100694020 /* AppKitProject.app */,
+				AB8575402E0B9BB200694020 /* AppKitProjectTests.xctest */,
+				AB85754A2E0B9BB200694020 /* AppKitProjectUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AB85752E2E0B9BB100694020 /* AppKitProject */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB8575542E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProject" */;
+			buildPhases = (
+				AB85752B2E0B9BB100694020 /* Sources */,
+				AB85755E2E0B9C9100694020 /* SwiftLint Project */,
+				AB85755F2E0B9C9500694020 /* Increment Build Number */,
+				AB8575602E0B9C9800694020 /* Stamp Icon of Beta Builds */,
+				AB85752C2E0B9BB100694020 /* Frameworks */,
+				AB85752D2E0B9BB100694020 /* Resources */,
+				AB8575612E0B9C9C00694020 /* Restore Icon */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AB8575312E0B9BB100694020 /* AppKitProject */,
+			);
+			name = AppKitProject;
+			packageProductDependencies = (
+			);
+			productName = AppKitProject;
+			productReference = AB85752F2E0B9BB100694020 /* AppKitProject.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AB85753F2E0B9BB200694020 /* AppKitProjectTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB8575572E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProjectTests" */;
+			buildPhases = (
+				AB85753C2E0B9BB200694020 /* Sources */,
+				AB85753D2E0B9BB200694020 /* Frameworks */,
+				AB85753E2E0B9BB200694020 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB8575422E0B9BB200694020 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AB8575432E0B9BB200694020 /* AppKitProjectTests */,
+			);
+			name = AppKitProjectTests;
+			packageProductDependencies = (
+			);
+			productName = AppKitProjectTests;
+			productReference = AB8575402E0B9BB200694020 /* AppKitProjectTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AB8575492E0B9BB200694020 /* AppKitProjectUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AB85755A2E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProjectUITests" */;
+			buildPhases = (
+				AB8575462E0B9BB200694020 /* Sources */,
+				AB8575472E0B9BB200694020 /* Frameworks */,
+				AB8575482E0B9BB200694020 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB85754C2E0B9BB200694020 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AB85754D2E0B9BB200694020 /* AppKitProjectUITests */,
+			);
+			name = AppKitProjectUITests;
+			packageProductDependencies = (
+			);
+			productName = AppKitProjectUITests;
+			productReference = AB85754A2E0B9BB200694020 /* AppKitProjectUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AB8575272E0B9BB100694020 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 2620;
+				ORGANIZATIONNAME = "CompanyName";
+				TargetAttributes = {
+					AB85752E2E0B9BB100694020 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					AB85753F2E0B9BB200694020 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = AB85752E2E0B9BB100694020;
+					};
+					AB8575492E0B9BB200694020 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = AB85752E2E0B9BB100694020;
+					};
+				};
+			};
+			buildConfigurationList = AB85752A2E0B9BB100694020 /* Build configuration list for PBXProject "AppKitProject" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AB8575262E0B9BB100694020;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = AB8575302E0B9BB100694020 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AB85752E2E0B9BB100694020 /* AppKitProject */,
+				AB85753F2E0B9BB200694020 /* AppKitProjectTests */,
+				AB8575492E0B9BB200694020 /* AppKitProjectUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AB85752D2E0B9BB100694020 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB85753E2E0B9BB200694020 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB8575482E0B9BB200694020 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AB85755E2E0B9C9100694020 /* SwiftLint Project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "SwiftLint Project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# swiftlint-project.sh\n#\n# This script will run SwiftLint over the current project\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [ -f \"/opt/homebrew/bin/brew\" ]; then\n\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"\nfi\n \nif ! command -v swiftlint; then\n\tbrew install swiftlint\nfi\n \ncd \"${SRCROOT}\"\nswiftlint --fix --config \"${PROJECT_DIR}/.swiftlint.yml\" .\n";
+		};
+		AB85755F2E0B9C9500694020 /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build Number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# increment-build-number.sh\n#\n# This script increments macOS/iOS build number in the project Info.plist\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [[ ${CONFIGURATION} == \"Release\" || ${CONFIGURATION} == \"TestFlight\" ]]; then\n\tcd \"${PROJECT_DIR}\" || exit\n\tagvtool bump\nfi\n";
+		};
+		AB8575602E0B9C9800694020 /* Stamp Icon of Beta Builds */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Stamp Icon of Beta Builds";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# stamp-beta-version.sh\n#\n# This script is meant to be run during the app build process, it make copy of the app's\n# icon resources and then modifies the app icon to include a Beta stamp and version numbers\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [[ ${CONFIGURATION} != \"TestFlight\" ]]; then\n\texit 0\nfi\n \nbuildInformation=\"text 0,0 \\'v${MARKETING_VERSION} Build ${CURRENT_PROJECT_VERSION}\\'\"\n \n#*****************************************************************************************\n#  make sure the PATH includes Home Brew so that we can access the ImageMagick tools\n#*****************************************************************************************\nif [ -f \"/opt/homebrew/bin/brew\" ]; then\n\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"\nelif [ -f \"/usr/local/bin/brew\" ]; then\n\texport PATH=\"/usr/local/bin:$PATH\"\nfi\n \nif ! command -v magick &>/dev/null; then\n\tbrew install imagemagick\nfi\n \n#*****************************************************************************************\n#  find the app icon graphics and make backups\n#*****************************************************************************************\nappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)\ntvOSappIconDir=$(find \"${SRCROOT}/\" -type d -name \"Brand Assets.brandassets\" -print)\n \nif [[ -n $appIconDir ]]; then\n\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"\n\tcp -rf \"${appIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\"\nfi\n \nif [[ -n ${tvOSappIconDir} ]]; then\n\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"\n\tcp -rf \"${tvOSappIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\"\nfi\n \n#*****************************************************************************************\n#  add the Beta flag, version, and build information to the AppStore icon\n#*****************************************************************************************\nfind \"$appIconDir\" -name \"*.png\" -type f -print |\n\twhile IFS= read -r file; do\n\t\tdimWidth=$(magick identify -format \"%w\" \"${file}\")\n\t\tdimHeight=$(magick identify -format \"%h\" \"${file}\")\n \n\t\tbetaPoint=$((72 * dimHeight / 1024))\n\t\tbuildPoint=$((35 * dimHeight / 1024))\n\t\tbetaX=$((80 * dimWidth / 1024))\n\t\tbetaY=$((200 * dimHeight / 1024))\n \n\t\techo \"${file} rotate -25 text ${betaX},${betaY} ' Beta '\"\n \n\t\tmagick \"${file}\" \\\n\t\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\\n\t\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\\n\t\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\\n\t\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${file}\"\n\tdone\n \n#*****************************************************************************************\n#  if there are tvOS assets add those to the list icons\n#*****************************************************************************************\nif [[ -n ${tvOSappIconDir} ]]; then\n\tfind \"$tvOSappIconDir/App Icon - App Store.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/App Icon.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/Top Shelf Image Wide.imageset\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/Top Shelf Image.imageset\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \nfi\n \n#*****************************************************************************************\n#  finish prepping the last of icons\n#*****************************************************************************************\nfor icon in \"${icons[@]}\"; do\n\tdimWidth=$(magick identify -format \"%w\" \"${icon}\")\n\tdimHeight=$(magick identify -format \"%h\" \"${icon}\")\n \n\tbetaPoint=$((72 * dimHeight / 1024))\n\tbuildPoint=$((35 * dimHeight / 1024))\n\tbetaX=$((80 * dimWidth / 1024))\n\tbetaY=$((200 * dimHeight / 1024))\n \n\techo \"${icon} rotate -25 text ${betaX},${betaY} ' Beta '\"\n \n\tmagick \"${icon}\" \\\n\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\\n\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\\n\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\\n\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${icon}\"\ndone\n";
+		};
+		AB8575612E0B9C9C00694020 /* Restore Icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Restore Icon";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# restore-stamped-icon.sh\n#\n# This script will restore the copy of the app's original icon resources\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\nif [[ ${CONFIGURATION} == \"TestFlight\" ]]; then\n\tappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)\n\ttvOSappIconDir=$(find \"${SRCROOT}\" -type d -name \"Brand Assets.brandassets\" -print)\n\n\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" ]]; then\n\t\trm -rf \"${appIconDir}\"\n\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" \"${appIconDir}\"\n\tfi\n\n\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" ]]; then\n\t\trm -rf \"${tvOSappIconDir}\"\n\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" \"${tvOSappIconDir}\"\n\tfi\n\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AB85752B2E0B9BB100694020 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB85753C2E0B9BB200694020 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AB8575462E0B9BB200694020 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AB8575422E0B9BB200694020 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AB85752E2E0B9BB100694020 /* AppKitProject */;
+			targetProxy = AB8575412E0B9BB200694020 /* PBXContainerItemProxy */;
+		};
+		AB85754C2E0B9BB200694020 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AB85752E2E0B9BB100694020 /* AppKitProject */;
+			targetProxy = AB85754B2E0B9BB200694020 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AB8575522E0B9BB200694020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AB8575532E0B9BB200694020 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		AB8575552E0B9BB200694020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AppKitProject/Resources/AppKitProject.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.AppKitProject;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		AB8575562E0B9BB200694020 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AppKitProject/Resources/AppKitProject.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.AppKitProject;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		AB8575582E0B9BB200694020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.AppKitProjectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppKitProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AppKitProject";
+			};
+			name = Debug;
+		};
+		AB8575592E0B9BB200694020 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.AppKitProjectTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AppKitProject.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AppKitProject";
+			};
+			name = Release;
+		};
+		AB85755B2E0B9BB200694020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.AppKitProjectUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = AppKitProject;
+			};
+			name = Debug;
+		};
+		AB85755C2E0B9BB200694020 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.AppKitProjectUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = AppKitProject;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AB85752A2E0B9BB100694020 /* Build configuration list for PBXProject "AppKitProject" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB8575522E0B9BB200694020 /* Debug */,
+				AB8575532E0B9BB200694020 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB8575542E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProject" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB8575552E0B9BB200694020 /* Debug */,
+				AB8575562E0B9BB200694020 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB8575572E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProjectTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB8575582E0B9BB200694020 /* Debug */,
+				AB8575592E0B9BB200694020 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AB85755A2E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProjectUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB85755B2E0B9BB200694020 /* Debug */,
+				AB85755C2E0B9BB200694020 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AB8575272E0B9BB100694020 /* Project object */;
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ORGANIZATIONNAME</key>
+	<string>Gary Ash</string>
+	<key>FILEHEADER</key>
+	<string>/*****************************************************************************************
+ * ___FILENAME___
+ * 
+ *
+ *
+ * Author   :  Gary Ash &lt;gary.ash@icloud.com&gt;
+ * Created  :  ___DATE___ ___TIME___
+ * Modified :  
+ *
+ * Copyright © ___YEAR___ By ___ORGANIZATIONNAME___ All rights reserved.
+ ****************************************************************************************/</string>
+</dict>
+</plist>

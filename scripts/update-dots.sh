@@ -151,7 +151,6 @@ buildRepository() {
 		--exclude="/XcodeToMetalToolchainIndexMapping.plist" \
 		"$HOME/Library/Developer/Xcode/" "$DOTFILES_DIR/xcode/" &>/dev/null
 
-
 	rsync -arcz -E --rsh=ssh \
 		--exclude="BBEdit User Manual *.pdf" \
 		--exclude="'Scripts/Diff Unsaved Changes in Kaleidoscope.sh'" \
@@ -165,16 +164,16 @@ buildRepository() {
 
 	local package_temp="$HOME/Downloads/package-temp"
 	mkdir -p "$package_temp"
-	pushd "$package_temp" > /dev/null || return
+	pushd "$package_temp" >/dev/null || return
 
 	brew bundle dump --force &>/dev/null
-	gem list --no-version > gems.txt
+	gem list --no-version >gems.txt
 
 	pip3 list --format freeze | while IFS= read -r p; do
 		echo "${p%%=*}"
-	done > python-packages.txt
+	done >python-packages.txt
 
-	popd > /dev/null || return
+	popd >/dev/null || return
 
 	find "$DOTFILES_DIR" -type f -name "*.zwc" -delete
 
@@ -201,7 +200,7 @@ buildRepository() {
 		.hasShownOpus45Notice = {} |
 		.s1mAccessCache = {} |
 		.groveConfigCache = {} |
-		.skillUsage = {}' "$DOTFILES_DIR/home/.claude.json" > "$DOTFILES_DIR/home/.claude.json1"
+		.skillUsage = {}' "$DOTFILES_DIR/home/.claude.json" >"$DOTFILES_DIR/home/.claude.json1"
 
 	rm -f "$DOTFILES_DIR/home/".claude.json.backup.*
 
@@ -221,9 +220,9 @@ updateGitHub() {
 	fi
 
 	if git clone --quiet --recurse-submodules git@github.com:Gary-Ash/dotfiles.git "$DOTFILES_DIR"; then
-		pushd "$DOTFILES_DIR" > /dev/null || return 1
+		pushd "$DOTFILES_DIR" >/dev/null || return 1
 		git submodule update --recursive --remote
-		popd > /dev/null || return 1
+		popd >/dev/null || return 1
 
 		buildRepository
 	else
@@ -358,11 +357,11 @@ if [[ $# -gt 0 ]]; then
 	case $1 in
 		-h | --help)
 			cat <<-EOF
-			=================================================
-			 Update dot file repro on GitHub
-			=================================================
-			   update-dots.sh --help for this help message
-			   update-dots.sh --package build the GitHub update without committing it
+				=================================================
+				 Update dot file repro on GitHub
+				=================================================
+				   update-dots.sh --help for this help message
+				   update-dots.sh --package build the GitHub update without committing it
 			EOF
 			exit 0
 			;;

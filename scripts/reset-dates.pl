@@ -30,7 +30,7 @@ use Cwd   qw(abs_path);
 # constants
 #-----------------------------------------------------------------------------------------
 our $HOME              = $ENV{"HOME"};
-our $TEMPLATE_LOCATION = "$HOME/Developer/GeeDblA/ProjectTemplates/";
+our $TEMPLATE_LOCATION = "/opt/geedbla/templates/Xcode/";
 
 #-----------------------------------------------------------------------------------------
 # regular expressions

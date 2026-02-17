@@ -1,0 +1,34 @@
+#*****************************************************************************
+# ci.yaml
+#
+# This file contains the Github actions based CI building and automated
+# testing on pushes and pull requests
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  20-Feb-2026  5:21pm
+# Modified :
+#
+# Copyright © 2026 By CompanyName All rights reserved.
+#*****************************************************************************
+
+name: CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  build:
+    name: Build and Test default scheme
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run testing workflow
+        run:  |
+            sh BuildEnv/ci.sh

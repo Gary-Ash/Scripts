@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  15-Feb-2026  1:23pm
+# Modified :  18-Feb-2026  4:59pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -94,7 +94,7 @@ tell application "System Events"
 end tell
 CLOSE_SCRIPT
 
-killall "Crash Reporter" ReportCrash &>/dev/null
+	killall "Crash Reporter" ReportCrash &>/dev/null
 }
 
 #-----------------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ while true; do
 done &
 
 export SUDO_SHELL_PID=$!
-caffeinate -disu &>/dev/null &
+caffeinate -s -b -t 3600 &>/dev/null &
 export CAFFEINATE=$!
 
 sudo chown -R garyash:admin /opt/geedbla/* &>/dev/null
@@ -222,7 +222,7 @@ jq 'del(.projects, .githubRepoPaths,
 	.hasShownOpus45Notice = {} |
 	.s1mAccessCache = {} |
 	.groveConfigCache = {} |
-	.skillUsage = {}' "$HOME/.claude.json" > "$HOME/.claude.json1"
+	.skillUsage = {}' "$HOME/.claude.json" >"$HOME/.claude.json1"
 
 rm -f "$HOME/.claude.json"
 mv "$HOME/.claude.json1" "$HOME/.claude.json"
@@ -233,13 +233,13 @@ rm -f ~/.claude.json.backup.*
 #*****************************************************************************************
 snapshots=()
 while IFS= read -r line; do
-    if [[ $line =~ com\.apple\.TimeMachine\.([0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6})\.local ]]; then
-        snapshots+=("${BASH_REMATCH[1]}")
-    fi
+	if [[ $line =~ com\.apple\.TimeMachine\.([0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6})\.local ]]; then
+		snapshots+=("${BASH_REMATCH[1]}")
+	fi
 done < <(sudo tmutil listlocalsnapshots /)
 
 for snapshot in "${snapshots[@]}"; do
-    tmutil deletelocalsnapshots "$snapshot" &> /dev/null
+	tmutil deletelocalsnapshots "$snapshot" &>/dev/null
 done
 
 echo -n '' | pbcopy
@@ -1369,10 +1369,10 @@ sudo chown -R root:admin /Applications/* &>/dev/null
 sudo xattr -cr /Applications/* &>/dev/null
 
 CACHE="$(getconf DARWIN_USER_CACHE_DIR)"
-sudo rm -rf "${CACHE}com.apple.DeveloperTools"												&>/dev/null
-sudo rm -rf "${CACHE}org.llvm.clang.$(whoami)/ModuleCache" 									&>/dev/null
-sudo rm -rf "${CACHE}org.llvm.clang/ModuleCache" 											&>/dev/null
-sudo find "$HOME/Library/Caches" -type d -name "com.apple.dt.*" -exec rm -rf {} \; 			&>/dev/null
+sudo rm -rf "${CACHE}com.apple.DeveloperTools" &>/dev/null
+sudo rm -rf "${CACHE}org.llvm.clang.$(whoami)/ModuleCache" &>/dev/null
+sudo rm -rf "${CACHE}org.llvm.clang/ModuleCache" &>/dev/null
+sudo find "$HOME/Library/Caches" -type d -name "com.apple.dt.*" -exec rm -rf {} \; &>/dev/null
 
 DTMP=$(getconf DARWIN_USER_TEMP_DIR)
 sudo find "$DTMP" -name "*.swift" -exec rm -rfv {} \; &>/dev/null
@@ -1394,7 +1394,7 @@ killall "Crash Reporter" ReportCrash &>/dev/null
 
 find "$HOME/Library/Developer" -type d -name "[A-Za-z0-9]* Device Logs" -exec rm -rfv {} \; &>/dev/null
 sqlite3 "$(find "$HOME/Library/Mail" -name "Envelope Index")" vacuum
-sudo diskutil resetUserPermissions / "$(id -u)"	&>/dev/null
+sudo diskutil resetUserPermissions / "$(id -u)" &>/dev/null
 #*****************************************************************************************
 #  refresh Safari icons
 #*****************************************************************************************
@@ -1460,7 +1460,7 @@ history -p
 if [[ $OCD_OPTION == "" ]]; then
 	finish
 	perl /opt/geedbla/scripts/startup-banner.pl --dark
-	osascript <<"END2" 		&>/dev/null
+	osascript <<"END2" &>/dev/null
 try
     tell application "Keyboard Maestro Engine" to launch
     try
@@ -1486,10 +1486,10 @@ tell application "System Events"
 end tell
 END2
 else
-#*****************************************************************************************
-# Prepare for shutdown or restart
-#*****************************************************************************************
-nohup osascript <<"SHUTDOWN" >/dev/null 2>&1 &
+	#*****************************************************************************************
+	# Prepare for shutdown or restart
+	#*****************************************************************************************
+	nohup osascript <<"SHUTDOWN" >/dev/null 2>&1 &
 tell application "System Events"
 	set terminals to {"ghostty", "Terminal"}
 	repeat with processName in terminals
@@ -1505,8 +1505,7 @@ tell application "System Events"
 	end if
 end tell
 SHUTDOWN
-disown
-exit 0
+	disown
+	exit 0
 
 fi
-

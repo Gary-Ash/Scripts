@@ -1,0 +1,864 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		ABA0E46C2CC5D9F400281AED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ABA0E4522CC5D9F300281AED /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ABA0E4592CC5D9F300281AED;
+			remoteInfo = MultiPlatform;
+		};
+		ABA0E4762CC5D9F400281AED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ABA0E4522CC5D9F300281AED /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ABA0E4592CC5D9F300281AED;
+			remoteInfo = MultiPlatform;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		AB7825852E0C964000F1656A /* LICENSE.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.markdown; sourceTree = "<group>"; };
+		AB7825862E0C964000F1656A /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.markdown; sourceTree = "<group>"; };
+		ABA0E45A2CC5D9F300281AED /* MultiPlatform.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiPlatform.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABA0E46B2CC5D9F400281AED /* MultiPlatformTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiPlatformTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABA0E4752CC5D9F400281AED /* MultiPlatformUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiPlatformUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		ABA0E45C2CC5D9F300281AED /* MultiPlatform */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MultiPlatform;
+			sourceTree = "<group>";
+		};
+		ABA0E46E2CC5D9F400281AED /* MultiPlatformTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MultiPlatformTests;
+			sourceTree = "<group>";
+		};
+		ABA0E4782CC5D9F400281AED /* MultiPlatformUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MultiPlatformUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ABA0E4572CC5D9F300281AED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABA0E4682CC5D9F400281AED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABA0E4722CC5D9F400281AED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ABA0E4512CC5D9F300281AED = {
+			isa = PBXGroup;
+			children = (
+				ABA0E45C2CC5D9F300281AED /* MultiPlatform */,
+				ABA0E46E2CC5D9F400281AED /* MultiPlatformTests */,
+				ABA0E4782CC5D9F400281AED /* MultiPlatformUITests */,
+				AB7825852E0C964000F1656A /* LICENSE.markdown */,
+				AB7825862E0C964000F1656A /* README.markdown */,
+				ABA0E45B2CC5D9F300281AED /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ABA0E45B2CC5D9F300281AED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ABA0E45A2CC5D9F300281AED /* MultiPlatform.app */,
+				ABA0E46B2CC5D9F400281AED /* MultiPlatformTests.xctest */,
+				ABA0E4752CC5D9F400281AED /* MultiPlatformUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ABA0E4592CC5D9F300281AED /* MultiPlatform */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABA0E47F2CC5D9F400281AED /* Build configuration list for PBXNativeTarget "MultiPlatform" */;
+			buildPhases = (
+				ABA0E4562CC5D9F300281AED /* Sources */,
+				ABE75FFD2CC8852F009E208B /* SwiftLint Project */,
+				ABE75FFE2CC885A9009E208B /* Increment Build Number */,
+				ABE75FFF2CC88606009E208B /* Stamp Icon of Beta Builds */,
+				ABA0E4572CC5D9F300281AED /* Frameworks */,
+				ABA0E4582CC5D9F300281AED /* Resources */,
+				ABE760002CC8864D009E208B /* Restore Icon */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				ABA0E45C2CC5D9F300281AED /* MultiPlatform */,
+			);
+			name = MultiPlatform;
+			packageProductDependencies = (
+			);
+			productName = MultiPlatform;
+			productReference = ABA0E45A2CC5D9F300281AED /* MultiPlatform.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ABA0E46A2CC5D9F400281AED /* MultiPlatformTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABA0E4822CC5D9F400281AED /* Build configuration list for PBXNativeTarget "MultiPlatformTests" */;
+			buildPhases = (
+				ABA0E4672CC5D9F400281AED /* Sources */,
+				ABA0E4682CC5D9F400281AED /* Frameworks */,
+				ABA0E4692CC5D9F400281AED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ABA0E46D2CC5D9F400281AED /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				ABA0E46E2CC5D9F400281AED /* MultiPlatformTests */,
+			);
+			name = MultiPlatformTests;
+			packageProductDependencies = (
+			);
+			productName = MultiPlatformTests;
+			productReference = ABA0E46B2CC5D9F400281AED /* MultiPlatformTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		ABA0E4742CC5D9F400281AED /* MultiPlatformUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABA0E4852CC5D9F400281AED /* Build configuration list for PBXNativeTarget "MultiPlatformUITests" */;
+			buildPhases = (
+				ABA0E4712CC5D9F400281AED /* Sources */,
+				ABA0E4722CC5D9F400281AED /* Frameworks */,
+				ABA0E4732CC5D9F400281AED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ABA0E4772CC5D9F400281AED /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				ABA0E4782CC5D9F400281AED /* MultiPlatformUITests */,
+			);
+			name = MultiPlatformUITests;
+			packageProductDependencies = (
+			);
+			productName = MultiPlatformUITests;
+			productReference = ABA0E4752CC5D9F400281AED /* MultiPlatformUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ABA0E4522CC5D9F300281AED /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 2600;
+				ORGANIZATIONNAME = "CompanyName";
+				TargetAttributes = {
+					ABA0E4592CC5D9F300281AED = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					ABA0E46A2CC5D9F400281AED = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = ABA0E4592CC5D9F300281AED;
+					};
+					ABA0E4742CC5D9F400281AED = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = ABA0E4592CC5D9F300281AED;
+					};
+				};
+			};
+			buildConfigurationList = ABA0E4552CC5D9F300281AED /* Build configuration list for PBXProject "MultiPlatform" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = ABA0E4512CC5D9F300281AED;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = ABA0E45B2CC5D9F300281AED /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ABA0E4592CC5D9F300281AED /* MultiPlatform */,
+				ABA0E46A2CC5D9F400281AED /* MultiPlatformTests */,
+				ABA0E4742CC5D9F400281AED /* MultiPlatformUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ABA0E4582CC5D9F300281AED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABA0E4692CC5D9F400281AED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABA0E4732CC5D9F400281AED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		ABE75FFD2CC8852F009E208B /* SwiftLint Project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "SwiftLint Project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# swiftlint-project.sh\n#\n# This script will run SwiftLint over the current project\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [ -f \"/opt/homebrew/bin/brew\" ]; then\n\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"\nfi\n \nif ! command -v swiftlint; then\n\tbrew install swiftlint\nfi\n \ncd \"${SRCROOT}\"\nswiftlint --fix --config \"${PROJECT_DIR}/.swiftlint.yml\" .\n";
+		};
+		ABE75FFE2CC885A9009E208B /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build Number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# increment-build-number.sh\n#\n# This script increments macOS/iOS build number in the project Info.plist\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [[ ${CONFIGURATION} == \"Release\" || ${CONFIGURATION} == \"TestFlight\" ]]; then\n\tcd \"${PROJECT_DIR}\" || exit\n\tagvtool bump\nfi\n";
+		};
+		ABE75FFF2CC88606009E208B /* Stamp Icon of Beta Builds */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Stamp Icon of Beta Builds";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# stamp-beta-version.sh\n#\n# This script is meant to be run during the app build process, it make copy of the app's\n# icon resources and then modifies the app icon to include a Beta stamp and version numbers\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [[ ${CONFIGURATION} != \"TestFlight\" ]]; then\n\texit 0\nfi\n \nbuildInformation=\"text 0,0 \\'v${MARKETING_VERSION} Build ${CURRENT_PROJECT_VERSION}\\'\"\n \n#*****************************************************************************************\n#  make sure the PATH includes Home Brew so that we can access the ImageMagick tools\n#*****************************************************************************************\nif [ -f \"/opt/homebrew/bin/brew\" ]; then\n\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"\nelif [ -f \"/usr/local/bin/brew\" ]; then\n\texport PATH=\"/usr/local/bin:$PATH\"\nfi\n \nif ! command -v magick &>/dev/null; then\n\tbrew install imagemagick\nfi\n \n#*****************************************************************************************\n#  find the app icon graphics and make backups\n#*****************************************************************************************\nappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)\ntvOSappIconDir=$(find \"${SRCROOT}/\" -type d -name \"Brand Assets.brandassets\" -print)\n \nif [[ -n $appIconDir ]]; then\n\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"\n\tcp -rf \"${appIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\"\nfi\n \nif [[ -n ${tvOSappIconDir} ]]; then\n\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"\n\tcp -rf \"${tvOSappIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\"\nfi\n \n#*****************************************************************************************\n#  add the Beta flag, version, and build information to the AppStore icon\n#*****************************************************************************************\nfind \"$appIconDir\" -name \"*.png\" -type f -print |\n\twhile IFS= read -r file; do\n\t\tdimWidth=$(magick identify -format \"%w\" \"${file}\")\n\t\tdimHeight=$(magick identify -format \"%h\" \"${file}\")\n \n\t\tbetaPoint=$((72 * dimHeight / 1024))\n\t\tbuildPoint=$((35 * dimHeight / 1024))\n\t\tbetaX=$((80 * dimWidth / 1024))\n\t\tbetaY=$((200 * dimHeight / 1024))\n \n\t\techo \"${file} rotate -25 text ${betaX},${betaY} ' Beta '\"\n \n\t\tmagick \"${file}\" \\\n\t\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\\n\t\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\\n\t\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\\n\t\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${file}\"\n\tdone\n \n#*****************************************************************************************\n#  if there are tvOS assets add those to the list icons\n#*****************************************************************************************\nif [[ -n ${tvOSappIconDir} ]]; then\n\tfind \"$tvOSappIconDir/App Icon - App Store.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/App Icon.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/Top Shelf Image Wide.imageset\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/Top Shelf Image.imageset\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \nfi\n \n#*****************************************************************************************\n#  finish prepping the last of icons\n#*****************************************************************************************\nfor icon in \"${icons[@]}\"; do\n\tdimWidth=$(magick identify -format \"%w\" \"${icon}\")\n\tdimHeight=$(magick identify -format \"%h\" \"${icon}\")\n \n\tbetaPoint=$((72 * dimHeight / 1024))\n\tbuildPoint=$((35 * dimHeight / 1024))\n\tbetaX=$((80 * dimWidth / 1024))\n\tbetaY=$((200 * dimHeight / 1024))\n \n\techo \"${icon} rotate -25 text ${betaX},${betaY} ' Beta '\"\n \n\tmagick \"${icon}\" \\\n\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\\n\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\\n\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\\n\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${icon}\"\ndone\n";
+		};
+		ABE760002CC8864D009E208B /* Restore Icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Restore Icon";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# restore-stamped-icon.sh\n#\n# This script will restore the copy of the app's original icon resources\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\nif [[ ${CONFIGURATION} == \"TestFlight\" ]]; then\n\tappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)\n\ttvOSappIconDir=$(find \"${SRCROOT}\" -type d -name \"Brand Assets.brandassets\" -print)\n\n\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" ]]; then\n\t\trm -rf \"${appIconDir}\"\n\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" \"${appIconDir}\"\n\tfi\n\n\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" ]]; then\n\t\trm -rf \"${tvOSappIconDir}\"\n\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" \"${tvOSappIconDir}\"\n\tfi\n\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ABA0E4562CC5D9F300281AED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABA0E4672CC5D9F400281AED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABA0E4712CC5D9F400281AED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		ABA0E46D2CC5D9F400281AED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ABA0E4592CC5D9F300281AED /* MultiPlatform */;
+			targetProxy = ABA0E46C2CC5D9F400281AED /* PBXContainerItemProxy */;
+		};
+		ABA0E4772CC5D9F400281AED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ABA0E4592CC5D9F300281AED /* MultiPlatform */;
+			targetProxy = ABA0E4762CC5D9F400281AED /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		ABA0E47D2CC5D9F400281AED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1.0;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		ABA0E47E2CC5D9F400281AED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1.0;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		ABA0E4802CC5D9F400281AED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MultiPlatform/Resources/MultiPlatform.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"MultiPlatform/Resources/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Multiplatform;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CompanyName.MultiPlatform;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TVOS_DEPLOYMENT_TARGET = 18.0;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		ABA0E4812CC5D9F400281AED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MultiPlatform/Resources/MultiPlatform.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"MultiPlatform/Resources/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Multiplatform;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CompanyName.MultiPlatform;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TVOS_DEPLOYMENT_TARGET = 18.0;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		ABA0E4832CC5D9F400281AED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.MultiPlatformTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MultiPlatform.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MultiPlatform";
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		ABA0E4842CC5D9F400281AED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.MultiPlatformTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MultiPlatform.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MultiPlatform";
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		ABA0E4862CC5D9F400281AED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.MultiPlatformUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TEST_TARGET_NAME = MultiPlatform;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		ABA0E4872CC5D9F400281AED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.MultiPlatformUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TEST_TARGET_NAME = MultiPlatform;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		ABE75FF92CC884DC009E208B /* TestFlight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1.0;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = TestFlight;
+		};
+		ABE75FFA2CC884DC009E208B /* TestFlight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MultiPlatform/Resources/MultiPlatform.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"MultiPlatform/Resources/Preview Content\"";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Multiplatform;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.CompanyName.MultiPlatform;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TVOS_DEPLOYMENT_TARGET = 18.0;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = TestFlight;
+		};
+		ABE75FFB2CC884DC009E208B /* TestFlight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.MultiPlatformTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MultiPlatform.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MultiPlatform";
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = TestFlight;
+		};
+		ABE75FFC2CC884DC009E208B /* TestFlight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.MultiPlatformUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3,7";
+				TEST_TARGET_NAME = MultiPlatform;
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = TestFlight;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ABA0E4552CC5D9F300281AED /* Build configuration list for PBXProject "MultiPlatform" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABA0E47D2CC5D9F400281AED /* Debug */,
+				ABA0E47E2CC5D9F400281AED /* Release */,
+				ABE75FF92CC884DC009E208B /* TestFlight */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ABA0E47F2CC5D9F400281AED /* Build configuration list for PBXNativeTarget "MultiPlatform" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABA0E4802CC5D9F400281AED /* Debug */,
+				ABA0E4812CC5D9F400281AED /* Release */,
+				ABE75FFA2CC884DC009E208B /* TestFlight */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ABA0E4822CC5D9F400281AED /* Build configuration list for PBXNativeTarget "MultiPlatformTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABA0E4832CC5D9F400281AED /* Debug */,
+				ABA0E4842CC5D9F400281AED /* Release */,
+				ABE75FFB2CC884DC009E208B /* TestFlight */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ABA0E4852CC5D9F400281AED /* Build configuration list for PBXNativeTarget "MultiPlatformUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABA0E4862CC5D9F400281AED /* Debug */,
+				ABA0E4872CC5D9F400281AED /* Release */,
+				ABE75FFC2CC884DC009E208B /* TestFlight */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ABA0E4522CC5D9F300281AED /* Project object */;
+}

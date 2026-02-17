@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  12-Feb-2026
+# Modified :  20-Feb-2026  6:02pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -37,7 +37,7 @@ use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
 # constants
 #-----------------------------------------------------------------------------------------
 our $HOME              = $ENV{"HOME"};
-our $TEMPLATE_LOCATION = "$HOME/Developer/GeeDblA/ProjectTemplates/";
+our $TEMPLATE_LOCATION = "/opt/geedbla/templates/Xcode/";
 
 #-----------------------------------------------------------------------------------------
 # regular expressions
@@ -515,8 +515,8 @@ sub searchReplace {
                         $source =~ s/GENERATE_INFOPLIST_FILE = YES;/GENERATE_INFOPLIST_FILE = YES;\n\t\t\tINFOPLIST_KEY_CFBundleDisplayName = \"$projectName\";/g;
                     }
                     $source =~ s/PRODUCT_BUNDLE_IDENTIFIER \s*=\s*.*;/PRODUCT_BUNDLE_IDENTIFIER  = $bundleIdentifier;/g;
-                    $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n]|Created  :*[^\n]/Created  :  $timestamp/g;
-                    $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n]|Modified :*[^\n]/Modified :/g;
+                    $source =~ s/Created  :[^\\\n]*/Created  :  $timestamp/g;
+                    $source =~ s/Modified :[^\\\n]*/Modified :/g;
 
                     our $count = 0;
                     while ($source =~ /$projectFileCopyright/) {
@@ -539,8 +539,8 @@ sub searchReplace {
                     }
                 }
                 else {
-                    $source =~ s/Created  :[\/\t 0-9A-Za-z-:]*[^\n]|Created  :*[^\n]/Created  :  $timestamp/;
-                    $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n]|Modified :*[^\n]/Modified :/;
+                    $source =~ s/Created  :[^\\\n]*/Created  :  $timestamp/;
+                    $source =~ s/Modified :[^\\\n]*/Modified :/;
 
                     if ($inFileLicense) {
                         if ($source =~ /$nonProjectFileCopyright/) {

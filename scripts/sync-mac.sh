@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  16-Feb-2026 10:53pm
+# Modified :  17-Feb-2026  5:45pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -57,7 +57,7 @@ sync_mail_archive() {
 	SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${mail_dir}/" "${target_system}:${remote_dir}/"
 
 	for file in "${pref_files[@]}"; do
-		if [[ -f "$file" ]]; then
+		if [[ -f $file ]]; then
 			local remote_file="${file// /\\ }"
 			# We use rsync without --delete here as these are individual files
 			SSHPASS="${sudo_password}" sshpass -e rsync -azq "${file}" "${target_system}:${remote_file}"
@@ -86,10 +86,10 @@ sync_ruby_gems() {
 	gems_to_remove="$(comm -23 <(echo "${target_gems}") <(echo "${host_gems}") | tr '\n' ' ')"
 	gems_to_install="$(comm -23 <(echo "${host_gem_list}") <(echo "${target_gem_list}") | sed 's/ (.*//' | sort -u | tr '\n' ' ')"
 
-	if [[ -n "${gems_to_remove}" ]]; then
+	if [[ -n ${gems_to_remove} ]]; then
 		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${rbenv_init} && gem uninstall -aIx ${gems_to_remove}'"
 	fi
-	if [[ -n "${gems_to_install}" ]]; then
+	if [[ -n ${gems_to_install} ]]; then
 		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${rbenv_init} && gem install --force ${gems_to_install}'"
 	fi
 }
@@ -115,10 +115,10 @@ sync_pip_packages() {
 	packages_to_remove="$(comm -23 <(echo "${target_packages}") <(echo "${host_packages}") | tr '\n' ' ')"
 	packages_to_install="$(comm -23 <(echo "${host_freeze}") <(echo "${target_freeze}") | tr '\n' ' ')"
 
-	if [[ -n "${packages_to_remove}" ]]; then
+	if [[ -n ${packages_to_remove} ]]; then
 		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${venv_init} && pip3 uninstall -qy ${packages_to_remove}'"
 	fi
-	if [[ -n "${packages_to_install}" ]]; then
+	if [[ -n ${packages_to_install} ]]; then
 		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${venv_init} && pip3 install -q ${packages_to_install}'"
 	fi
 }
@@ -136,19 +136,27 @@ sync_homebrew_packages() {
 	target_formulae="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew list --formula | sort'")"
 	formulae_to_remove="$(comm -23 <(echo "${target_formulae}") <(echo "${host_formulae}") | tr '\n' ' ')"
 
-	if [[ -n "${formulae_to_remove}" ]]; then
-		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew uninstall -q ${formulae_to_remove}'"
+	if [[ -n ${formulae_to_remove} ]]; then
+		if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew uninstall -q ${formulae_to_remove} >/dev/null 2>&1'"; then
+			echo "Homebrew formula uninstall failed on ${target_system}" >&2
+		fi
 	fi
-	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew install -q $(echo "${host_formulae}" | tr '\n' ' ')'"
+	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew install -q $(echo "${host_formulae}" | tr '\n' ' ') >/dev/null 2>&1'"; then
+		echo "Homebrew formula install failed on ${target_system}" >&2
+	fi
 
 	host_casks="$(brew list --cask | sort)"
 	target_casks="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew list --cask | sort'")"
 	casks_to_remove="$(comm -23 <(echo "${target_casks}") <(echo "${host_casks}") | tr '\n' ' ')"
 
-	if [[ -n "${casks_to_remove}" ]]; then
-		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew uninstall -q --cask ${casks_to_remove}'"
+	if [[ -n ${casks_to_remove} ]]; then
+		if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew uninstall -q --cask ${casks_to_remove} >/dev/null 2>&1'"; then
+			echo "Homebrew cask uninstall failed on ${target_system}" >&2
+		fi
 	fi
-	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew install -q --cask $(echo "${host_casks}" | tr '\n' ' ')'"
+	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew install -q --cask $(echo "${host_casks}" | tr '\n' ' ') >/dev/null 2>&1'"; then
+		echo "Homebrew cask install failed on ${target_system}" >&2
+	fi
 }
 
 sync_npm_packages() {
@@ -161,7 +169,7 @@ sync_npm_packages() {
 	target_packages="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm list -g --depth=0 --parseable | tail -n +2 | xargs -n1 basename | sort'")"
 	packages_to_remove="$(comm -23 <(echo "${target_packages}") <(echo "${host_packages}") | tr '\n' ' ')"
 
-	if [[ -n "${packages_to_remove}" ]]; then
+	if [[ -n ${packages_to_remove} ]]; then
 		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm uninstall -g --silent ${packages_to_remove}'"
 	fi
 	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm install -g --silent $(echo "${host_packages}" | tr '\n' ' ')'"
@@ -178,9 +186,14 @@ sync_custom_apps() {
 	for app in "${apps_to_sync[@]}"; do
 		local app_path="${base_path}/${app}"
 		if [[ -d ${app_path} ]]; then
-			SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${app_path}" "${target_system}:${staging_dir}/"
-			SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" \
-				"echo '${sudo_password}' | sudo -S rsync -aq --delete '${staging_dir}/${app}/' '${base_path}/${app}/'"
+			if ! SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${app_path}" "${target_system}:${staging_dir}/"; then
+				echo "Failed to sync ${app} to ${target_system}" >&2
+				continue
+			fi
+			if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" \
+				"echo '${sudo_password}' | sudo -S rsync -aq --delete '${staging_dir}/${app}/' '${base_path}/${app}/' 2>/dev/null"; then
+				echo "Failed to install ${app} on ${target_system}" >&2
+			fi
 		fi
 	done
 
@@ -198,7 +211,7 @@ main() {
 	exec 1>/dev/null
 
 	for system in "${systems_to_sync[@]}"; do
-		if [[ "${system}" != "${current_host}" ]]; then
+		if [[ ${system} != "${current_host}" ]]; then
 			target_system="${USER}@${system}"
 			sync_directories "${target_system}"
 			sync_mail_archive "${target_system}"

@@ -6,6 +6,8 @@ A collection of utility scripts and shell libraries for macOS development, syste
 
 - [Scripts](#scripts)
 - [Shell Library Functions](#shell-library-functions)
+- [Zsh Shell Completions](#zsh-shell-completions)
+- [Xcode Project Templates](#xcode-project-templates)
 
 ---
 
@@ -119,6 +121,8 @@ Generates a new Xcode project from customizable templates. Supports options for 
 - `-cs, --closed` - Use closed source license
 - `-lif, --inFileLicense` - Add license text to source files
 
+**Templates:** Project templates are located in `templates/Xcode/`. See [Xcode Project Templates](#xcode-project-templates).
+
 ---
 
 ### ocd.sh
@@ -145,7 +149,7 @@ Downloads and installs custom Safari favicon files from a remote server to repla
 
 Resets file creation/modification dates and updates copyright headers in source files. Handles various file types including Xcode project files and compiled AppleScript.
 
-**Usage:** `reset-dates.pl "Company Name" [files|directories...]`
+**Usage:** `reset-dates.pl "Company Name" [file|directory ...]`
 
 ---
 
@@ -173,7 +177,13 @@ Removes all C-style comments (both `//` and `/* */`) from source files in a dire
 
 ### sync-mac.sh
 
-Synchronizes directories, files, and package manager installations (Homebrew, pip, gems, npm) between multiple Mac systems over SSH.
+Synchronizes directories, files, and package manager installations between multiple Mac systems over SSH. Syncs:
+
+- **Directories** — `~/.claude`, `~/.config`, `~/Developer`, `~/Documents`, `/opt/bin`, `/opt/geedbla`, BBEdit support files
+- **Files** — `~/.claude.json`
+- **Mail** — Mail archive (`~/Library/Mail`) and Mail preferences
+- **Package managers** — Homebrew formulae and casks, pip packages, Ruby gems, npm packages (installs missing, removes extras)
+- **Custom apps** — Bespoke applications (CleanStart.app, XcodeGeDblA.app) installed to `/Applications` via sudo. Sudo password prompts are suppressed and sync failures produce descriptive error messages without aborting the remaining sync operations.
 
 ---
 
@@ -245,6 +255,54 @@ source "/opt/geedbla/lib/shell/lib/get_notary_password.sh"
 NOTARY_PASSWORD="$(get_notary_password)"
 xcrun notarytool submit app.zip --apple-id "$APPLE_ID" --password "$NOTARY_PASSWORD"
 ```
+
+---
+
+## Zsh Shell Completions
+
+Tab completion definitions located in `zsh-completion/` that can be added to a `$fpath` directory for zsh.
+
+| File | Command | Description |
+|------|---------|-------------|
+| `_jekyll` | `jekyll` | Tab completion for Jekyll subcommands and options |
+| `_new-xcode-project` | `new-xcode-project.pl` | Tab completion for project templates (dynamically read from `templates/Xcode/`) and all command-line flags |
+| `_ocd` | `ocd.sh` | Tab completion for `ocd.sh` providing the `restart` and `off` subcommands |
+
+---
+
+## Xcode Project Templates
+
+Reusable Xcode project templates located in `templates/Xcode/`, used by `new-xcode-project.pl` to generate new projects.
+
+### Project Templates
+
+| Template | Description |
+|----------|-------------|
+| `2DGame` | Multiplatform SpriteKit-based game (iOS, macOS, tvOS) |
+| `AppKitProject` | AppKit-based macOS application with unit and UI tests |
+| `MultiPlatform` | SwiftUI multiplatform app (iOS + macOS) with unit and UI tests |
+| `UIKitProject` | UIKit-based iOS application with unit and UI tests |
+
+Each template directory contains a complete `.xcodeproj` and source tree that `new-xcode-project.pl` copies and customizes with the project name, company, bundle identifier, and license.
+
+### Shared Files (`_Files/`)
+
+Files in `templates/Xcode/_Files/` are applied to every generated project regardless of template:
+
+| File / Directory | Description |
+|------------------|-------------|
+| `.github/` | GitHub community health files: `CODE_OF_CONDUCT`, `CONTRIBUTING`, `FUNDING.yml`, issue templates, PR template, and a CI workflow |
+| `.swiftlint.yml` | Project SwiftLint configuration |
+| `.xcodesamplecode.plist` | Marks the project as Xcode sample code |
+| `Assets.xcassets.zip` | Pre-built asset catalog (app icon slots, accent color, etc.) |
+| `BuildEnv/` | Build phase scripts: `increment-build-number.sh`, `stamp-beta-version.sh`, `restore-stamped-icon.sh`, `swiftlint-project.sh` |
+| `IDETemplateMacros.plist` | Xcode file header template macros |
+| `IDETemplateMacros-Open.plist` | Header macros variant for open-source projects |
+| `IDETemplateMacros-Closed.plist` | Header macros variant for closed-source projects |
+| `LICENSE-Open.markdown` | Open-source license text |
+| `LICENSE-Closed.markdown` | Closed-source license text |
+| `ci.sh` | Local CI runner script |
+| `organizations.txt` | Known organization names for copyright substitution |
 
 ---
 

@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  14-Feb-2026  2:51pm
+# Modified :  16-Feb-2026 10:53pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -167,6 +167,26 @@ sync_npm_packages() {
 	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm install -g --silent $(echo "${host_packages}" | tr '\n' ' ')'"
 }
 
+sync_custom_apps() {
+	local target_system="$1"
+	local apps_to_sync=("CleanStart.app" "XcodeGeDblA.app")
+	local base_path="/Applications"
+	local staging_dir="/tmp/sync_apps_staging"
+
+	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "mkdir -p ${staging_dir}"
+
+	for app in "${apps_to_sync[@]}"; do
+		local app_path="${base_path}/${app}"
+		if [[ -d ${app_path} ]]; then
+			SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${app_path}" "${target_system}:${staging_dir}/"
+			SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" \
+				"echo '${sudo_password}' | sudo -S rsync -aq --delete '${staging_dir}/${app}/' '${base_path}/${app}/'"
+		fi
+	done
+
+	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "rm -rf ${staging_dir}"
+}
+
 main() {
 	trap finish EXIT
 
@@ -186,6 +206,7 @@ main() {
 			sync_pip_packages "${target_system}"
 			sync_homebrew_packages "${target_system}"
 			sync_npm_packages "${target_system}"
+			sync_custom_apps "${target_system}"
 		fi
 	done
 }

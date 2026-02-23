@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  18-Feb-2026  4:59pm
+# Modified :  25-Feb-2026  2:59pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -244,7 +244,7 @@ done
 
 echo -n '' | pbcopy
 
-sudo /usr/bin/perl <<'PERL' &>/dev/null
+sudo /usr/bin/perl <<'PERL' #&>/dev/null
 #!/usr/bin/env perl
 #*****************************************************************************************
 # libraries used
@@ -290,10 +290,11 @@ our @plistKeysToDelete = (
     "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
     "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
-    "ApplicationAutoSaveState",                                       "LastOpenByNameString",
+    "ApplicationAutoSaveState",                                       "LastOpenByNameString",                                           "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",                                                               "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
 );
 
 our @itemsToDelete = (
+	["$HOME/Library/Application Support/zoxide/db.zo",																					  1],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments",                  0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentDocuments.sfl3",                        0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl3",                          0],
@@ -307,6 +308,7 @@ our @itemsToDelete = (
     ["$HOME/Library/Preferences/org.sparkle-project.Sparkle.Autoupdate.plist",                                                            0],
     ["$HOME/.proxyman-data",                                                                                                              0],
     ["$HOME/.hawtjni",                                                                                                                    0],
+    ["$HOME/.claude/backups",                                                                                                             0],
     ["$HOME/.claude/cache",                                                                                                               0],
     ["$HOME/.claude/session-env",                                                                                                         0],
     ["$HOME/.claude/plans",                                                                                                               0],
@@ -320,7 +322,14 @@ our @itemsToDelete = (
     ["$HOME/.claude/file-history",                                                                                                        0],
     ["$HOME/.claude/history.jsonl",                                                                                                       0],
     ["$HOME/.claude/stats-cache.json",                                                                                                    0],
-    ["$HOME/.python_history",                                                                                                             0],
+    ["$HOME/.claude/file-history",                                                                                                        0],
+    ["$HOME/.claude/plans",                                                                                                               0],
+    ["$HOME/.claude/debug",                                                                                                               0],
+    ["$HOME/.claude/projects",                                                                                                            0],
+    ["$HOME/.claude/todos",                                                                                                               0],
+    ["$HOME/.claude/session-env",                                                                                                         0],
+    ["$HOME/.claude/history.jsonl",                                                                                                       0],
+    ["$HOME/.claude/stats-cache.json",                                                                                                    0],
     ["$HOME/.npm",                                                                                                                        0],
     ["$HOME/.konan",                                                                                                                      0],
     ["$HOME/.ssh/known_hosts.old",                                                                                                        0],
@@ -344,14 +353,6 @@ our @itemsToDelete = (
     ["$HOME/.recently-used",                                                                                                              0],
     ["$HOME/.cmake",                                                                                                                      0],
     ["$HOME/.solargraph",                                                                                                                 0],
-    ["$HOME/.claude/file-history",                                                                                                        0],
-    ["$HOME/.claude/plans",                                                                                                               0],
-    ["$HOME/.claude/debug",                                                                                                               0],
-    ["$HOME/.claude/projects",                                                                                                            0],
-    ["$HOME/.claude/todos",                                                                                                               0],
-    ["$HOME/.claude/session-env",                                                                                                         0],
-    ["$HOME/.claude/history.jsonl",                                                                                                       0],
-    ["$HOME/.claude/stats-cache.json",                                                                                                    0],
     ["$HOME/.TemporaryItems",                                                                                                             0],
     ["$HOME/.thumbnails",                                                                                                                 0],
     ["$HOME/.config/zsh/.zsh_sessions",                                                                                                   0],

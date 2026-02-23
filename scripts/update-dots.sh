@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  12-Feb-2026  4:00pm
+# Modified :  25-Feb-2026  1:40pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -32,6 +32,7 @@ dot-files() {
 	local dotfiles=()
 
 	local -r ignore_these=(
+		"$HOME/.claude/backups"
 		"$HOME/.claude/cache"
 		"$HOME/.claude/session-env"
 		"$HOME/.claude/plans"
@@ -270,9 +271,8 @@ our @plistKeysToDelete = (
     "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
     "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
-    "ApplicationAutoSaveState",										  "LastOpenByNameString",
+    "ApplicationAutoSaveState",                                       "LastOpenByNameString",                                           "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",                                                               "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
 );
-
 
 #*****************************************************************************************
 # process the plists in the Containers folder
@@ -303,14 +303,15 @@ sub processFiles {
 # BBEdit
 #*****************************************************************************************
 sub BBEdit {
-    my @files = (
-    	"$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist",
-    	"$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",
-    );
+    my @files = ("$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist", "$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",);
 
     foreach my $plistFile (@files) {
         my $plist = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
         if ($plist && $$plist) {
+            foreach my $key (@plistKeysToDelete) {
+                $plist->removeObjectForKey_($key);
+            }
+
             my $keyNamesArray = $plist->allKeys();
             my $items         = $keyNamesArray->count;
             for (my $index = 0; $index < $items; ++$index) {

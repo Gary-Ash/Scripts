@@ -7,12 +7,12 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  12-Feb-2026  4:00pm
+# Modified :  24-Feb-2026  9:52pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
-if [ -z "$1" ]; then
+if [[ -z $1 ]]; then
 	directory="."
 else
 	directory="$1"

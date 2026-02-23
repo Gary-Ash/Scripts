@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  17-Feb-2026  5:45pm
+# Modified :  23-Feb-2026 10:08pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -31,7 +31,14 @@ finish() {
 
 sync_directories() {
 	local target_system="$1"
-	local directories_to_sync=(~/.claude ~/.config ~/Developer ~/Documents /opt/bin /opt/geedbla ~/Library/"Application Support"/BBEdit)
+	local directories_to_sync=(~/.claude
+		~/.config
+		~/Developer
+		~/Documents
+		/opt/bin /opt/geedbla
+		~/Library/"Application Support"/BBEdit
+		~/Library/Containers/com.barebones.bbedit)
+
 	local files_to_sync=(~/.claude.json)
 
 	for dir in "${directories_to_sync[@]}"; do

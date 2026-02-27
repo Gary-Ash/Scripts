@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  25-Feb-2026  1:40pm
+# Modified :  28-Feb-2026  3:11pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -232,11 +232,8 @@ updateGitHub() {
 	fi
 }
 
-#*****************************************************************************************
-# script main line
-#*****************************************************************************************
-
-perl <<'PERL'
+cleanSettingsFiles() {
+	perl <<'PERL'
 #!/usr/bin/env perl
 #*****************************************************************************************
 # libraries used
@@ -271,7 +268,7 @@ our @plistKeysToDelete = (
     "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
     "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
-    "ApplicationAutoSaveState",                                       "LastOpenByNameString",                                           "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",                                                               "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
+    "ApplicationAutoSaveState",                                       "LastOpenByNameString",                                           "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",                                                               "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",		                          "BBEditSerialNumber:15.0",
 );
 
 #*****************************************************************************************
@@ -293,38 +290,19 @@ sub processFiles {
                 }
                 $plistData->setObject_forKey_($valuesDicM, "values");
             }
-
-            $plistData->writeToFile_atomically_($File::Find::name, "0");
-        };
-    }
-}
-
-#*****************************************************************************************
-# BBEdit
-#*****************************************************************************************
-sub BBEdit {
-    my @files = ("$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist", "$HOME/Library/Application Support/BBEdit/Setup/BBEdit Preferences Backup.plist",);
-
-    foreach my $plistFile (@files) {
-        my $plist = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
-        if ($plist && $$plist) {
-            foreach my $key (@plistKeysToDelete) {
-                $plist->removeObjectForKey_($key);
-            }
-
-            my $keyNamesArray = $plist->allKeys();
+            my $keyNamesArray = $plistData->allKeys();
             my $items         = $keyNamesArray->count;
             for (my $index = 0; $index < $items; ++$index) {
                 my $key = $keyNamesArray->objectAtIndex_($index)->UTF8String();
-                if (   rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
+                if (rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
                     || rindex($key, "ImageDisplayGrayLevel_", 0) != -1)
                 {
-                    $plist->removeObjectForKey_($key);
+                    $plistData->removeObjectForKey_($key);
                 }
             }
-            unlink($plistFile);
-            $plist->writeToFile_atomically_($plistFile, "0");
-        }
+            unlink($File::Find::name);
+            $plistData->writeToFile_atomically_($File::Find::name, "0");
+        };
     }
 }
 
@@ -332,25 +310,19 @@ sub BBEdit {
 # process the plists in the Preferences folder
 #*****************************************************************************************
 sub plists {
-    `killall Dock Finder`;
-    foreach my $plistFile (glob "$HOME/Library/Preferences/*.plist") {
-        eval {
-            my $plistData = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
-            foreach my $key (@plistKeysToDelete) {
-                $plistData->removeObjectForKey_($key);
-            }
-            $plistData->writeToFile_atomically_($plistFile, "0");
-        };
-    }
-    find(\&processFiles, "$HOME/Library/Containers/");
+    find(\&processFiles, "$HOME/Downloads/dotfiles");
 }
 
 #*****************************************************************************************
 # script main line
 #*****************************************************************************************
 plists();
-BBEdit();
 PERL
+}
+
+#*****************************************************************************************
+# script main line
+#*****************************************************************************************
 
 format-project.sh "/opt/geedbla"
 
@@ -384,3 +356,4 @@ if [[ $# -gt 0 ]]; then
 else
 	updateGitHub
 fi
+cleanSettingsFiles

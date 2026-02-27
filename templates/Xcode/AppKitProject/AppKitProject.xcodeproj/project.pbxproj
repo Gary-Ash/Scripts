@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 90;
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
@@ -52,24 +52,18 @@
 /* Begin PBXFrameworksBuildPhase section */
 		AB85752C2E0B9BB100694020 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AB85753D2E0B9BB200694020 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AB8575472E0B9BB200694020 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -113,14 +107,10 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			fileSystemSynchronizedGroups = (
 				AB8575312E0B9BB100694020 /* AppKitProject */,
 			);
 			name = AppKitProject;
-			packageProductDependencies = (
-			);
 			productName = AppKitProject;
 			productReference = AB85752F2E0B9BB100694020 /* AppKitProject.app */;
 			productType = "com.apple.product-type.application";
@@ -142,8 +132,6 @@
 				AB8575432E0B9BB200694020 /* AppKitProjectTests */,
 			);
 			name = AppKitProjectTests;
-			packageProductDependencies = (
-			);
 			productName = AppKitProjectTests;
 			productReference = AB8575402E0B9BB200694020 /* AppKitProjectTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -165,8 +153,6 @@
 				AB85754D2E0B9BB200694020 /* AppKitProjectUITests */,
 			);
 			name = AppKitProjectUITests;
-			packageProductDependencies = (
-			);
 			productName = AppKitProjectUITests;
 			productReference = AB85754A2E0B9BB200694020 /* AppKitProjectUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -180,7 +166,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 2620;
-				ORGANIZATIONNAME = "CompanyName";
+				ORGANIZATIONNAME = CompanyName;
 				TargetAttributes = {
 					AB85752E2E0B9BB100694020 = {
 						CreatedOnToolsVersion = 16.4;
@@ -204,7 +190,7 @@
 			);
 			mainGroup = AB8575262E0B9BB100694020;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
+			preferredProjectObjectVersion = 90;
 			productRefGroup = AB8575302E0B9BB100694020 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -219,24 +205,18 @@
 /* Begin PBXResourcesBuildPhase section */
 		AB85752D2E0B9BB100694020 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AB85753E2E0B9BB200694020 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AB8575482E0B9BB200694020 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
@@ -244,102 +224,240 @@
 		AB85755E2E0B9C9100694020 /* SwiftLint Project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
 			name = "SwiftLint Project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# swiftlint-project.sh\n#\n# This script will run SwiftLint over the current project\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [ -f \"/opt/homebrew/bin/brew\" ]; then\n\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"\nfi\n \nif ! command -v swiftlint; then\n\tbrew install swiftlint\nfi\n \ncd \"${SRCROOT}\"\nswiftlint --fix --config \"${PROJECT_DIR}/.swiftlint.yml\" .\n";
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# swiftlint-project.sh",
+				"#",
+				"# This script will run SwiftLint over the current project",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm",
+				"# Modified :",
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v swiftlint; then",
+				"\tbrew install swiftlint",
+				"fi",
+				" ",
+				"cd \"${SRCROOT}\"",
+				"swiftlint --fix --config \"${PROJECT_DIR}/.swiftlint.yml\" .",
+				"",
+			);
 		};
 		AB85755F2E0B9C9500694020 /* Increment Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
 			name = "Increment Build Number";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# increment-build-number.sh\n#\n# This script increments macOS/iOS build number in the project Info.plist\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [[ ${CONFIGURATION} == \"Release\" || ${CONFIGURATION} == \"TestFlight\" ]]; then\n\tcd \"${PROJECT_DIR}\" || exit\n\tagvtool bump\nfi\n";
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# increment-build-number.sh",
+				"#",
+				"# This script increments macOS/iOS build number in the project Info.plist",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm",
+				"# Modified :",
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [[ ${CONFIGURATION} == \"Release\" || ${CONFIGURATION} == \"TestFlight\" ]]; then",
+				"\tcd \"${PROJECT_DIR}\" || exit",
+				"\tagvtool bump",
+				"fi",
+				"",
+			);
 		};
 		AB8575602E0B9C9800694020 /* Stamp Icon of Beta Builds */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
 			name = "Stamp Icon of Beta Builds";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# stamp-beta-version.sh\n#\n# This script is meant to be run during the app build process, it make copy of the app's\n# icon resources and then modifies the app icon to include a Beta stamp and version numbers\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\n \nif [[ ${CONFIGURATION} != \"TestFlight\" ]]; then\n\texit 0\nfi\n \nbuildInformation=\"text 0,0 \\'v${MARKETING_VERSION} Build ${CURRENT_PROJECT_VERSION}\\'\"\n \n#*****************************************************************************************\n#  make sure the PATH includes Home Brew so that we can access the ImageMagick tools\n#*****************************************************************************************\nif [ -f \"/opt/homebrew/bin/brew\" ]; then\n\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"\nelif [ -f \"/usr/local/bin/brew\" ]; then\n\texport PATH=\"/usr/local/bin:$PATH\"\nfi\n \nif ! command -v magick &>/dev/null; then\n\tbrew install imagemagick\nfi\n \n#*****************************************************************************************\n#  find the app icon graphics and make backups\n#*****************************************************************************************\nappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)\ntvOSappIconDir=$(find \"${SRCROOT}/\" -type d -name \"Brand Assets.brandassets\" -print)\n \nif [[ -n $appIconDir ]]; then\n\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"\n\tcp -rf \"${appIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\"\nfi\n \nif [[ -n ${tvOSappIconDir} ]]; then\n\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"\n\tcp -rf \"${tvOSappIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\"\nfi\n \n#*****************************************************************************************\n#  add the Beta flag, version, and build information to the AppStore icon\n#*****************************************************************************************\nfind \"$appIconDir\" -name \"*.png\" -type f -print |\n\twhile IFS= read -r file; do\n\t\tdimWidth=$(magick identify -format \"%w\" \"${file}\")\n\t\tdimHeight=$(magick identify -format \"%h\" \"${file}\")\n \n\t\tbetaPoint=$((72 * dimHeight / 1024))\n\t\tbuildPoint=$((35 * dimHeight / 1024))\n\t\tbetaX=$((80 * dimWidth / 1024))\n\t\tbetaY=$((200 * dimHeight / 1024))\n \n\t\techo \"${file} rotate -25 text ${betaX},${betaY} ' Beta '\"\n \n\t\tmagick \"${file}\" \\\n\t\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\\n\t\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\\n\t\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\\n\t\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${file}\"\n\tdone\n \n#*****************************************************************************************\n#  if there are tvOS assets add those to the list icons\n#*****************************************************************************************\nif [[ -n ${tvOSappIconDir} ]]; then\n\tfind \"$tvOSappIconDir/App Icon - App Store.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/App Icon.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/Top Shelf Image Wide.imageset\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \n\tfind \"$tvOSappIconDir/Top Shelf Image.imageset\" -name \"*.png\" -type f -print |\n\t\twhile IFS= read -r file; do\n\t\t\ticons+=(\"${file}\")\n\t\tdone\n \nfi\n \n#*****************************************************************************************\n#  finish prepping the last of icons\n#*****************************************************************************************\nfor icon in \"${icons[@]}\"; do\n\tdimWidth=$(magick identify -format \"%w\" \"${icon}\")\n\tdimHeight=$(magick identify -format \"%h\" \"${icon}\")\n \n\tbetaPoint=$((72 * dimHeight / 1024))\n\tbuildPoint=$((35 * dimHeight / 1024))\n\tbetaX=$((80 * dimWidth / 1024))\n\tbetaY=$((200 * dimHeight / 1024))\n \n\techo \"${icon} rotate -25 text ${betaX},${betaY} ' Beta '\"\n \n\tmagick \"${icon}\" \\\n\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\\n\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\\n\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\\n\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${icon}\"\ndone\n";
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# stamp-beta-version.sh",
+				"#",
+				"# This script is meant to be run during the app build process, it make copy of the app's",
+				"# icon resources and then modifies the app icon to include a Beta stamp and version numbers",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm",
+				"# Modified :",
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [[ ${CONFIGURATION} != \"TestFlight\" ]]; then",
+				"\texit 0",
+				"fi",
+				" ",
+				"buildInformation=\"text 0,0 \\'v${MARKETING_VERSION} Build ${CURRENT_PROJECT_VERSION}\\'\"",
+				" ",
+				"#*****************************************************************************************",
+				"#  make sure the PATH includes Home Brew so that we can access the ImageMagick tools",
+				"#*****************************************************************************************",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"elif [ -f \"/usr/local/bin/brew\" ]; then",
+				"\texport PATH=\"/usr/local/bin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v magick &>/dev/null; then",
+				"\tbrew install imagemagick",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  find the app icon graphics and make backups",
+				"#*****************************************************************************************",
+				"appIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)",
+				"tvOSappIconDir=$(find \"${SRCROOT}/\" -type d -name \"Brand Assets.brandassets\" -print)",
+				" ",
+				"if [[ -n $appIconDir ]]; then",
+				"\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"",
+				"\tcp -rf \"${appIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\"",
+				"fi",
+				" ",
+				"if [[ -n ${tvOSappIconDir} ]]; then",
+				"\tmkdir -p \"${TMPDIR}/${PROJECT_NAME}\"",
+				"\tcp -rf \"${tvOSappIconDir}\" \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\"",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  add the Beta flag, version, and build information to the AppStore icon",
+				"#*****************************************************************************************",
+				"find \"$appIconDir\" -name \"*.png\" -type f -print |",
+				"\twhile IFS= read -r file; do",
+				"\t\tdimWidth=$(magick identify -format \"%w\" \"${file}\")",
+				"\t\tdimHeight=$(magick identify -format \"%h\" \"${file}\")",
+				" ",
+				"\t\tbetaPoint=$((72 * dimHeight / 1024))",
+				"\t\tbuildPoint=$((35 * dimHeight / 1024))",
+				"\t\tbetaX=$((80 * dimWidth / 1024))",
+				"\t\tbetaY=$((200 * dimHeight / 1024))",
+				" ",
+				"\t\techo \"${file} rotate -25 text ${betaX},${betaY} ' Beta '\"",
+				" ",
+				"\t\tmagick \"${file}\" \\",
+				"\t\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\",
+				"\t\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\",
+				"\t\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\",
+				"\t\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${file}\"",
+				"	done",
+				" ",
+				"#*****************************************************************************************",
+				"#  if there are tvOS assets add those to the list icons",
+				"#*****************************************************************************************",
+				"if [[ -n ${tvOSappIconDir} ]]; then",
+				"\tfind \"$tvOSappIconDir/App Icon - App Store.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/App Icon.imagestack/Front.imagestacklayer\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/Top Shelf Image Wide.imageset\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"\tfind \"$tvOSappIconDir/Top Shelf Image.imageset\" -name \"*.png\" -type f -print |",
+				"\t\twhile IFS= read -r file; do",
+				"\t\t\ticons+=(\"${file}\")",
+				"\t\tdone",
+				" ",
+				"fi",
+				" ",
+				"#*****************************************************************************************",
+				"#  finish prepping the last of icons",
+				"#*****************************************************************************************",
+				"for icon in \"${icons[@]}\"; do",
+				"\tdimWidth=$(magick identify -format \"%w\" \"${icon}\")",
+				"\tdimHeight=$(magick identify -format \"%h\" \"${icon}\")",
+				" ",
+				"\tbetaPoint=$((72 * dimHeight / 1024))",
+				"\tbuildPoint=$((35 * dimHeight / 1024))",
+				"\tbetaX=$((80 * dimWidth / 1024))",
+				"\tbetaY=$((200 * dimHeight / 1024))",
+				" ",
+				"\techo \"${icon} rotate -25 text ${betaX},${betaY} ' Beta '\"",
+				" ",
+				"\tmagick \"${icon}\" \\",
+				"\t\t-font Courier-New-Bold -fill white -pointsize ${betaPoint} -undercolor red \\",
+				"\t\t-draw \"rotate -25 text ${betaX},${betaY} ' Beta '\" \\",
+				"\t\t-font Courier-New-Bold -fill white -pointsize ${buildPoint} -undercolor lightgrey \\",
+				"\t\t-fill white -gravity south -draw \"${buildInformation}\" \"${icon}\"",
+				"done",
+				"",
+			);
 		};
 		AB8575612E0B9C9C00694020 /* Restore Icon */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
 			name = "Restore Icon";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/usr/bin/env zsh\n#*****************************************************************************************\n# restore-stamped-icon.sh\n#\n# This script will restore the copy of the app's original icon resources\n#\n# Author   :  Gary Ash <gary.ash@icloud.com>\n# Created  :  20-Feb-2026  5:21pm\n# Modified :\n#\n# Copyright © 2026 By CompanyName All rights reserved.\n#*****************************************************************************************\nif [[ ${CONFIGURATION} == \"TestFlight\" ]]; then\n\tappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)\n\ttvOSappIconDir=$(find \"${SRCROOT}\" -type d -name \"Brand Assets.brandassets\" -print)\n\n\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" ]]; then\n\t\trm -rf \"${appIconDir}\"\n\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" \"${appIconDir}\"\n\tfi\n\n\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" ]]; then\n\t\trm -rf \"${tvOSappIconDir}\"\n\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" \"${tvOSappIconDir}\"\n\tfi\n\nfi\n";
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# restore-stamped-icon.sh",
+				"#",
+				"# This script will restore the copy of the app's original icon resources",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm",
+				"# Modified :",
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				"if [[ ${CONFIGURATION} == \"TestFlight\" ]]; then",
+				"\tappIconDir=$(find \"${SRCROOT}/\" -type d -name \"AppIcon.appiconset\" -print)",
+				"\ttvOSappIconDir=$(find \"${SRCROOT}\" -type d -name \"Brand Assets.brandassets\" -print)",
+				"",
+				"\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" ]]; then",
+				"\t\trm -rf \"${appIconDir}\"",
+				"\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/AppIcon.appiconset\" \"${appIconDir}\"",
+				"	fi",
+				"",
+				"\tif [[ -d \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" ]]; then",
+				"\t\trm -rf \"${tvOSappIconDir}\"",
+				"\t\tcp -rf \"${TMPDIR}/${PROJECT_NAME}/Brand Assets.brandassets\" \"${tvOSappIconDir}\"",
+				"	fi",
+				"",
+				"fi",
+				"",
+			);
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AB85752B2E0B9BB100694020 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AB85753C2E0B9BB200694020 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AB8575462E0B9BB200694020 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -357,7 +475,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		AB8575522E0B9BB200694020 /* Debug */ = {
+		AB8575522E0B9BB200694020 /* Debug configuration for PBXProject "AppKitProject" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -423,7 +541,7 @@
 			};
 			name = Debug;
 		};
-		AB8575532E0B9BB200694020 /* Release */ = {
+		AB8575532E0B9BB200694020 /* Release configuration for PBXProject "AppKitProject" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -481,7 +599,7 @@
 			};
 			name = Release;
 		};
-		AB8575552E0B9BB200694020 /* Debug */ = {
+		AB8575552E0B9BB200694020 /* Debug configuration for PBXNativeTarget "AppKitProject" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -503,17 +621,18 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.AppKitProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
-		AB8575562E0B9BB200694020 /* Release */ = {
+		AB8575562E0B9BB200694020 /* Release configuration for PBXNativeTarget "AppKitProject" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -535,17 +654,18 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.AppKitProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
-		AB8575582E0B9BB200694020 /* Debug */ = {
+		AB8575582E0B9BB200694020 /* Debug configuration for PBXNativeTarget "AppKitProjectTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -564,7 +684,7 @@
 			};
 			name = Debug;
 		};
-		AB8575592E0B9BB200694020 /* Release */ = {
+		AB8575592E0B9BB200694020 /* Release configuration for PBXNativeTarget "AppKitProjectTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -583,7 +703,7 @@
 			};
 			name = Release;
 		};
-		AB85755B2E0B9BB200694020 /* Debug */ = {
+		AB85755B2E0B9BB200694020 /* Debug configuration for PBXNativeTarget "AppKitProjectUITests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -600,7 +720,7 @@
 			};
 			name = Debug;
 		};
-		AB85755C2E0B9BB200694020 /* Release */ = {
+		AB85755C2E0B9BB200694020 /* Release configuration for PBXNativeTarget "AppKitProjectUITests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -623,37 +743,33 @@
 		AB85752A2E0B9BB100694020 /* Build configuration list for PBXProject "AppKitProject" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AB8575522E0B9BB200694020 /* Debug */,
-				AB8575532E0B9BB200694020 /* Release */,
+				AB8575522E0B9BB200694020 /* Debug configuration for PBXProject "AppKitProject" */,
+				AB8575532E0B9BB200694020 /* Release configuration for PBXProject "AppKitProject" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		AB8575542E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProject" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AB8575552E0B9BB200694020 /* Debug */,
-				AB8575562E0B9BB200694020 /* Release */,
+				AB8575552E0B9BB200694020 /* Debug configuration for PBXNativeTarget "AppKitProject" */,
+				AB8575562E0B9BB200694020 /* Release configuration for PBXNativeTarget "AppKitProject" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		AB8575572E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProjectTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AB8575582E0B9BB200694020 /* Debug */,
-				AB8575592E0B9BB200694020 /* Release */,
+				AB8575582E0B9BB200694020 /* Debug configuration for PBXNativeTarget "AppKitProjectTests" */,
+				AB8575592E0B9BB200694020 /* Release configuration for PBXNativeTarget "AppKitProjectTests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		AB85755A2E0B9BB200694020 /* Build configuration list for PBXNativeTarget "AppKitProjectUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AB85755B2E0B9BB200694020 /* Debug */,
-				AB85755C2E0B9BB200694020 /* Release */,
+				AB85755B2E0B9BB200694020 /* Debug configuration for PBXNativeTarget "AppKitProjectUITests" */,
+				AB85755C2E0B9BB200694020 /* Release configuration for PBXNativeTarget "AppKitProjectUITests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */

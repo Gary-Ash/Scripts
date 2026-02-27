@@ -1,4 +1,4 @@
-#compdef _new-xcode-project new-xcode-project.pl
+#compdef new-xcode-project.pl
 #*****************************************************************************************
 # new-xcode-project
 #
@@ -6,46 +6,59 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  20-Feb-2026  5:24pm
+# Modified :  27-Feb-2026  5:15pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
+_new_xcode_project() {
+	local -a options
+	local template_root cache_file
+	local -a specs
 
-_new-xcode-project() {
- 	case "$state" in
-   		templates)
-		    setopt localoptions extendedglob
+	template_root="/opt/geedbla/templates/Xcode"
 
-		    local -a _descriptions
-			local raw_names=("${(@f)$(find "/opt/geedbla/templates/Xcode" -type d -depth 1 -not -name "_*"  -not -name ".*")}")
-			for template in "${raw_names[@]}"; do
-				name=$(basename "$template")
-				desc=$(<"${template}/.ProjectDescription")
-				_descriptions+="$name:$desc"
+	# Cache
+	cache_file="$HOME/.cache/new-xcode-project-templates.zsh"
+	mkdir -p "${cache_file:h}"
+
+	# Build cache if needed
+	if [[ ! -f $cache_file || $template_root -nt $cache_file ]]; then
+		{
+			local tpl desc
+			for tpl in "$template_root"/*(/); do
+				[[ -f "$tpl/.ProjectDescription" ]] || continue
+				desc="$(<"$tpl/.ProjectDescription")"
+				printf '%s\t%s\n' "${tpl:t}" "${desc}"
 			done
-	       _describe 'templates' _descriptions
-		;;
+		} | sort >|"$cache_file"
+	fi
 
-	   	proj)
+	# Load cache
+	specs=()
+	while IFS=$'\t' read -r name desc; do
+		specs+=("${name}:${desc}")
+	done <"$cache_file"
+
+	options=(
+		'(-cs --closed)'{-cs,--closed}'[Create project with a closed-source license]'
+		'(-lif --infilelicense)'{-lif,--infilelicense}'[Add the source license to files]'
+		'(-ng --no-github)'{-ng,--no-github}'[Do not create a GitHub repository]'
+		'(-nx --no-xcode)'{-nx,--no-xcode}'[Do not start Xcode after project generation]'
+	)
+
+	_arguments -s \
+		$options \
+		'1:template name:->template' \
+		'2:project name:' \
+		'3:project location:_files -/' \
+		'4:company name (optional):' \
+		'5:bundle identifier (optional):reverse-DNS (e.g. com.company.app)'
+
+	case $state in
+		template)
+			_describe 'template name' specs
 			;;
-
-	   	loc)
-		_path_files -/
-		;;
-
-		org)
-		;;
-  	esac
-
-	_arguments \
-        {-cs,--closed}'[Closed source project]' \
-        {-lif,--inFileLicense}'[Add the source license to the files]' \
-        {-ng,--no-github}'[No GitHub project]' \
-        {-nx,--no-xcode}'[Do not start Xcode]' \
-   		'1:templates:->templates' 				\
-   		'2:.*:->proj' 							\
-		'3:.*:->loc'							\
-		'4:.*:->org'							\
-		'*::arg:->args'
-
+	esac
 }
+
+_new_xcode_project

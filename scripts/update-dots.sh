@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  28-Feb-2026  3:11pm
+# Modified :   5-Mar-2026  3:59pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -43,9 +43,11 @@ dot-files() {
 		"$HOME/.claude/statsig"
 		"$HOME/.claude/downloads"
 		"$HOME/.claude/shell-snapshots"
+		"$HOME/.claude/telemetry"
 		"$HOME/.claude/file-history"
 		"$HOME/.claude/history.jsonl"
 		"$HOME/.claude/stats-cache.json"
+		"$HOME/.claude/plugins/blocklist.json"
 		"$HOME/.config/z"
 		"$HOME/.config/zsh/.zsh_history"
 		"$HOME/.config/zsh/zcompdump*"
@@ -268,7 +270,8 @@ our @plistKeysToDelete = (
     "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
     "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
-    "ApplicationAutoSaveState",                                       "LastOpenByNameString",                                           "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",                                                               "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",		                          "BBEditSerialNumber:15.0",
+    "ApplicationAutoSaveState",                                       "LastOpenByNameString",                                           "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",                                                               "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate", "BBEditSerialNumber:15.0",
+    "SULastCheckedDate",                                              "LastLaunchOSVersion",
 );
 
 #*****************************************************************************************
@@ -294,7 +297,7 @@ sub processFiles {
             my $items         = $keyNamesArray->count;
             for (my $index = 0; $index < $items; ++$index) {
                 my $key = $keyNamesArray->objectAtIndex_($index)->UTF8String();
-                if (rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
+                if (   rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
                     || rindex($key, "ImageDisplayGrayLevel_", 0) != -1)
                 {
                     $plistData->removeObjectForKey_($key);

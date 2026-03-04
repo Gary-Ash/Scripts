@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  25-Feb-2026  2:59pm
+# Modified :   5-Mar-2026  4:07pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -290,11 +290,13 @@ our @plistKeysToDelete = (
     "TSAOpenedTemplates.Numbers",                                     "TSAOpenedTemplates.Pages",                                       "FindDialog_SearchReplaceHistory",                                                                                       "ApplicationSleepState",                                         "ApplicationAutoSaveState",                                     "CurrentWorkspaceDocumentName",
     "FindDialog_SelectedSourceNodes",                                 "NSOSPLastRootDirectory",                                         "RecentItemsData",                                                                                                       "PropertyWindowsToReopen",                                       "LastPersistenceCleanupDateKey",                                "XCCArchiveReminderPromptDate",
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
-    "ApplicationAutoSaveState",                                       "LastOpenByNameString",                                           "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",                                                               "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
+    "ApplicationAutoSaveState",                                       "LastOpenByNameString",
+    "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",        "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
+    "SULastCheckedDate",                                              "LastLaunchOSVersion", "LastOpenByNameString", "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier", "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
 );
 
 our @itemsToDelete = (
-	["$HOME/Library/Application Support/zoxide/db.zo",																					  1],
+    ["$HOME/Library/Application Support/zoxide/db.zo",                                                                                    1],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments",                  0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentDocuments.sfl3",                        0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl3",                          0],
@@ -318,6 +320,8 @@ our @itemsToDelete = (
     ["$HOME/.claude/debug",                                                                                                               0],
     ["$HOME/.claude/statsig",                                                                                                             0],
     ["$HOME/.claude/downloads",                                                                                                           0],
+    ["$HOME/.claude/telemetry",                                                                                                           0],
+    ["$HOME/.claude/plugins/blocklist.json",                                                                                              0],
     ["$HOME/.claude/shell-snapshots",                                                                                                     0],
     ["$HOME/.claude/file-history",                                                                                                        0],
     ["$HOME/.claude/history.jsonl",                                                                                                       0],
@@ -329,7 +333,6 @@ our @itemsToDelete = (
     ["$HOME/.claude/todos",                                                                                                               0],
     ["$HOME/.claude/session-env",                                                                                                         0],
     ["$HOME/.claude/history.jsonl",                                                                                                       0],
-    ["$HOME/.claude/stats-cache.json",                                                                                                    0],
     ["$HOME/.npm",                                                                                                                        0],
     ["$HOME/.konan",                                                                                                                      0],
     ["$HOME/.ssh/known_hosts.old",                                                                                                        0],

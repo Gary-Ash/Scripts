@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :   6-Mar-2026  4:19pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -39,6 +39,7 @@ rsync -rz -delete "Sublime Text/Packages/" "$HOME/Library/Application Support/Su
 rsync -rz -delete "xcode/" "$HOME/Library/Developer/Xcode/"
 
 rsync -rz preferences/* "$HOME/Library/Preferences"
+rsync -rz "Script Libraries/"* "$HOME/Library/Script Libraries"
 
 if ! command -v brew >/dev/null; then
 	curl -fsS 'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby

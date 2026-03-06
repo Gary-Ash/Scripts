@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  23-Feb-2026 10:08pm
+# Modified :   6-Mar-2026  4:02pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -36,6 +36,7 @@ sync_directories() {
 		~/Developer
 		~/Documents
 		/opt/bin /opt/geedbla
+		~/Library/"Script Libraries"
 		~/Library/"Application Support"/BBEdit
 		~/Library/Containers/com.barebones.bbedit)
 

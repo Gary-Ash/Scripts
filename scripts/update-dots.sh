@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   5-Mar-2026  3:59pm
+# Modified :   6-Mar-2026  4:15pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -153,6 +153,11 @@ buildRepository() {
 		--exclude="/SDKToSimulatorIndexMapping.plist" \
 		--exclude="/XcodeToMetalToolchainIndexMapping.plist" \
 		"$HOME/Library/Developer/Xcode/" "$DOTFILES_DIR/xcode/" &>/dev/null
+
+	rsync -arcz -E --rsh=ssh \
+		--delete \
+		"$HOME/Library/Script Libraries" \
+		"$DOTFILES_DIR/" &>/dev/null
 
 	rsync -arcz -E --rsh=ssh \
 		--exclude="BBEdit User Manual *.pdf" \

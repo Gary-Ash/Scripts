@@ -1,0 +1,141 @@
+#*****************************************************************************
+# app-store-release.yaml
+#
+# Build, archive, and upload the app to App Store Connect when code is
+# pushed to main. Uses only xcodebuild with an App Store Connect API
+# key for authentication
+#
+# This workflow does assume that once code hits the main branch it has been
+# through whatever unit tests and/or UI test you see fit
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   8-Mar-2026  4:00pm
+# Modified :   8-Mar-2026  2:16pm
+#
+# Copyright © 2026 By Gary Ash All rights reserved.
+#*****************************************************************************
+
+name: App Store Release
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  release:
+    name: Archive and Upload to App Store Connect
+    runs-on: macos-latest
+
+    env:
+      SCHEME: __PROJECT_NAME__
+      PROJECT: __PROJECT_NAME__.xcodeproj
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Install signing certificate
+        env:
+          CERTIFICATE_P12: ${{ secrets.CERTIFICATE_P12 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          CERT_PATH=$RUNNER_TEMP/certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/signing.keychain-db
+
+          echo -n "$CERTIFICATE_P12" | base64 --decode -o "$CERT_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          security import "$CERT_PATH" \
+            -P "$CERTIFICATE_PASSWORD" \
+            -A \
+            -t cert \
+            -f pkcs12 \
+            -k "$KEYCHAIN_PATH"
+
+          security set-key-partition-list \
+            -S apple-tool:,apple: \
+            -k "$KEYCHAIN_PASSWORD" \
+            "$KEYCHAIN_PATH"
+
+          security list-keychains -d user -s "$KEYCHAIN_PATH" login.keychain-db
+
+      - name: Install provisioning profile
+        env:
+          PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
+        run: |
+          PROFILE_PATH=$RUNNER_TEMP/profile.mobileprovision
+          echo -n "$PROVISIONING_PROFILE" | base64 --decode -o "$PROFILE_PATH"
+
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< \
+            "$(security cms -D -i "$PROFILE_PATH")")
+          cp "$PROFILE_PATH" \
+            ~/Library/MobileDevice/Provisioning\ Profiles/"$UUID".mobileprovision
+
+      - name: Set up App Store Connect API key
+        env:
+          ASC_API_KEY: ${{ secrets.ASC_API_KEY }}
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+        run: |
+          mkdir -p ~/private_keys
+          echo -n "$ASC_API_KEY" | base64 --decode \
+            -o ~/private_keys/AuthKey_${ASC_API_KEY_ID}.p8
+
+      - name: Build archive
+        run: |
+          SIMULATOR=$(xcrun xctrace list devices 2>&1 \
+            | grep -oE 'iPhone.*?[^\(]+' \
+            | head -1 \
+            | awk '{$1=$1;print}' \
+            | sed -e 's/ Simulator$//')
+
+          xcodebuild archive \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -destination "generic/platform=iOS" \
+            -archivePath $RUNNER_TEMP/__PROJECT_NAME__.xcarchive \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/private_keys/AuthKey_${{ secrets.ASC_API_KEY_ID }}.p8 \
+            -authenticationKeyID ${{ secrets.ASC_API_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.ASC_API_ISSUER_ID }} \
+            CODE_SIGNING_ALLOWED=YES
+
+      - name: Export and upload to App Store Connect
+        run: |
+          cat > $RUNNER_TEMP/ExportOptions.plist << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+            "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store-connect</string>
+              <key>destination</key>
+              <string>upload</string>
+          </dict>
+          </plist>
+          PLIST
+
+          xcodebuild -exportArchive \
+            -archivePath $RUNNER_TEMP/__PROJECT_NAME__.xcarchive \
+            -exportOptionsPlist $RUNNER_TEMP/ExportOptions.plist \
+            -authenticationKeyPath ~/private_keys/AuthKey_${{ secrets.ASC_API_KEY_ID }}.p8 \
+            -authenticationKeyID ${{ secrets.ASC_API_KEY_ID }} \
+            -authenticationKeyIssuerID ${{ secrets.ASC_API_ISSUER_ID }} \
+            -allowProvisioningUpdates
+
+      - name: Clean up
+        if: always()
+        run: |
+          security delete-keychain $RUNNER_TEMP/signing.keychain-db 2>/dev/null || true
+          rm -f $RUNNER_TEMP/certificate.p12
+          rm -f $RUNNER_TEMP/profile.mobileprovision
+          rm -rf ~/private_keys
+          rm -rf ~/Library/MobileDevice/Provisioning\ Profiles

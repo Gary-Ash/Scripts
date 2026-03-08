@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   5-Mar-2026  4:07pm
+# Modified :   8-Mar-2026  8:15pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -311,6 +311,7 @@ our @itemsToDelete = (
     ["$HOME/.proxyman-data",                                                                                                              0],
     ["$HOME/.hawtjni",                                                                                                                    0],
     ["$HOME/.claude/backups",                                                                                                             0],
+    ["$HOME/.claude/image-cache",                                                                                                         0],
     ["$HOME/.claude/cache",                                                                                                               0],
     ["$HOME/.claude/session-env",                                                                                                         0],
     ["$HOME/.claude/plans",                                                                                                               0],

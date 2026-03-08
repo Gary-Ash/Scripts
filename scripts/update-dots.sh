@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   6-Mar-2026  4:15pm
+# Modified :   8-Mar-2026  8:14pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -33,6 +33,7 @@ dot-files() {
 
 	local -r ignore_these=(
 		"$HOME/.claude/backups"
+		"$HOME/.claude/image-cache"
 		"$HOME/.claude/cache"
 		"$HOME/.claude/session-env"
 		"$HOME/.claude/plans"

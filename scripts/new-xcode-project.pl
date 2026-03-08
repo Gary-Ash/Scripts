@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   7-Mar-2026 11:55pm
+# Modified :   8-Mar-2026  7:41pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -511,6 +511,7 @@ sub searchReplace {
             my $source = do { local $/; <$sourcefile> };
             if ($source =~ /$findFilesToProcess/ && isValidOrganization("$1")) {
                 $source =~ s/$projectTemplate/$projectName/g;
+                $source =~ s/__PROJECT_NAME__/$projectName/g;
 
                 if ($extension eq '.pbxproj') {
                     $source =~ s/ORGANIZATIONNAME\s*=\s*.*;/ORGANIZATIONNAME = \"$companyName\";/;
@@ -586,5 +587,4 @@ if ($openXcode) {
 
 if ($setupGithub) {
     system("cd \"$projectLocation/$projectName/\" && gh repo create \"$projectName\" --private --source=. --remote=upstream &> /dev/null");
-    system("rm -rf ~/.local &> /dev/null");
 }

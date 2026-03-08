@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  20-Feb-2026  6:02pm
+# Modified :   7-Mar-2026 11:55pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -435,6 +435,13 @@ sub createProjectFileStructure {
         print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }
+
+    if ($setupGithub) {
+        if (dircopy("$TEMPLATE_LOCATION/_Files/.github", "$projectLocation/$projectName/.github") == 0) {
+            print STDERR "*** Error: disk error : $!\n";
+            exit(1);
+        }
+    }
     if (copy("$TEMPLATE_LOCATION/_Files/.swiftlint.yml", "$projectLocation/$projectName/") == 0) {
         print STDERR "*** Error: disk error : $!\n";
         exit(1);
@@ -515,8 +522,8 @@ sub searchReplace {
                         $source =~ s/GENERATE_INFOPLIST_FILE = YES;/GENERATE_INFOPLIST_FILE = YES;\n\t\t\tINFOPLIST_KEY_CFBundleDisplayName = \"$projectName\";/g;
                     }
                     $source =~ s/PRODUCT_BUNDLE_IDENTIFIER \s*=\s*.*;/PRODUCT_BUNDLE_IDENTIFIER  = $bundleIdentifier;/g;
-                    $source =~ s/Created  :[^\\\n]*/Created  :  $timestamp/g;
-                    $source =~ s/Modified :[^\\\n]*/Modified :/g;
+                    $source =~ s/Created  :[^"\\\n]*/Created  :  $timestamp/g;
+                    $source =~ s/Modified :[^"\\\n]*/Modified :/g;
 
                     our $count = 0;
                     while ($source =~ /$projectFileCopyright/) {
@@ -537,6 +544,7 @@ sub searchReplace {
                             last;
                         }
                     }
+                    $source =~ s/By\s+CompanyName\s+All rights reserved\./By $companyName All rights reserved./g;
                 }
                 else {
                     $source =~ s/Created  :[^\\\n]*/Created  :  $timestamp/;

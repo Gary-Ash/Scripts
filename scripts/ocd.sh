@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   8-Mar-2026  8:15pm
+# Modified :  11-Mar-2026 11:10pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -93,8 +93,6 @@ tell application "System Events"
 	end try
 end tell
 CLOSE_SCRIPT
-
-	killall "Crash Reporter" ReportCrash &>/dev/null
 }
 
 #-----------------------------------------------------------------------------------------
@@ -292,11 +290,10 @@ our @plistKeysToDelete = (
     "OpenDocuments",                                                  "IDEAppStatisticsXcodeVersionMetricsHistoryStorage",              "IDE_CA_Daily_LastReport",                                                                                               "IDE_CA_Daily_UptimeHours",                                      "IDE_CA_Daily_SessionCount",                                    "PreferencesSnapshotDate",
     "ApplicationAutoSaveState",                                       "LastOpenByNameString",
     "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",        "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
-    "SULastCheckedDate",                                              "LastLaunchOSVersion", "LastOpenByNameString", "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier", "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
+    "SULastCheckedDate",                                              "LastLaunchOSVersion", "LastOpenByNameString", "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier", "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate", "savedLastOpen",
 );
 
 our @itemsToDelete = (
-    ["$HOME/Library/Application Support/zoxide/db.zo",                                                                                    1],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments",                  0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentDocuments.sfl3",                        0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl3",                          0],

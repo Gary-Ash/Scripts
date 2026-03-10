@@ -21,6 +21,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [find-permission-based-API-usage.sh](#find-permission-based-api-usagesh) | Bash | Find iOS permission-requiring APIs |
 | [fix-xcode-templates.pl](#fix-xcode-templatespl) | Perl | Fix Xcode file header templates |
 | [format-project.sh](#format-projectsh) | Bash | Format source code in projects |
+| [git-applescript-filter.sh](#git-applescript-filtersh) | Bash | Git clean/smudge filter for AppleScript |
 | [git-rebase-mine-to.sh](#git-rebase-mine-tosh) | Bash | Git merge and rebase utility |
 | [load-simulator.pl](#load-simulatorpl) | Perl | Restore iOS simulator state |
 | [meeting-direct-link.py](#meeting-direct-linkpy) | Python | Convert meeting URLs to app links |
@@ -84,6 +85,17 @@ Modifies Xcode's internal file and project templates to remove the `//` comment 
 Runs multiple code formatters on a project directory including uncrustify (C/Objective-C), swiftformat (Swift), black (Python), shfmt (Bash), and perltidy (Perl).
 
 **Usage:** `format-project.sh [directory]`
+
+---
+
+### git-applescript-filter.sh
+
+A Git clean/smudge filter for compiled AppleScript (`.scpt`) files. In `--clean` mode it decompiles a compiled script to source text for storage in Git; in `--smudge` mode it recompiles source text back to a compiled script on checkout.
+
+**Usage:** Configured via `.gitattributes`:
+```
+*.scpt filter=applescript diff=applescript
+```
 
 ---
 
@@ -291,11 +303,11 @@ Files in `templates/Xcode/_Files/` are applied to every generated project regard
 
 | File / Directory | Description |
 |------------------|-------------|
-| `.github/` | GitHub community health files: `CODE_OF_CONDUCT`, `CONTRIBUTING`, `FUNDING.yml`, issue templates, PR template, and a CI workflow |
+| `.github/` | GitHub community health files: `CODE_OF_CONDUCT`, `CONTRIBUTING`, `FUNDING.yml`, issue templates, PR template, and CI/App Store release workflows |
 | `.swiftlint.yml` | Project SwiftLint configuration |
 | `.xcodesamplecode.plist` | Marks the project as Xcode sample code |
 | `Assets.xcassets.zip` | Pre-built asset catalog (app icon slots, accent color, etc.) |
-| `BuildEnv/` | Build phase scripts: `increment-build-number.sh`, `stamp-beta-version.sh`, `restore-stamped-icon.sh`, `swiftlint-project.sh` |
+| `BuildEnv/` | Build phase scripts: `increment-build-number.sh`, `stamp-beta-version.sh`, `restore-stamped-icon.sh`, `swiftlint-project.sh`, `export-github-secrets.sh` |
 | `IDETemplateMacros.plist` | Xcode file header template macros |
 | `IDETemplateMacros-Open.plist` | Header macros variant for open-source projects |
 | `IDETemplateMacros-Closed.plist` | Header macros variant for closed-source projects |

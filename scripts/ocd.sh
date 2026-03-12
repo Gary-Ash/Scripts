@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  11-Mar-2026 11:10pm
+# Modified :  12-Mar-2026  2:38pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -48,19 +48,24 @@ finish() {
 #*****************************************************************************************
 killEverything() {
 	osascript <<"CLOSE_SCRIPT" &>/dev/null
-tell application "System Events"
-	set backgroundsToKill to ¬
-		{"Keyboard Maestro Engine", ¬
-			"Bartender 6", ¬
-			"Safari", ¬
-			"Dash", ¬
-			"Alfred", ¬
-			"Moom", ¬
-			"SnippetsLab", ¬
-			"Slack", ¬
-			"Mona", ¬
-			"Pastebot"}
+set backgroundsToKill to ¬
+	{"Keyboard Maestro Engine", ¬
+		"Bartender 6", ¬
+		"Safari", ¬
+		"Dash", ¬
+		"Alfred", ¬
+		"Moom", ¬
+		"SnippetsLab", ¬
+		"Slack", ¬
+		"Mona", ¬
+		"Pastebot"}
 
+repeat with appName in backgroundsToKill
+	try
+		tell application (appName as text) to quit
+	end try
+end repeat
+tell application "System Events"
 	try
 		set processList to the name of ¬
 			every process whose visible is true as string
@@ -69,28 +74,13 @@ tell application "System Events"
 	end try
 
 	set activeApp to name of first application process whose frontmost is true as string
-
-	repeat with processName in backgroundsToKill
-		if processName as string is not equal to activeApp then
-			try
-				do shell script "killall " & quoted form of processName
-				delay 0.5
-			end try
-		end if
-	end repeat
-
 	repeat with processName in processList
 		if processName as string is not equal to activeApp then
 			try
-				do shell script "killall " & quoted form of processName
-				delay 0.5
+				tell application (processName as text) to quit
 			end try
 		end if
 	end repeat
-
-	try
-		tell application "BBEdit" to quit
-	end try
 end tell
 CLOSE_SCRIPT
 }

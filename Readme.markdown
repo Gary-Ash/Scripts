@@ -8,6 +8,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 - [Shell Library Functions](#shell-library-functions)
 - [Zsh Shell Completions](#zsh-shell-completions)
 - [Xcode Project Templates](#xcode-project-templates)
+- [Pictures](#pictures)
 
 ---
 
@@ -35,6 +36,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [strip-comments.pl](#strip-commentspl) | Perl | Remove comments from C-style source |
 | [sync-mac.sh](#sync-macsh) | Bash | Sync files between Mac systems |
 | [update-dots.sh](#update-dotssh) | Bash | Maintain dotfiles repository |
+| [update-safari-icons.sh](#update-safari-iconssh) | Bash | Upload Safari favicon cache to server |
 | [update-site.sh](#update-sitesh) | Bash | Deploy Jekyll website |
 | [wtf-autolayout.py](#wtf-autolayoutpy) | Python | Debug Auto Layout constraints |
 
@@ -207,6 +209,14 @@ Maintains a dotfiles Git repository by collecting configuration files, preferenc
 
 ---
 
+### update-safari-icons.sh
+
+Archives Safari favicon cache directories and uploads the archive to a remote server via scp. Retrieves the server password from the macOS Keychain.
+
+**Usage:** `update-safari-icons.sh`
+
+---
+
 ### update-site.sh
 
 Builds a Jekyll website and deploys it to a remote server via rsync.
@@ -315,6 +325,17 @@ Files in `templates/Xcode/_Files/` are applied to every generated project regard
 | `LICENSE-Closed.markdown` | Closed-source license text |
 | `ci.sh` | Local CI runner script |
 | `organizations.txt` | Known organization names for copyright substitution |
+
+---
+
+## Pictures
+
+Resource images located in `pictures/` used by scripts.
+
+| File | Description |
+|------|-------------|
+| `apple-logo.png` | Apple logo image |
+| `SimpleGrey.heic` | Desktop wallpaper image |
 
 ---
 

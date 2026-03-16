@@ -82,10 +82,14 @@ sub shouldIgnoreFile {
 sub processScptFile {
     my ($filename) = @_;
 
-    # decompile .scpt to plain text
+    my $language = "AppleScript";
     my $source = `osadecompile "$filename" 2>/dev/null`;
     if ($? != 0 || !defined($source) || $source eq '') {
-        return;
+        $language = "JavaScript";
+        $source = `osadecompile -l JavaScript "$filename" 2>/dev/null`;
+        if ($? != 0 || !defined($source) || $source eq '') {
+            return;
+        }
     }
 
     if ($source =~ /$findFilesToProcess/ && isValidOrganization("$1")) {
@@ -93,8 +97,7 @@ sub processScptFile {
         $source =~ s/Modified :[\/\t 0-9A-Za-z-:]*[^\n|\\n]|Modified :*[^\n|\\n]/Modified :/;
         $source =~ s/$findFilesToProcess/$copyrightNotice/;
 
-        # recompile back to .scpt
-        open(my $osacompile, '|-', "osacompile -o \"$filename\" 2>/dev/null") or return;
+        open(my $osacompile, '|-', "osacompile -l $language -o \"$filename\" 2>/dev/null") or return;
         print $osacompile $source;
         close($osacompile);
     }

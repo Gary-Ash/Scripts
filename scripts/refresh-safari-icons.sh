@@ -22,10 +22,10 @@ USER_NAME="$USER"
 ZIP_FILE="$(mktemp -t SafariDownload.XXXXXX).zip"
 
 DIRS=(
-"Link Presentation Icons"
-"Favicon Cache"
-"Template Icons"
-"Touch Icons Cache"
+	"Link Presentation Icons"
+	"Favicon Cache"
+	"Template Icons"
+	"Touch Icons Cache"
 )
 
 # Retrieve password from Keychain
@@ -44,16 +44,16 @@ expect {
 expect eof
 EOF
 
-if [[ ! -s "$ZIP_FILE" ]]; then
-    echo "Download failed."
-    rm -f "$ZIP_FILE"
-    exit 1
+if [[ ! -s $ZIP_FILE ]]; then
+	echo "Download failed."
+	rm -f "$ZIP_FILE"
+	exit 1
 fi
 
 echo "Removing existing Safari cache folders"
 
 for d in "${DIRS[@]}"; do
-    rm -rf "${SAFARI_DIR:?}/$d"
+	rm -rf "${SAFARI_DIR:?}/$d"
 done
 
 echo "Extracting archive"

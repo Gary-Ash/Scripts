@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ORGANIZATIONNAME</key>
-	<string>Gary Ash</string>
 	<key>FILEHEADER</key>
 	<string>/*****************************************************************************************
  * ___FILENAME___
@@ -16,5 +14,7 @@
  *
  * Copyright © ___YEAR___ By ___ORGANIZATIONNAME___ All rights reserved.
  ****************************************************************************************/</string>
+	<key>ORGANIZATIONNAME</key>
+	<string>Gary Ash</string>
 </dict>
 </plist>

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  19-Mar-2026  5:49pm
+# Modified :  19-Mar-2026  9:10pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -117,6 +117,13 @@ if command -v brew &>/dev/null; then
 	brew autoremove &>"$error_log"
 	brew cleanup &>"$error_log"
 	rm -rf "$(brew --cache)" &>/dev/null
+fi
+
+#*****************************************************************************************
+# Update Github gh extensions
+#*****************************************************************************************
+if command -v gh &>/dev/null; then
+	gh extension upgrade --all
 fi
 
 #*********************************************************************************

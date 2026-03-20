@@ -6,15 +6,16 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  20-Mar-2026  3:52pm
-# Modified :  20-Mar-2026  4:39pm
+# Modified :  20-Mar-2026  5:25pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
 (( $+functions[_tv_channels] )) ||
 _tv_channels() {
+  local cable_dir="${XDG_CONFIG_HOME:-$HOME/.config}/television/cable"
   local -a channels
-  channels=( ${(f)"$(tv list-channels 2>/dev/null)"} )
+  channels=( ${cable_dir}/*.toml(N:t:r) )
   _describe -t channels 'channel' channels
 }
 
@@ -51,7 +52,6 @@ _tv_subcommands() {
   local -a subcmds=(
     'list-channels:List all available channels'
     'init:Initialize shell integration'
-    'completions:Generate shell tab-completion scripts'
     'update-channels:Download latest channel prototypes from GitHub'
   )
   _describe -t subcommands 'subcommand' subcmds
@@ -127,39 +127,38 @@ _tv_main_options=(
   '--global-history[Use global history instead of per-channel]'
 )
 
+(( $+functions[_tv_first_arg] )) ||
+_tv_first_arg() {
+  _alternative \
+    'subcommands:subcommand:_tv_subcommands' \
+    'channels:channel:_tv_channels'
+}
+
+(( $+functions[_tv_second_arg] )) ||
+_tv_second_arg() {
+  case "${line[1]}" in
+    init)
+      _tv_shells
+      ;;
+    update-channels)
+      _arguments '--force[Force update even if up to date]'
+      ;;
+    list-channels)
+      ;;
+    *)
+      _directories
+      ;;
+  esac
+}
+
 _tv() {
   local curcontext="$curcontext" state state_descr line
   typeset -A opt_args
 
   _arguments -s -S -C \
-    '1: :->first_arg' \
-    '2: :->second_arg' \
-    "${_tv_main_options[@]}" \
-    && return
-
-  case "$state" in
-    first_arg)
-      _alternative \
-        'subcommands:subcommand:_tv_subcommands' \
-        'channels:channel:_tv_channels' \
-        'directories:directory:_directories'
-      ;;
-    second_arg)
-      case "${line[1]}" in
-        init|completions)
-          _tv_shells
-          ;;
-        update-channels)
-          _arguments '--force[Force update even if up to date]'
-          ;;
-        list-channels)
-          ;;
-        *)
-          _directories
-          ;;
-      esac
-      ;;
-  esac
+    '1: :_tv_first_arg' \
+    '2: :_tv_second_arg' \
+    "${_tv_main_options[@]}"
 }
 
 _tv "$@"

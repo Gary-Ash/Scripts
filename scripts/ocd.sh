@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  19-Mar-2026  9:10pm
+# Modified :  21-Mar-2026  3:26pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -123,7 +123,7 @@ fi
 # Update Github gh extensions
 #*****************************************************************************************
 if command -v gh &>/dev/null; then
-	gh extension upgrade --all
+	gh extension upgrade --all >/dev/null
 fi
 
 #*********************************************************************************

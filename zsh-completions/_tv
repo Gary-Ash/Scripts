@@ -1,0 +1,165 @@
+#compdef tv
+#*****************************************************************************************
+# _tv
+#
+# Zsh completion script for the television (tv) TUI fuzzy finder
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  20-Mar-2026  3:52pm
+# Modified :  20-Mar-2026  4:39pm
+#
+# Copyright © 2026 By Gary Ash All rights reserved.
+#*****************************************************************************************
+
+(( $+functions[_tv_channels] )) ||
+_tv_channels() {
+  local -a channels
+  channels=( ${(f)"$(tv list-channels 2>/dev/null)"} )
+  _describe -t channels 'channel' channels
+}
+
+(( $+functions[_tv_shells] )) ||
+_tv_shells() {
+  local -a shells=(
+    'bash:Bash'
+    'zsh:Zsh'
+    'fish:Fish'
+    'power-shell:PowerShell'
+    'nu:Nushell'
+    'cmd:Command Prompt'
+  )
+  _describe -t shells 'shell' shells
+}
+
+(( $+functions[_tv_border_types] )) ||
+_tv_border_types() {
+  local -a borders=(
+    'none:No border'
+    'plain:Plain border'
+    'rounded:Rounded corners'
+    'thick:Thick border'
+  )
+  _describe -t borders 'border style' borders
+}
+
+(( $+functions[_tv_padding] )) ||
+_tv_padding() {
+  _message 'padding (top=N;left=N;bottom=N;right=N)'
+}
+
+_tv_subcommands() {
+  local -a subcmds=(
+    'list-channels:List all available channels'
+    'init:Initialize shell integration'
+    'completions:Generate shell tab-completion scripts'
+    'update-channels:Download latest channel prototypes from GitHub'
+  )
+  _describe -t subcommands 'subcommand' subcmds
+}
+
+_tv_main_options=(
+  + '(help)' {-h,--help}'[Show help]'
+  + '(version)' {-V,--version}'[Show version]'
+  + source
+  {-s,--source-command}'[Source command for the channel]:command:_command_names'
+  '--ansi[Parse ANSI style codes from source output]'
+  '--no-sort[Disable sorting by match quality; preserve original order]'
+  '--source-display[Display template for result entries]:template:'
+  '--source-output[Output template for selected entry]:template:'
+  '--source-entry-delimiter[Delimiter for splitting source output]:delimiter:'
+  + preview
+  '(no-preview)'{-p,--preview-command}'[Preview command]:command:'
+  '(no-preview)--preview-header[Preview header template]:template:'
+  '(no-preview)--preview-footer[Preview footer template]:template:'
+  '(no-preview)--cache-preview[Cache preview output per entry]'
+  '--preview-offset[Line number offset for scrolling preview]:template:'
+  '(preview hide-preview show-preview)--no-preview[Disable preview panel]'
+  '(no-preview show-preview)--hide-preview[Hide preview on startup]'
+  '(no-preview hide-preview)--show-preview[Show preview on startup]'
+  '--preview-border[Preview border style]:style:_tv_border_types'
+  '(no-preview)--preview-padding[Preview panel padding]:padding:_tv_padding'
+  '(no-preview)--preview-word-wrap[Enable word wrap in preview]'
+  '(no-preview)--hide-preview-scrollbar[Hide the preview scrollbar]'
+  '(no-preview)--preview-size[Preview panel size (1-99 percent)]:percent:'
+  + input
+  {-i,--input}'[Prefill input prompt]:text:'
+  '--input-header[Input field header template]:template:'
+  '--input-prompt[Prompt string before input]:prompt:'
+  '--input-position[Input bar position]:position:(top bottom)'
+  '--input-border[Input bar border style]:style:_tv_border_types'
+  '--input-padding[Input bar padding]:padding:_tv_padding'
+  + '(status-bar)'
+  '--no-status-bar[Disable status bar]'
+  '--hide-status-bar[Hide status bar on startup]'
+  '--show-status-bar[Show status bar on startup]'
+  + ui
+  '--results-border[Results panel border style]:style:_tv_border_types'
+  '--results-padding[Results panel padding]:padding:_tv_padding'
+  '--layout[Layout orientation]:layout:(landscape portrait)'
+  '--ui-scale[Display scale percentage (10-100)]:scale:'
+  '--height[Height in lines (min 6)]:lines:'
+  '--width[Width in columns (min 20)]:columns:'
+  '(--height)--inline[Use inline mode at bottom of terminal]'
+  + '(remote)'
+  '--no-remote[Disable remote control panel]'
+  '--hide-remote[Hide remote control on startup]'
+  '--show-remote[Show remote control on startup]'
+  + '(help-panel)'
+  '--no-help-panel[Disable help panel]'
+  '--hide-help-panel[Hide help panel on startup]'
+  '--show-help-panel[Show help panel on startup]'
+  + behavior
+  {-t,--tick-rate}'[Application tick rate]:rate:'
+  '--watch[Reload source every N seconds]:seconds:'
+  '--autocomplete-prompt[Guess channel from prompt]:prompt:'
+  '--exact[Use substring matching instead of fuzzy]'
+  + '(selection-mode)'
+  '--select-1[Auto-select if only one entry]'
+  '--take-1[Take first entry after loading completes]'
+  '--take-1-fast[Take first entry as soon as available]'
+  + keybindings
+  {-k,--keybindings}'[Override keybindings]:bindings:'
+  '--expect[Additional confirmation keys]:keys:'
+  + config
+  '--config-file[Custom configuration file path]:file:_files'
+  '--cable-dir[Custom cable directory path]:dir:_directories'
+  + history
+  '--global-history[Use global history instead of per-channel]'
+)
+
+_tv() {
+  local curcontext="$curcontext" state state_descr line
+  typeset -A opt_args
+
+  _arguments -s -S -C \
+    '1: :->first_arg' \
+    '2: :->second_arg' \
+    "${_tv_main_options[@]}" \
+    && return
+
+  case "$state" in
+    first_arg)
+      _alternative \
+        'subcommands:subcommand:_tv_subcommands' \
+        'channels:channel:_tv_channels' \
+        'directories:directory:_directories'
+      ;;
+    second_arg)
+      case "${line[1]}" in
+        init|completions)
+          _tv_shells
+          ;;
+        update-channels)
+          _arguments '--force[Force update even if up to date]'
+          ;;
+        list-channels)
+          ;;
+        *)
+          _directories
+          ;;
+      esac
+      ;;
+  esac
+}
+
+_tv "$@"

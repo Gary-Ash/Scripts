@@ -23,6 +23,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [fix-xcode-templates.pl](#fix-xcode-templatespl) | Perl | Fix Xcode file header templates |
 | [format-project.sh](#format-projectsh) | Bash | Format source code in projects |
 | [git-applescript-filter.sh](#git-applescript-filtersh) | Bash | Git clean/smudge filter for AppleScript |
+| [git-plist-filter.sh](#git-plist-filtersh) | Bash | Git clean/smudge filter for plist files |
 | [git-rebase-mine-to.sh](#git-rebase-mine-tosh) | Bash | Git merge and rebase utility |
 | [load-simulator.pl](#load-simulatorpl) | Perl | Restore iOS simulator state |
 | [meeting-direct-link.py](#meeting-direct-linkpy) | Python | Convert meeting URLs to app links |
@@ -97,6 +98,17 @@ A Git clean/smudge filter for compiled AppleScript (`.scpt`) files. In `--clean`
 **Usage:** Configured via `.gitattributes`:
 ```
 *.scpt filter=applescript diff=applescript
+```
+
+---
+
+### git-plist-filter.sh
+
+A Git clean/smudge filter for binary plist files. In `--clean` mode it converts a binary plist to XML for readable diffs in Git; in `--smudge` mode it converts XML back to binary plist on checkout.
+
+**Usage:** Configured via `.gitattributes`:
+```
+*.plist filter=plist diff=plist
 ```
 
 ---
@@ -282,13 +294,14 @@ xcrun notarytool submit app.zip --apple-id "$APPLE_ID" --password "$NOTARY_PASSW
 
 ## Zsh Shell Completions
 
-Tab completion definitions located in `zsh-completion/` that can be added to a `$fpath` directory for zsh.
+Tab completion definitions located in `zsh-completions/` that can be added to a `$fpath` directory for zsh.
 
 | File | Command | Description |
 |------|---------|-------------|
 | `_jekyll` | `jekyll` | Tab completion for Jekyll subcommands and options |
 | `_new-xcode-project` | `new-xcode-project.pl` | Tab completion for project templates (dynamically read from `templates/Xcode/`) and all command-line flags |
 | `_ocd` | `ocd.sh` | Tab completion for `ocd.sh` providing the `restart` and `off` subcommands |
+| `_tv` | `tv` | Tab completion for the television (tv) TUI fuzzy finder |
 
 ---
 

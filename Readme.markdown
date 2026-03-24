@@ -23,6 +23,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [fix-xcode-templates.pl](#fix-xcode-templatespl) | Perl | Fix Xcode file header templates |
 | [format-project.sh](#format-projectsh) | Bash | Format source code in projects |
 | [git-applescript-filter.sh](#git-applescript-filtersh) | Bash | Git clean/smudge filter for AppleScript |
+| [git-log.sh](#git-logsh) | Bash | Pretty git log with signature highlighting |
 | [git-plist-filter.sh](#git-plist-filtersh) | Bash | Git clean/smudge filter for plist files |
 | [git-rebase-mine-to.sh](#git-rebase-mine-tosh) | Bash | Git merge and rebase utility |
 | [load-simulator.pl](#load-simulatorpl) | Perl | Restore iOS simulator state |
@@ -99,6 +100,16 @@ A Git clean/smudge filter for compiled AppleScript (`.scpt`) files. In `--clean`
 ```
 *.scpt filter=applescript diff=applescript
 ```
+
+---
+
+### git-log.sh
+
+Displays a decorated, graphed git log with commit signature verification. Good signatures are highlighted in green and bad signatures in red using 24-bit truecolor ANSI escapes via Perl.
+
+**Usage:** `git-log.sh [git-log-options...]`
+
+**Requirements:** Git with SSH or GPG signing enabled, truecolor-capable terminal.
 
 ---
 

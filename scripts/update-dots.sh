@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  24-Mar-2026  9:02pm
+# Modified :  24-Mar-2026  9:30pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -188,8 +188,10 @@ buildRepository() {
 
 	find "$DOTFILES_DIR" -type f -name "*.zwc" -delete
 
-	local files
-	mapfile -t files < <(find "$package_temp" -type f)
+	local files=()
+	while IFS= read -r f; do
+		files+=("$f")
+	done < <(find "$package_temp" -type f)
 
 	for file in "${files[@]}"; do
 		local name
@@ -219,7 +221,7 @@ buildRepository() {
 	mv "$DOTFILES_DIR/home/.claude.json1" "$DOTFILES_DIR/home/.claude.json"
 	cp -f /opt/geedbla/scripts/bootstrap.sh "$DOTFILES_DIR"
 	rm -rf "$package_temp"
-	generate-gitkeep.sh
+	generate-gitkeep.sh "$DOTFILES_DIR"
 }
 
 #****************************************************************************************

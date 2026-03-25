@@ -22,6 +22,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [find-permission-based-API-usage.sh](#find-permission-based-api-usagesh) | Bash | Find iOS permission-requiring APIs |
 | [fix-xcode-templates.pl](#fix-xcode-templatespl) | Perl | Fix Xcode file header templates |
 | [format-project.sh](#format-projectsh) | Bash | Format source code in projects |
+| [generate-gitkeep.sh](#generate-gitkeepsh) | Bash | Add .gitkeep files to empty directories |
 | [git-applescript-filter.sh](#git-applescript-filtersh) | Bash | Git clean/smudge filter for AppleScript |
 | [git-log.sh](#git-logsh) | Bash | Pretty git log with signature highlighting |
 | [git-plist-filter.sh](#git-plist-filtersh) | Bash | Git clean/smudge filter for plist files |
@@ -89,6 +90,14 @@ Modifies Xcode's internal file and project templates to remove the `//` comment 
 Runs multiple code formatters on a project directory including uncrustify (C/Objective-C), swiftformat (Swift), black (Python), shfmt (Bash), and perltidy (Perl).
 
 **Usage:** `format-project.sh [directory]`
+
+---
+
+### generate-gitkeep.sh
+
+Traverses a directory tree and adds a `.gitkeep` file to any directory that does not contain files. Useful for preserving empty directory structures in Git repositories.
+
+**Usage:** `generate-gitkeep.sh [directory]`
 
 ---
 

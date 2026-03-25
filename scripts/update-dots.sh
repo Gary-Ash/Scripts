@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  19-Mar-2026  6:12pm
+# Modified :  24-Mar-2026  9:02pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -219,7 +219,7 @@ buildRepository() {
 	mv "$DOTFILES_DIR/home/.claude.json1" "$DOTFILES_DIR/home/.claude.json"
 	cp -f /opt/geedbla/scripts/bootstrap.sh "$DOTFILES_DIR"
 	rm -rf "$package_temp"
-	find "$DOTFILES_DIR" -type d -empty -not -path "*/.git/*" -exec touch {}/.gitkeep \;
+	generate-gitkeep.sh
 }
 
 #****************************************************************************************
@@ -235,6 +235,7 @@ updateGitHub() {
 		git submodule update --recursive --remote
 		popd >/dev/null || return 1
 
+		find "$DOTFILES_DIR" -type f -name ".gitkeep" -delete
 		buildRepository
 	else
 		echo "Unable to update the repository" >&2

@@ -350,7 +350,7 @@ Files in `templates/Xcode/_Files/` are applied to every generated project regard
 | `.swiftlint.yml` | Project SwiftLint configuration |
 | `.xcodesamplecode.plist` | Marks the project as Xcode sample code |
 | `Assets.xcassets.zip` | Pre-built asset catalog (app icon slots, accent color, etc.) |
-| `BuildEnv/` | Build phase scripts: `increment-build-number.sh`, `stamp-beta-version.sh`, `restore-stamped-icon.sh`, `swiftlint-project.sh`, `export-github-secrets.sh` |
+| `BuildEnv/` | Build phase scripts: `ci.sh`, `increment-build-number.sh`, `stamp-beta-version.sh`, `restore-stamped-icon.sh`, `swiftlint-project.sh`, `export-github-secrets.sh` |
 | `IDETemplateMacros.plist` | Xcode file header template macros |
 | `IDETemplateMacros-Open.plist` | Header macros variant for open-source projects |
 | `IDETemplateMacros-Closed.plist` | Header macros variant for closed-source projects |

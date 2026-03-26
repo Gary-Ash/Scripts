@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  21-Mar-2026  3:26pm
+# Modified :  26-Mar-2026  8:14pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1515,7 +1515,7 @@ sudo diskutil resetUserPermissions / "$(id -u)" &>/dev/null
 #*****************************************************************************************
 #  refresh Safari icons
 #*****************************************************************************************
-refresh-safari-icons.sh
+refresh-safari-icons.sh  &>/dev/null
 
 #*****************************************************************************************
 # clean the font cache

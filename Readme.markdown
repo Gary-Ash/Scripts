@@ -346,7 +346,7 @@ Files in `templates/Xcode/_Files/` are applied to every generated project regard
 
 | File / Directory | Description |
 |------------------|-------------|
-| `.github/` | GitHub community health files: `CODE_OF_CONDUCT`, `CONTRIBUTING`, `FUNDING.yml`, issue templates, PR template, and CI/App Store release workflows |
+| `.github/` | GitHub community health files: `CODE_OF_CONDUCT`, `CONTRIBUTING`, `FUNDING.yml`, issue templates, PR template, and CI/App Store release/TestFlight workflows |
 | `.swiftlint.yml` | Project SwiftLint configuration |
 | `.xcodesamplecode.plist` | Marks the project as Xcode sample code |
 | `Assets.xcassets.zip` | Pre-built asset catalog (app icon slots, accent color, etc.) |

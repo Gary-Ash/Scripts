@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  26-Mar-2026  8:14pm
+# Modified :  31-Mar-2026  7:41pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -339,6 +339,9 @@ our @plistKeysToDelete = (
     "IDEFileTemplateChooserAssistantSelectedTemplateName_tvOS",
     "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection3ProjectTemplateChooserAssistantSelectedTemplateName_macOS",
     "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_iOS",
+    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_Multiplatform",
+    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_macOS",
+    "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_Multiplatform",
     "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection",
     "DVTTextCompletionRecentCompletions",
     "GoToFieldHistory",
@@ -406,6 +409,8 @@ our @plistKeysToDelete = (
     "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
     "savedLastOpen",
     "IDELastViewedSettingsPane",
+    "LastTerminalStartTime",
+    "IDEMostRecentPostFLEDate",
 );
 
 our @itemsToDelete = (
@@ -422,6 +427,8 @@ our @itemsToDelete = (
     ["$HOME/Library/Preferences/org.sparkle-project.Sparkle.Autoupdate.plist",                                                            0],
     ["$HOME/.proxyman-data",                                                                                                              0],
     ["$HOME/.hawtjni",                                                                                                                    0],
+    ["$HOME/.claude/cache",                                                                                                             0],
+    ["$HOME/.claude/data",                                                                                                             0],
     ["$HOME/.claude/backups",                                                                                                             0],
     ["$HOME/.claude/image-cache",                                                                                                         0],
     ["$HOME/.claude/cache",                                                                                                               0],
@@ -498,6 +505,7 @@ our @itemsToDelete = (
     ["$HOME/Library/Developer/CoreSimulator/Caches",                                                                                      0],
     ["$HOME/Library/Developer/Xcode/UserData/IDEEditorInteractivityHistory",                                                              0],
     ["$HOME/Library/Developer/Xcode/DocumentationCache",                                                                                  0],
+    ["$HOME/Library/Developer/Xcode/.derived-data-log*",                                                                                  0],
     ["$HOME/Library/Developer/Xcode/DocumentationIndex",                                                                                  0],
     ["$HOME/Library/Developer/Xcode/Products",                                                                                            0],
     ["$HOME/Library/Caches/Homebrew",                                                                                                     0],
@@ -1515,7 +1523,7 @@ sudo diskutil resetUserPermissions / "$(id -u)" &>/dev/null
 #*****************************************************************************************
 #  refresh Safari icons
 #*****************************************************************************************
-refresh-safari-icons.sh  &>/dev/null
+refresh-safari-icons.sh &>/dev/null
 
 #*****************************************************************************************
 # clean the font cache

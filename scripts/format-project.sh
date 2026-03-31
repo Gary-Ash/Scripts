@@ -7,15 +7,15 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  24-Feb-2026  9:52pm
+# Modified :  31-Mar-2026  4:28pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
-if [[ -z $1 ]]; then
-	directory="."
-else
-	directory="$1"
+directory="${1:-.}"
+if [[ ! -d $directory ]]; then
+	echo "*** Error: Bad directory: $directory" >&2
+	exit 1
 fi
 
 if command -v uncrustify &>/dev/null; then

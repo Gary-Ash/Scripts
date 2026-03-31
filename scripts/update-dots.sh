@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  24-Mar-2026  9:30pm
+# Modified :  31-Mar-2026  7:41pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -33,6 +33,7 @@ dot-files() {
 
 	local -r ignore_these=(
 		"$HOME/.claude/backups"
+		"$HOME/.claude/data"
 		"$HOME/.claude/image-cache"
 		"$HOME/.claude/cache"
 		"$HOME/.claude/paste-cache"
@@ -49,6 +50,7 @@ dot-files() {
 		"$HOME/.claude/telemetry"
 		"$HOME/.claude/file-history"
 		"$HOME/.claude/history.jsonl"
+		"$HOME/.claude/mcp-needs-auth-cache.json"
 		"$HOME/.claude/stats-cache.json"
 		"$HOME/.claude/plugins/blocklist.json"
 		"$HOME/.config/z"
@@ -155,6 +157,7 @@ buildRepository() {
 		--exclude="/DocumentationCache" \
 		--exclude="/SDKToSimulatorIndexMapping.plist" \
 		--exclude="/XcodeToMetalToolchainIndexMapping.plist" \
+		--exclude="/.derived-data-log"* \
 		"$HOME/Library/Developer/Xcode/" "$DOTFILES_DIR/xcode/" &>/dev/null
 
 	rsync -arcz -E --rsh=ssh \
@@ -209,7 +212,8 @@ buildRepository() {
 
 	jq 'del(.userID, .oauthAccount, .projects, .githubRepoPaths,
 			.firstStartTime, .claudeCodeFirstTokenDate,
-			.opusProMigrationTimestamp, .changelogLastFetched) |
+			.opusProMigrationTimestamp, .changelogLastFetched,
+			.numStartups, .btwUseCount, .anonymousId) |
 		.hasShownOpus45Notice = {} |
 		.s1mAccessCache = {} |
 		.groveConfigCache = {} |
@@ -335,6 +339,9 @@ our @plistKeysToDelete = (
     "IDEFileTemplateChooserAssistantSelectedTemplateName_tvOS",
     "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection3ProjectTemplateChooserAssistantSelectedTemplateName_macOS",
     "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_iOS",
+    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_Multiplatform",
+    "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_macOS",
+    "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_Multiplatform",
     "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection",
     "DVTTextCompletionRecentCompletions",
     "GoToFieldHistory",
@@ -399,6 +406,8 @@ our @plistKeysToDelete = (
     "IDELastViewedSettingsPane",
     "SULastCheckedDate",
     "LastLaunchOSVersion",
+    "LastTerminalStartTime",
+    "IDEMostRecentPostFLEDate",
 );
 
 #*****************************************************************************************

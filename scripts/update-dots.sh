@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  31-Mar-2026  7:41pm
+# Modified :   2-Apr-2026  4:37pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -314,6 +314,7 @@ our @plistKeysToDelete = (
     "XCOpenWorkspaceDocuments",
     "IDETemplateCompletionDefaultPath",
     "IDETemplateOptions",
+    "IDEDistributionPlanSelection",
     "IDEDefaultPrimaryEditorFrameSizeForPaths",
     "IDEDocViewerLastViewedURLKey",
     "IDESourceControlRecentsFavoritesRepositoriesUserDefaultsKey",

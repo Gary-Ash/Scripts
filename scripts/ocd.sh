@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   2-Apr-2026  4:33pm
+# Modified :   5-Apr-2026 10:08pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -175,7 +175,7 @@ find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".j
 find "$HOME/Developer" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 
 perl /opt/geedbla/scripts/load-simulator.pl &
-
+perl /opt/geedbla/scripts/safari-cookie-cleaner.pl &> /dev/null
 #*****************************************************************************************
 # setup the sudo until the script is done
 #*****************************************************************************************
@@ -194,7 +194,7 @@ sudo chown -R garyash:admin /opt/geedbla/* &>/dev/null
 sudo chown -R root:admin /Applications/* &>/dev/null
 sudo chmod -R 775 /Applications/* &>/dev/null
 
-sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user
+sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user &> /dev/null
 
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
@@ -429,8 +429,8 @@ our @itemsToDelete = (
     ["$HOME/Library/Preferences/org.sparkle-project.Sparkle.Autoupdate.plist",                                                            0],
     ["$HOME/.proxyman-data",                                                                                                              0],
     ["$HOME/.hawtjni",                                                                                                                    0],
-    ["$HOME/.claude/cache",                                                                                                             0],
-    ["$HOME/.claude/data",                                                                                                             0],
+    ["$HOME/.claude/cache",                                                                                                               0],
+    ["$HOME/.claude/data",                                                                                                                0],
     ["$HOME/.claude/backups",                                                                                                             0],
     ["$HOME/.claude/image-cache",                                                                                                         0],
     ["$HOME/.claude/cache",                                                                                                               0],

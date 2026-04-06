@@ -34,6 +34,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [refresh-compile-commands.sh](#refresh-compile-commandssh) | Bash | Regenerate LSP compile_commands.json |
 | [refresh-safari-icons.sh](#refresh-safari-iconssh) | Bash | Restore custom Safari favicons |
 | [reset-dates.pl](#reset-datespl) | Perl | Reset file dates and copyright headers |
+| [safari-cookie-cleaner.pl](#safari-cookie-cleanerpl) | Perl | Delete Safari data for non-bookmarked sites |
 | [settings.sh](#settingssh) | Bash | Configure macOS system settings |
 | [startup-banner.pl](#startup-bannerpl) | Perl | Display terminal startup banner |
 | [strip-comments.pl](#strip-commentspl) | Perl | Remove comments from C-style source |
@@ -196,6 +197,20 @@ Downloads and installs custom Safari favicon files from a remote server to repla
 Resets file creation/modification dates and updates copyright headers in source files. Handles various file types including Xcode project files and compiled AppleScript.
 
 **Usage:** `reset-dates.pl "Company Name" [file|directory ...]`
+
+---
+
+### safari-cookie-cleaner.pl
+
+Deletes Safari website data (cookies, local storage, observations, URL cache, WebKit cache, Screen Time web usage, and HTTP Alternative Services) for domains that do not match any bookmarked website. Parses and rewrites Safari's `Cookies.binarycookies` file directly.
+
+**Usage:** `safari-cookie-cleaner.pl [--dry-run|-n] [--verbose|-v]`
+
+**Options:**
+- `-n, --dry-run` — Report what would be removed without making changes
+- `-v, --verbose` — Print each deleted entry
+
+**Note:** Safari must be quit before running.
 
 ---
 

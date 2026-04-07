@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   5-Apr-2026 10:08pm
+# Modified :   6-Apr-2026 10:08pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -239,7 +239,77 @@ done
 
 echo -n '' | pbcopy
 
-sudo /usr/bin/perl <<'PERL' #&>/dev/null
+#*****************************************************************************************
+# Clean Messages
+#*****************************************************************************************
+DB="$HOME/Library/Messages/chat.db"
+
+# Quit Messages
+osascript -e 'tell application "Messages" to quit' 2>/dev/null
+sleep 2
+
+# Save triggers, drop them, delete data, restore triggers
+sqlite3 "$DB" <<'SQL'
+-- Save all trigger definitions
+.mode list
+.output /tmp/messages_triggers.sql
+SELECT sql || ';' FROM sqlite_master WHERE type='trigger' AND sql IS NOT NULL;
+.output stdout
+
+-- Drop all triggers
+DROP TRIGGER IF EXISTS update_message_date_after_update_on_message;
+DROP TRIGGER IF EXISTS add_to_sync_deleted_messages;
+DROP TRIGGER IF EXISTS before_deleting_chat_delete_chat_background_trigger;
+DROP TRIGGER IF EXISTS after_delete_on_chat_message_join;
+DROP TRIGGER IF EXISTS add_to_deleted_messages;
+DROP TRIGGER IF EXISTS after_delete_on_chat_handle_join;
+DROP TRIGGER IF EXISTS after_insert_on_message_attachment_join;
+DROP TRIGGER IF EXISTS after_delete_on_message;
+DROP TRIGGER IF EXISTS delete_associated_messages_after_delete_on_message;
+DROP TRIGGER IF EXISTS verify_chat_update;
+DROP TRIGGER IF EXISTS after_insert_on_chat_message_join;
+DROP TRIGGER IF EXISTS add_to_sync_deleted_attachments;
+DROP TRIGGER IF EXISTS after_delete_on_message_plugin;
+DROP TRIGGER IF EXISTS before_delete_on_attachment;
+DROP TRIGGER IF EXISTS after_delete_on_message_attachment_join;
+DROP TRIGGER IF EXISTS after_delete_on_attachment;
+DROP TRIGGER IF EXISTS after_delete_on_chat;
+DROP TRIGGER IF EXISTS update_last_failed_message_date;
+DROP TRIGGER IF EXISTS after_delete_on_chat_recoverable_message_join;
+DROP TRIGGER IF EXISTS verify_chat_insert;
+DROP TRIGGER IF EXISTS chat_service_on_insert_chat_message_join;
+DROP TRIGGER IF EXISTS before_delete_chat_update_sync_chat_deletes;
+DROP TRIGGER IF EXISTS message_index_state_propagation;
+DROP TRIGGER IF EXISTS message_index_state_clear;
+DROP TRIGGER IF EXISTS index_metrics_delete_propagation;
+DROP TRIGGER IF EXISTS index_metrics_update_propagation;
+DROP TRIGGER IF EXISTS index_metrics_insert_propagation;
+
+-- Clear all data
+DELETE FROM message_attachment_join;
+DELETE FROM chat_message_join;
+DELETE FROM chat_handle_join;
+DELETE FROM chat_recoverable_message_join;
+DELETE FROM deleted_messages;
+DELETE FROM recoverable_message_part;
+DELETE FROM sync_deleted_messages;
+DELETE FROM sync_deleted_chats;
+DELETE FROM sync_deleted_attachments;
+DELETE FROM unsynced_removed_recoverable_messages;
+DELETE FROM message;
+DELETE FROM attachment;
+DELETE FROM chat;
+DELETE FROM handle;
+
+VACUUM;
+SQL
+
+# Restore triggers
+sqlite3 "$DB" < /tmp/messages_triggers.sql 2>/dev/null
+rm -f /tmp/messages_triggers.sql
+
+
+sudo /usr/bin/perl <<'PERL' &>/dev/null
 #!/usr/bin/env perl
 #*****************************************************************************************
 # libraries used
@@ -413,6 +483,7 @@ our @plistKeysToDelete = (
     "IDELastViewedSettingsPane",
     "LastTerminalStartTime",
     "IDEMostRecentPostFLEDate",
+    "RecentTemplates",
 );
 
 our @itemsToDelete = (
@@ -1359,43 +1430,6 @@ repeat while application "Xcode" is running
 	delay 1
 	tell application "Xcode" to quit
 end repeat
-
-(*****************************************************************************************
- * clean Messages
- ****************************************************************************************)
-try
-	tell application "Messages" to activate
-	delay 1
-	tell application "System Events" to tell process "Messages"
-		activate
-		set frontmost to true
-
-		delay 1
-		try
-			click menu item "All Messages" of menu 1 of menu bar item "View" of menu bar 1
-		end try
-	end tell
-
-	set repFlag to 1
-	repeat while repFlag = 1
-		tell application "Messages"
-			activate
-			tell application "System Events" to tell process "Messages"
-				try
-					click menu item "Delete Conversation…" of menu 1 of menu bar item "Conversation" of menu bar 1
-				end try
-
-				try
-					delay 0.5
-					click button "Delete" of sheet 1 of window 1
-				on error
-					set repFlag to 0
-				end try
-			end tell
-		end tell
-	end repeat
-	tell application "Messages" to quit
-end try
 END
 
 osascript <<END2 2>/dev/null 1>&2

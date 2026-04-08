@@ -20,6 +20,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [bootstrap.sh](#bootstrapsh) | Bash | Bootstrap a new Mac setup |
 | [check-path.pl](#check-pathpl) | Perl | Validate PATH directories |
 | [find-permission-based-API-usage.sh](#find-permission-based-api-usagesh) | Bash | Find iOS permission-requiring APIs |
+| [finder-setup.sh](#finder-setupsh) | Bash | Configure Finder preferences and window layout |
 | [fix-xcode-templates.pl](#fix-xcode-templatespl) | Perl | Fix Xcode file header templates |
 | [format-project.sh](#format-projectsh) | Bash | Format source code in projects |
 | [generate-gitkeep.sh](#generate-gitkeepsh) | Bash | Add .gitkeep files to empty directories |
@@ -75,6 +76,16 @@ Scans the current PATH environment variable and reports which directories exist 
 Scans Swift and Objective-C source files for usage of APIs that require runtime permissions or entitlements (e.g., file dates, system uptime, disk capacity, UserDefaults).
 
 **Usage:** `find-permission-based-API-usage.sh <directory>`
+
+---
+
+### finder-setup.sh
+
+Configures Finder preferences including list view with specific columns (name, size, kind, date created, date modified), show all files and extensions, sort folders first, and suppresses .DS_Store on network and USB volumes. Cleans existing .DS_Store files, restarts Finder, and uses AppleScript to set the Downloads folder view, resize windows, and clear recent items.
+
+**Usage:** `finder-setup.sh`
+
+**Note:** Requires Accessibility permissions for System Events automation.
 
 ---
 

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   6-Apr-2026 10:08pm
+# Modified :  13-Apr-2026  4:44pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -175,7 +175,7 @@ find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".j
 find "$HOME/Developer" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 
 perl /opt/geedbla/scripts/load-simulator.pl &
-perl /opt/geedbla/scripts/safari-cookie-cleaner.pl &> /dev/null
+perl /opt/geedbla/scripts/safari-cookie-cleaner.pl &>/dev/null
 #*****************************************************************************************
 # setup the sudo until the script is done
 #*****************************************************************************************
@@ -194,7 +194,7 @@ sudo chown -R garyash:admin /opt/geedbla/* &>/dev/null
 sudo chown -R root:admin /Applications/* &>/dev/null
 sudo chmod -R 775 /Applications/* &>/dev/null
 
-sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user &> /dev/null
+sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user &>/dev/null
 
 #****************************************************************************************
 # Pause Time Machine while updating and cleaning
@@ -305,9 +305,8 @@ VACUUM;
 SQL
 
 # Restore triggers
-sqlite3 "$DB" < /tmp/messages_triggers.sql 2>/dev/null
+sqlite3 "$DB" </tmp/messages_triggers.sql 2>/dev/null
 rm -f /tmp/messages_triggers.sql
-
 
 sudo /usr/bin/perl <<'PERL' &>/dev/null
 #!/usr/bin/env perl
@@ -487,6 +486,7 @@ our @plistKeysToDelete = (
 );
 
 our @itemsToDelete = (
+    ["$HOME/Library/Containers/com.apple.corerecents.recentsd/Data/Library/Recents",                  									  0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ApplicationRecentDocuments",                  0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentDocuments.sfl3",                        0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.ProjectsItems.sfl3",                          0],
@@ -877,7 +877,7 @@ sub podcastapp {
 # process the plists in the Preferences folder
 #*****************************************************************************************
 sub plists {
-    `killall Dock Finder`;
+    `killall Dock Finder recentsd`;
     foreach my $plistFile (glob "$HOME/Library/Preferences/*.plist") {
         eval {
             my $plistData = NSMutableDictionary->dictionaryWithContentsOfFile_($plistFile);
@@ -900,7 +900,7 @@ sub deleteFilesAndFolders {
         keep_root => 1
     );
 
-    `killall Dock Finder`;
+    `killall Dock Finder recentsd`;
     for my $item (0 .. $#itemsToDelete) {
         my $i                         = "\"" . $itemsToDelete[$item][0] . "\"";
         my @actualFilesAndDirectories = glob $i;
@@ -967,364 +967,7 @@ sub processFiles {
 }
 PERL
 
-#*****************************************************************************************
-# get Safari bookmarks get use a tool to hunt junk cookies in the Safari cleaner
-#*****************************************************************************************
-getBookmarks() {
-	perl <<"GEETBOOKMARKS"
-#!/usr/bin/env perl
-use strict;
-use Foundation;
-
-my @bookmarks;
-
-sub getBookmarks {
-    my $newline = sprintf('%c', 10);
-
-    sub processChildren {
-        my $children = shift;
-        for (my $itemIndex = 0;$itemIndex < $children->count;++$itemIndex) {
-            my $item = $children->objectAtIndex_($itemIndex);
-            if ($item && $$item) {
-                my $url = $item->objectForKey_('URLString');
-                if ($url && $$url) {
-                    my $nsurl = NSURL->URLWithString_($url);
-                    my $input = $nsurl->host()->UTF8String;
-                    my $firstdot = index($input, '.');
-                    my $lastdot = rindex($input, '.');
-
-                    if ($firstdot > -1 && $firstdot != $lastdot) {
-                        $input = substr($input, $firstdot + 1);
-                    }
-                    $input .= $newline;
-                    push(@bookmarks, $input);
-                  }
-                my $nextChildren = $item->objectForKey_('Children');
-                if ($nextChildren && $$nextChildren) {
-                    processChildren($nextChildren);
-                }
-            }
-        }
-    }
-    my $bookmarkFile = $ENV{'HOME'} .'/Library/Safari/bookmarks.plist';
-    my $bookmarkPlist = NSDictionary->dictionaryWithContentsOfFile_($bookmarkFile);
-    if ($bookmarkPlist && $$bookmarkPlist) {
-        my $children = $bookmarkPlist->objectForKey_('Children');
-        processChildren($children);
-    }
-}
-
-getBookmarks();
-
-my $HOME = $ENV{"HOME"};
-for my $file (<$HOME/Library/Safari/LocalStorage/*>) {
-    my $found = 0;
-    for my $bookkmark (@bookmarks) {
-        if (index($file,, $bookkmark) != -1) {
-            $found = 1;
-            last;
-        }
-        if ($found == 0) {
-            unlink($file);
-        }
-    }
-}
-
-print @bookmarks;
-GEETBOOKMARKS
-}
-
-output=$(getBookmarks)
 osascript <<END
-(*****************************************************************************************
- * clean Safari
- ****************************************************************************************)
-set keepingSites to {¬
-	"apple.com", ¬
-	"x.com", ¬
-	"gitlab.com", ¬
-	"atlassian.com", ¬
-	"atlassian.net", ¬
-	"bing.com", ¬
-	"live.com", ¬
-	"duckduckgo.com", ¬
-	"discord.com", ¬
-	"discordapp.com", ¬
-	"stackexchange.com", ¬
-	"sublimehq.com", ¬
-	"zenhub.com", ¬
-	"app.zenhub.com", ¬
-	"wikimedia.org", ¬
-	"wikipedia.org", ¬
-	"stackoverflow.com", ¬
-	"apple.stackexchange.com", ¬
-	"twitch.tv", ¬
-	"twitter.com", ¬
-	"superuser.com", ¬
-	"fuckingapproachableswiftconcurrency.com"}
-
-set deleteAnyway to {¬
-	"advancedswift.com", ¬
-	"barebones.com", ¬
-	"batman-news.com", ¬
-	"gamedev.city", ¬
-	"matteomanferdini.com", ¬
-	"donnywals.com", ¬
-	"avanderlee.com", ¬
-	"jessesquires.com", ¬
-	"t.co", ¬
-	"devhints.io", ¬
-	"iosref.com", ¬
-	"costco.com", ¬
-	"ios-factor.com", ¬
-	"iosfeeds.com", ¬
-	"qualitycoding.org", ¬
-	"2dgameartguru.com", ¬
-	"9to5mac.com", ¬
-	"macpaw.com", ¬
-	"angel.co", ¬
-	"blendswap.com", ¬
-	"codeandweb.com", ¬
-	"comicscontinuum.com", ¬
-	"emailtemp.org", ¬
-	"redd.it", ¬
-	"agner.org", ¬
-	"swiftpm.co", ¬
-	"swiftpm.com", ¬
-	"swiftbysundell.com", ¬
-	"swiftjectivec.com", ¬
-	"mapeditor.org", ¬
-	"udemy.com", ¬
-	"fandom.com", ¬
-	"wtfautolayout.com", ¬
-	"71squared.com", ¬
-	"beautifyconverter.com", ¬
-	"freeformatter.com", ¬
-	"sanctum.geek.nz", ¬
-	"graphicriver.net", ¬
-	"stclairsoft.com", ¬
-	"jscreenfix.com", ¬
-	"johncodeos.com", ¬
-	"opengameart.org", ¬
-	"sqlitebrowser.org", ¬
-	"pfiddlesoft.com", ¬
-	"geedbla.com", ¬
-	"gitignore.io", ¬
-	"packagecontrol.io", ¬
-	"probot.github.io", ¬
-	"jamendo.com", ¬
-	"tutsplus.com", ¬
-	"itch.io", ¬
-	"nshipster.com", ¬
-	"testableapple.com", ¬
-	"iterm2.com", ¬
-	"shields.io", ¬
-	"codewars.com", ¬
-	"upwork.com", ¬
-	"escapistmagazine.com"}
-
-tell application "System Events"
-	set theActiveApp to name of first application process whose frontmost is true as string
-end tell
-(*========================================================================================
- *
- *======================================================================================*)
-set bookmarks to paragraphs of "$output"
-try
-	tell application "Safari" to quit
-	delay 3
-	tell application "Safari" to activate
-	delay 4
-
-	set defaultDelim to AppleScript's text item delimiters
-	set AppleScript's text item delimiters to " "
-end try
-(*=========================================================================================
- *
- *=======================================================================================*)
-tell application "System Events" to tell process "Safari"
-	set frontmost to true
-	try
-		if exists radio button 1 of radio group 1 of group 1 of splitter group 1 of window 1 then
-			click radio button 1 of radio group 1 of group 1 of splitter group 1 of window 1
-			delay 1
-			tell application "Safari" to activate
-			click button 1 of toolbar 1 of window 1
-		end if
-
-		click menu item "Hide History" of menu 1 of menu bar item "History" of menu bar 1
-		try
-			click menu item "Sync iCloud History" of menu 1 of menu bar item "Debug" of menu bar 1
-			delay 6
-		end try
-
-		tell application "Safari" to activate
-		click button "Show Search Menu" of group 6 of toolbar 1 of window 1
-		delay 0.1
-		set row_index to 1
-		set number_items to number of rows in table 1 of scroll area 1 of group 5 of toolbar 1 of window 1
-		select row row_index of table 1 of scroll area 1 of group 5 of toolbar 1 of window 1
-
-		repeat until row_index = number_items
-			tell application "Safari" to activate
-
-			key code 125
-			set row_index to row_index + 1
-		end repeat
-		if row_index > 4 then
-			key code 36
-		else
-			key code 53
-		end if
-		delay 0.1
-		tell application "Safari" to activate
-	end try
-
-	try
-		tell application "Safari" to activate
-		click UI element 11 of toolbar 1 of window "Start Page" of application process "Safari"
-		delay 0.2
-		tell application "Safari" to activate
-		click UI element 1 of UI element 1 of row 1 of table 1 of scroll area 1 of window "Start Page" of application process "Safari"
-	end try
-
-	click menu item "Show All History" of menu 1 of menu bar item "History" of menu bar 1
-	delay 0.2
-	tell application "Safari" to activate
-	try
-		keystroke "a" using command down
-		keystroke (ASCII character 127)
-		delay 1
-	end try
-
-	tell application "Safari" to activate
-	click menu item "Hide History" of menu 1 of menu bar item "History" of menu bar 1
-end tell
-
-(*========================================================================================
- *
- *======================================================================================*)
-tell application "System Events" to tell process "Safari"
-	set frontmost to true
-
-	keystroke "," using {command down}
-	delay 0.2
-	tell application "Safari" to activate
-	click button 7 of toolbar 1 of the first window
-	click button "Manage Website Data…" of group 1 of group 1 of window 1
-	repeat
-		set numberItems to number of rows of table 1 of scroll area 1 of sheet 1 of window 1
-		if numberItems > 10 then
-			exit repeat
-		end if
-		delay 6
-	end repeat
-	keystroke tab
-end tell
-
-(*========================================================================================
- *
- *=======================================================================================*)
-set deleteFlag to 1
-set rowIndex to 1
-
-repeat while true
-	tell application "System Events" to tell process "Safari"
-		set frontmost to true
-
-		try
-			select row rowIndex of table 1 of scroll area 1 of sheet 1 of window 1
-			delay 0.01
-			tell application "Safari" to activate
-
-			set r to row rowIndex of table 1 of scroll area 1 of sheet 1 of window 1
-			set txt to (get value of static text 1 of UI element 1 of r) as string
-		on error msg number errNum
-			if errNum = -1719 then
-				set txt to ""
-				set rowIndex to rowIndex - 1
-
-				if deleteFlag = 1 then
-					set rowIndex to 0
-					set deleteFlag to 0
-				else
-					set AppleScript's text item delimiters to defaultDelim
-					exit repeat
-				end if
-			end if
-		end try
-	end tell
-
-	set deleteFlag to 1
-
-	repeat with bookmark in bookmarks
-		set bookmark to bookmark as string
-		--display dialog bookmark
-		if txt is equal to bookmark then
-			set deleteFlag to 0
-			exit repeat
-		end if
-	end repeat
-
-	repeat with deleteIt in deleteAnyway
-		set deleteIt to deleteIt as string
-		if txt is equal to deleteIt then
-			set deleteFlag to 1
-			exit repeat
-		end if
-	end repeat
-
-	repeat with keepIt in keepingSites
-		set keepIt to keepIt as string
-		if txt is equal to keepIt then
-			set deleteFlag to 0
-			exit repeat
-		end if
-	end repeat
-
-	tell application "System Events" to tell process "Safari"
-		if deleteFlag = 1 then
-			try
-				click button "Remove" of sheet 1 of window "Privacy"
-			on error msg number errNum
-				tell application "Safari" to activate
-				key code 125
-				set deletedFlag to 0
-				set rowIndex to rowIndex + 1
-			end try
-		else
-			try
-				tell application "Safari" to activate
-				key code 125
-				set deletedFlag to 0
-				set rowIndex to rowIndex + 1
-			on error msg number errNum
-			end try
-		end if
-	end tell
-end repeat
-
-(*========================================================================================
- *
- *=======================================================================================*)
-tell application "System Events" to tell process "Safari"
-	tell application "Safari" to activate
-	try
-		select row 1 of table 1 of scroll area 1 of sheet 1 of window 1
-	end try
-	key code 125
-	delay 0.01
-	tell application "Safari" to activate
-	click button "Done" of sheet 1 of window "Privacy"
-	delay 0.5
-	tell application "Safari" to activate
-	click button 1 of toolbar 1 of the first window
-	delay 0.3
-	click button 1 of window 1
-	delay 0.5
-	tell application "Safari" to quit
-end tell
-
 try
 	tell application "Keyboard Maestro Engine" to quit
 end try
@@ -1384,32 +1027,24 @@ try
 	tell application "Slack" to activate
 	delay 0.5
 
-	try
-		tell application "System Events" to tell process "Slack"
-			tell application "Slack" to activate
-			delay 3
+	tell application "System Events"
+		tell process "Slack"
 
-			repeat with n from 0 to 9
-				try
-					key code (18 + n) using {command down}
-					delay 0.1
+			repeat with i from 1 to 9
+				keystroke (i as string) using command down
+				delay 0.5
 
-					tell application "Slack" to activate
-					click menu item "All Unreads" of menu 1 of menu bar item "Go" of menu bar 1
-					delay 0.1
-					key code 53 using {shift down}
-					delay 0.1
-				end try
+				key code 53 using shift down
+
+				delay 0.3
 			end repeat
 
-			delay 0.5
-			tell application "Slack" to activate
-			keystroke "1" using {command down}
+			keystroke "1" using command down
 			delay 0.2
-			key code 53
 			tell application "Slack" to quit
+
 		end tell
-	end try
+	end tell
 end try
 
 (*****************************************************************************************

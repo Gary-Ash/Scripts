@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   5-Apr-2026  2:30pm
-# Modified :  12-Apr-2026  6:00pm
+# Modified :  17-Apr-2026  2:50pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -815,6 +815,17 @@ sub url_host ($url) {
 
 sub clean_screen_time ($bookmark_domains) {
     return unless -f $KNOWLEDGE_DB;
+
+    # Reset Screen Time TCC authorizations — clears which apps have
+    # been granted Screen Time API access. Does not touch knowledgeC
+    # data; the SQL below handles that.
+    if ($dry_run) {
+        say "Would run: tccutil reset ScreenTime";
+    } else {
+        system('tccutil', 'reset', 'ScreenTime') == 0
+            or warn "tccutil reset ScreenTime failed\n";
+        say "Reset ScreenTime TCC entries" if $verbose;
+    }
 
     # Query ZSTRUCTUREDMETADATA directly so orphaned rows (no ZOBJECT
     # reference) are also caught. We'll cascade-delete ZOBJECT rows that

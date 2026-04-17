@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   8-Mar-2026  7:41pm
+# Modified :  16-Apr-2026 10:04pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -443,6 +443,10 @@ sub createProjectFileStructure {
         }
     }
     if (copy("$TEMPLATE_LOCATION/_Files/.swiftlint.yml", "$projectLocation/$projectName/") == 0) {
+        print STDERR "*** Error: disk error : $!\n";
+        exit(1);
+    }
+    if (copy("$TEMPLATE_LOCATION/_Files/.gitignore", "$projectLocation/$projectName/") == 0) {
         print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }

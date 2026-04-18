@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   2-Apr-2026  4:37pm
+# Modified :  17-Apr-2026  8:30pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -223,6 +223,13 @@ buildRepository() {
 
 	rm -f "$DOTFILES_DIR/home/.claude.json"
 	mv "$DOTFILES_DIR/home/.claude.json1" "$DOTFILES_DIR/home/.claude.json"
+
+	local xcode_agent_json="$DOTFILES_DIR/xcode/CodingAssistant/ClaudeAgentConfig/.claude.json"
+	if [[ -f $xcode_agent_json ]]; then
+		jq 'del(.userID, .oauthAccount, .firstStartTime)' "$xcode_agent_json" >"${xcode_agent_json}1"
+		mv -f "${xcode_agent_json}1" "$xcode_agent_json"
+	fi
+
 	cp -f /opt/geedbla/scripts/bootstrap.sh "$DOTFILES_DIR"
 	rm -rf "$package_temp"
 	generate-gitkeep.sh "$DOTFILES_DIR"
@@ -409,6 +416,13 @@ our @plistKeysToDelete = (
     "LastLaunchOSVersion",
     "LastTerminalStartTime",
     "IDEMostRecentPostFLEDate",
+    "DVTDeveloperAccountManagerAppleIDLists",
+    "DVTDevicesWindowControllerSelectedDeviceIdentifier",
+    "DVTDevicesWindowControllerSelectedSimulatorIdentifier",
+    "DVTDeviceVisibilityPreferences",
+    "DVTSourceControlAccountDefaultsKey",
+    "IDEProvisioningTeamByIdentifier",
+    "IDESourceControlHostAccounts_10",
 );
 
 #*****************************************************************************************

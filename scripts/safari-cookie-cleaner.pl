@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   5-Apr-2026  2:30pm
-# Modified :  17-Apr-2026  2:50pm
+# Modified :  17-Apr-2026  3:15pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -194,6 +194,7 @@ clean_content_blocker_stats($bookmark_domains);
 clean_hsts($bookmark_domains);
 clean_favicons($bookmark_domains);
 clean_screen_time($bookmark_domains);
+clean_biome_streams();
 clean_webkit_cache();
 
 #----- subroutines -----------------------------------------------------------------------
@@ -876,6 +877,42 @@ sub clean_screen_time ($bookmark_domains) {
             }
         }
     }
+}
+
+sub clean_biome_streams {
+    # Safari's "Screen Time" website-data rows are fed by Biome log streams,
+    # not knowledgeC. The streams are binary append-logs with no per-domain
+    # delete API, so we wipe the local chunks and let biomed rebuild — same
+    # tradeoff as alt_services. biomed holds the files open and rewrites on
+    # exit, so it must be stopped first.
+    my $biome_root = "$ENV{HOME}/Library/Biome/streams/restricted";
+    my @streams = qw(
+        Safari.AutoPlay
+        Safari.Navigations
+        App.WebUsage
+    );
+
+    my @to_clean;
+    for my $s (@streams) {
+        my $local = "$biome_root/$s/local";
+        push @to_clean, $local if -d $local;
+    }
+    return unless @to_clean;
+
+    printf "%s %d Biome stream local chunks (Screen Time web data)\n",
+        $dry_run ? 'Would wipe' : 'Wiping',
+        scalar @to_clean;
+
+    if ($verbose) {
+        printf "  DELETE: %s\n", $_ for @to_clean;
+    }
+
+    return if $dry_run;
+
+    my $uid = $<;
+    system('launchctl', 'bootout', "gui/$uid/com.apple.biomed");
+    remove_tree($_) for @to_clean;
+    system('launchctl', 'kickstart', "gui/$uid/com.apple.biomed");
 }
 
 sub clean_webkit_cache {

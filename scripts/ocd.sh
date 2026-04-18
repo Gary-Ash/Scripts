@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  13-Apr-2026  4:44pm
+# Modified :  17-Apr-2026  8:45pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -20,6 +20,8 @@ source "/opt/geedbla/lib/shell/lib/get_sudo_password.sh"
 # globals
 #*****************************************************************************************
 export SUDO_PASSWORD
+SUDO_SHELL_PID=""
+CAFFEINATE=""
 
 #*****************************************************************************************
 # set a exit trap to make sure the persistent sudo thread is always cleaned up
@@ -31,9 +33,9 @@ finish() {
 		setopt local_options no_monitor
 	fi
 
-	kill "$SUDO_SHELL_PID"
-	kill "$CAFFEINATE"
-	wait
+	[[ -n $SUDO_SHELL_PID ]] && kill "$SUDO_SHELL_PID" 2>/dev/null
+	[[ -n $CAFFEINATE ]] && kill "$CAFFEINATE" 2>/dev/null
+	wait 2>/dev/null
 	unset SUDO_SHELL_PID
 	unset CAFFEINATE
 	unset SUDO_PASSWORD
@@ -92,6 +94,7 @@ CLOSE_SCRIPT
 #*****************************************************************************************
 # parse the command line for arguments
 #*****************************************************************************************
+cmd=""
 if [[ $# -gt 0 ]]; then
 	cmd=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 
@@ -105,7 +108,7 @@ export OCD_OPTION="$cmd"
 error_log="$TMPDIR/Error.txt"
 
 killEverything
-cd ~ || return
+cd ~ || exit 1
 
 #*****************************************************************************************
 # brew
@@ -157,13 +160,11 @@ find "$HOME" -name "Icon?" -exec chflags hidden {} \; &>/dev/null
 #*****************************************************************************************
 # clean my git projects
 #*****************************************************************************************
-raw=$(find "$HOME/Developer" -type d -name ".git")
-raw+=$(find "$HOME/Documents" -type d -name ".git")
-
-while read -r gitDir; do
+while IFS= read -r gitDir; do
+	[[ -z $gitDir ]] && continue
 	cd "$(dirname "$gitDir")" || exit 1
 	git gc --aggressive --prune=now &>/dev/null
-done < <(echo "${raw}")
+done < <(find "$HOME/Developer" "$HOME/Documents" -type d -name ".git" 2>/dev/null)
 
 find "$HOME/Developer" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 find "$HOME/Documents" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
@@ -187,7 +188,7 @@ while true; do
 done &
 
 export SUDO_SHELL_PID=$!
-caffeinate -s -b -t 3600 &>/dev/null &
+caffeinate -s -b &>/dev/null &
 export CAFFEINATE=$!
 
 sudo chown -R garyash:admin /opt/geedbla/* &>/dev/null
@@ -204,23 +205,22 @@ sudo tmutil stopbackup
 #*****************************************************************************************
 # empty trash
 #*****************************************************************************************
-sudo rm -rf ~/.Trash/* &>/dev/null
-sudo rm -rf /Volumes/*/.Trashes &>/dev/null
 sudo rm -rf ~/.Trash /Volumes/*/.Trashes &>/dev/null
 rm -rf "$HOME/Library/Mobile Documents/com~apple~CloudDocs/.Trash"
 
 #*****************************************************************************************
 # AI Cleanup (Claude)
 #*****************************************************************************************
-jq 'del(.projects, .githubRepoPaths,
+if jq 'del(.projects, .githubRepoPaths,
 		.opusProMigrationTimestamp, .changelogLastFetched) |
 	.hasShownOpus45Notice = {} |
 	.s1mAccessCache = {} |
 	.groveConfigCache = {} |
-	.skillUsage = {}' "$HOME/.claude.json" >"$HOME/.claude.json1"
-
-rm -f "$HOME/.claude.json"
-mv "$HOME/.claude.json1" "$HOME/.claude.json"
+	.skillUsage = {}' "$HOME/.claude.json" >"$HOME/.claude.json1"; then
+	mv -f "$HOME/.claude.json1" "$HOME/.claude.json"
+else
+	rm -f "$HOME/.claude.json1"
+fi
 rm -f ~/.claude.json.backup.*
 
 #*****************************************************************************************
@@ -308,7 +308,7 @@ SQL
 sqlite3 "$DB" </tmp/messages_triggers.sql 2>/dev/null
 rm -f /tmp/messages_triggers.sql
 
-sudo /usr/bin/perl <<'PERL' &>/dev/null
+sudo -E /usr/bin/perl <<'PERL' &>/dev/null
 #!/usr/bin/env perl
 #*****************************************************************************************
 # libraries used
@@ -342,20 +342,15 @@ our @plistKeysToDelete = (
     "Hosts",
     "ExpandedURLs",
     "last_textureFileName",
-    "FXRecentFolders",
     "FXLastSearchScope",
-    "GoToField",
     "NSNavPanel",
     "NSNavRecentPlaces",
     "NSNavLastRootDirectory",
     "NSNavLastCurrentDirectory",
-    "RecentSearchStrings",
     "LRUDocumentPaths",
     "TSAOpenedTemplates.Pages",
     "NSReplacePboard",
-    "ExpandedURLs",
     "SelectedURLs",
-    "NSReplacePboard",
     "Apple CFPasteboard find",
     "Apple CFPasteboard replace",
     "Apple CFPasteboard general",
@@ -371,7 +366,6 @@ our @plistKeysToDelete = (
     "lastSpritesFolder",
     "main.lastFileName",
     "defaults.settingsAbsPath",
-    "main.lastFileName",
     "DefaultCheckOutDirectory",
     "RecentWorkingCopies",
     "kProjectBasePath",
@@ -391,11 +385,7 @@ our @plistKeysToDelete = (
     "Xcode3TargetTemplateChooserAssistantSelectedTemplateCategory",
     "Xcode3TargetTemplateChooserAssistantSelectedTemplateName",
     "Xcode3ProjectTemplateChooserAssistantSelectedTemplateSection",
-    "recentFileList",
-    "lastSpritesFolder",
-    "main.lastFileName",
     "last_name",
-    "last_textureFileName",
     "findRecentPlaces",
     "RecentWebSearches",
     "recentSearches",
@@ -403,12 +393,10 @@ our @plistKeysToDelete = (
     "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_iOS",
     "Xcode3TargetTemplateChooserAssistantSelectedTemplateName_tvOS",
     "SGTRecentFileSearches",
-    "IDETemplateOptions".
     "IDEDistributionPlanSelection",
     "IDEFileTemplateChooserAssistantSelectedTemplateSection",
     "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_tvOS",
     "IDEFileTemplateChooserAssistantSelectedTemplateName_tvOS",
-    "Xcode3TargetTemplateChooserAssistantSelectedTemplateSection3ProjectTemplateChooserAssistantSelectedTemplateName_macOS",
     "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_iOS",
     "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_Multiplatform",
     "Xcode3ProjectTemplateChooserAssistantSelectedTemplateName_macOS",
@@ -417,9 +405,7 @@ our @plistKeysToDelete = (
     "DVTTextCompletionRecentCompletions",
     "GoToFieldHistory",
     "HistoryColors",
-    "recentSearches",
     "recentSearchHints",
-    "IDETemplateCompletionDefaultPath",
     "SHKRecentServices",
     "FavoriteColors",
     "LastSetWindowSizeForDocument",
@@ -452,7 +438,6 @@ our @plistKeysToDelete = (
     "lastRegex",
     "TSARecentOpenedDocumentTimestamps",
     "TSAOpenedTemplates.Numbers",
-    "TSAOpenedTemplates.Pages",
     "FindDialog_SearchReplaceHistory",
     "ApplicationSleepState",
     "ApplicationAutoSaveState",
@@ -469,15 +454,11 @@ our @plistKeysToDelete = (
     "IDE_CA_Daily_UptimeHours",
     "IDE_CA_Daily_SessionCount",
     "PreferencesSnapshotDate",
-    "ApplicationAutoSaveState",
     "LastOpenByNameString",
     "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",
     "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
     "SULastCheckedDate",
     "LastLaunchOSVersion",
-    "LastOpenByNameString",
-    "IDEChatUserSelectedDefaultChatModelDefinitionIdentifier",
-    "IDEAnalyticsMetricsNotifications.AnalyticsMetricsNotificationsController.lastRefreshAttemptDate",
     "savedLastOpen",
     "IDELastViewedSettingsPane",
     "LastTerminalStartTime",
@@ -493,7 +474,7 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentApplications.sfl3",                     0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentServers.sfl3",                          0],
     ["$HOME/Library/Application Support/com.apple.sharedfilelist/com.apple.LSSharedFileList.RecentHosts.sfl3",                            0],
-    ["$HOME/Application Support/zoxide/",                                                                                                 1],
+    ["$HOME/Library/Application Support/zoxide/",                                                                                         1],
     ["$HOME/Library/Preferences/com.googlecode.iterm2.private.plist",                                                                     0],
     ["$HOME/Library/Preferences/com.apple.dock.extra.plist",                                                                              0],
     ["$HOME/Library/Preferences/us.zoom.ZoomClips.plist",                                                                                 0],
@@ -504,7 +485,6 @@ our @itemsToDelete = (
     ["$HOME/.claude/data",                                                                                                                0],
     ["$HOME/.claude/backups",                                                                                                             0],
     ["$HOME/.claude/image-cache",                                                                                                         0],
-    ["$HOME/.claude/cache",                                                                                                               0],
     ["$HOME/.claude/session-env",                                                                                                         0],
     ["$HOME/.claude/plans",                                                                                                               0],
     ["$HOME/.claude/projects",                                                                                                            0],
@@ -519,15 +499,8 @@ our @itemsToDelete = (
     ["$HOME/.claude/file-history",                                                                                                        0],
     ["$HOME/.claude/history.jsonl",                                                                                                       0],
     ["$HOME/.claude/stats-cache.json",                                                                                                    0],
-    ["$HOME/.claude/file-history",                                                                                                        0],
-    ["$HOME/.claude/plans",                                                                                                               0],
-    ["$HOME/.claude/debug",                                                                                                               0],
     ["$HOME/.claude/paste-cache",                                                                                                         0],
-    ["$HOME/.claude/projects",                                                                                                            0],
-    ["$HOME/.claude/todos",                                                                                                               0],
     ["$HOME/.claude/sessions",                                                                                                            0],
-    ["$HOME/.claude/session-env",                                                                                                         0],
-    ["$HOME/.claude/history.jsonl",                                                                                                       0],
     ["$HOME/.npm",                                                                                                                        0],
     ["$HOME/.konan",                                                                                                                      0],
     ["$HOME/.ssh/known_hosts.old",                                                                                                        0],
@@ -560,7 +533,7 @@ our @itemsToDelete = (
     ["$HOME/triald-*.ips",                                                                                                                1],
     ["$HOME/.config/configstore",                                                                                                         0],
     ["$HOME/Pictures/Pixelmator Pro Sidecar Files/",                                                                                      0],
-    ["$HOME/Library/Application Support/BBEdit/Workspaces",                                                                               9],
+    ["$HOME/Library/Application Support/BBEdit/Workspaces",                                                                               0],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Rescued Documents",                                               1],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Auto-Save Recovery",                                              0],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Sleep State.appstate",                                                           0],
@@ -586,8 +559,6 @@ our @itemsToDelete = (
     ["$HOME/Library/Cookies/Hocom.kapeli.dashdoc.binarycookies",                                                                          0],
     ["$HOME/Library/Cookies/org.m0k.transmission.binarycookies",                                                                          0],
     ["$HOME/Library/Caches/com.apple.dt.Xcode",                                                                                           0],
-    ["$HOME/Library/Autosave Information",                                                                                                0],
-    ["$HOME/Library/Application Support/CrashReporter",                                                                                   0],
     ["$HOME/Pictures/iSkysoft VideoConverterUltimate",                                                                                    0],
     ["$HOME/Movies/iSkysoft VideoConverterUltimate",                                                                                      0],
     ["$HOME/Library/Preferences/com.apple.LaunchServices",                                                                                0],
@@ -603,7 +574,6 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/Mozilla",                                                                                         0],
     ["$HOME/Library/Application Support/JetBrains",                                                                                       0],
     ["$HOME/Library/Application Support/Battle.net",                                                                                      0],
-    ["$HOME/Library/Application Support/Steam",                                                                                           0],
     ["$HOME/Library/org.swift.swiftpm",                                                                                                   0],
     ["$HOME/Music/Logic",                                                                                                                 0],
     ["$HOME/Library/Cookies/com.apple.Safari.SearchHelper.binarycookies",                                                                 0],
@@ -616,7 +586,6 @@ our @itemsToDelete = (
     ["$HOME/Library/Developer/Xcode/snapshots",                                                                                           0],
     ["$HOME/Library/Developer/Xcode/UserData/*.xcuserstate",                                                                              1],
     ["$HOME/Library/Developer/Xcode/UserData/CodingAssistant",                                                                            1],
-    ["$HOME/Library/Developer/Xcode/UserData/IDEEditorInteractivityHistory",                                                              0],
     ["$HOME/Library/Application Support/Alfred/Caches",                                                                                   1],
     ["$HOME/Library/Application Support/Alfred/Workflow Data",                                                                            1],
     ["$HOME/Library/Application Support/Sublime Merge/Local/Backup Session.sublime_session",                                              0],
@@ -631,13 +600,10 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/Sublime Text/Local/Backup Session.sublime_session",                                               0],
     ["$HOME/Library/Application Support/Sublime Text/Packages/User/Package Control.cache",                                                1],
     ["$HOME/Library/Application Support/Sublime Text (Safe Mode)",                                                                        0],
-    ["$HOME/Library/Application Support/CallHistoryDB",                                                                                   0],
-    ["$HOME/Library/Application Support/CallHistoryTransactions",                                                                         0],
     ["$HOME/Library/Caches/com.apple.Safari/Webpage Previews",                                                                            1],
     ["$HOME/Library/Caches/com.apple.Safari/Cache.*",                                                                                     1],
     ["$HOME/Library/Caches/com.apple.Safari/fsCachedData",                                                                                1],
     ["$HOME/Library/Caches/com.apple.Safari/WebKitCache",                                                                                 1],
-    ["$HOME/Library/Caches/com.apple.Safari/Webpage Previews",                                                                            1],
     ["$HOME/Library/Safari/Configurations.plist.signed",                                                                                  1],
     ["$HOME/Library/Caches/com.apple.Safari/Cache.db",                                                                                    1],
     ["$HOME/Library/Safari/CloudBookmarksMigrationCoordinator",                                                                           0],
@@ -653,11 +619,7 @@ our @itemsToDelete = (
     ["$HOME/Library/Preferences/com.trolltech.plist",                                                                                     1],
     ["$HOME/Library/Preferences/com.qtproject.plist",                                                                                     1],
     ["$HOME/Library/Application Support/Dash/Temp",                                                                                       1],
-    ["$HOME/Library/Developer/Xcode/DocumentationCache",                                                                                  0],
     ["$HOME/Library/Developer/Xcode/UserData/IB Support",                                                                                 0],
-    ["$HOME/Library/Developer/CoreSimulator/Caches",                                                                                      0],
-    ["$HOME/Library/Developer/Xcode/Products",                                                                                            0],
-    ["$HOME/Library/Caches/com.apple.dt.Xcode",                                                                                           0],
     ["$HOME/Library/Containers/com.koolesache.ColorSnapper2/Data/Library/Caches/com.koolesache.ColorSnapper2",                            0],
     ["$HOME/Library/Application Support/Keyboard Maestro/Keyboard Maestro Recent Applications.plist",                                     0],
     ["$HOME/Library/Application Support/Keyboard Maestro/Keyboard Maestro Clipboards.kmchunked",                                          0],
@@ -726,7 +688,7 @@ sub books {
 #*****************************************************************************************
 sub sublimeText {
     my $filename     = "$HOME/Library/Application Support/Sublime Text/Local/Session.sublime_session";
-    my @keysToDelete = ("auto_complete", "file_history", "replace", "find_state", "find_in_files", "project", "buffers", "command_palette", "expanded_folders" . "workspace_name", "folders", "console", "groups");
+    my @keysToDelete = ("auto_complete", "file_history", "replace", "find_state", "find_in_files", "project", "buffers", "command_palette", "expanded_folders", "workspace_name", "folders", "console", "groups");
 
     if (-e $filename) {
         open(my $configFile, "<", $filename);
@@ -1189,7 +1151,9 @@ sudo purge &>/dev/null
 killall "Crash Reporter" ReportCrash &>/dev/null
 
 find "$HOME/Library/Developer" -type d -name "[A-Za-z0-9]* Device Logs" -exec rm -rfv {} \; &>/dev/null
-sqlite3 "$(find "$HOME/Library/Mail" -name "Envelope Index")" vacuum
+while IFS= read -r envelope; do
+	sqlite3 "$envelope" vacuum
+done < <(find "$HOME/Library/Mail" -name "Envelope Index" 2>/dev/null)
 sudo diskutil resetUserPermissions / "$(id -u)" &>/dev/null
 #*****************************************************************************************
 #  refresh Safari icons
@@ -1249,9 +1213,9 @@ cat <<"XCODE_BREAKPOINTS" >"$HOME/Library/Developer/Xcode/UserData/xcdebugger/Br
 </Bucket>
 XCODE_BREAKPOINTS
 
-rm -f "${HISTFILE}" &>/dev/null
-mkdir -p "$XDG_CACHE_HOME/zsh"
-history -p
+[[ -n ${HISTFILE:-} ]] && rm -f "$HISTFILE" &>/dev/null
+[[ -n ${XDG_CACHE_HOME:-} ]] && mkdir -p "$XDG_CACHE_HOME/zsh"
+history -c 2>/dev/null
 
 if [[ $OCD_OPTION == "" ]]; then
 	finish

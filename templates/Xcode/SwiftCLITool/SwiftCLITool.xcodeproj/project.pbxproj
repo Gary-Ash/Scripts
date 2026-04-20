@@ -1,0 +1,599 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 90;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5CA0000000000000CCA0001F /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 5CA0000000000000CCA0001E /* ArgumentParser */; };
+		5CA0000000000000CCA0002E /* libSwiftCLIToolCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CA0000000000000CCA00028 /* libSwiftCLIToolCore.a */; };
+		5CA0000000000000CCA0002F /* libSwiftCLIToolCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CA0000000000000CCA00028 /* libSwiftCLIToolCore.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5CA0000000000000CCA0001A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5CA0000000000000CCA00001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5CA0000000000000CCA00007;
+			remoteInfo = SwiftCLITool;
+		};
+		5CA0000000000000CCA0002B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5CA0000000000000CCA00001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5CA0000000000000CCA00021;
+			remoteInfo = SwiftCLIToolCore;
+		};
+		5CA0000000000000CCA0002D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5CA0000000000000CCA00001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5CA0000000000000CCA00021;
+			remoteInfo = SwiftCLIToolCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5CA0000000000000CCA0000E /* SwiftCLITool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SwiftCLITool; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CA0000000000000CCA00017 /* SwiftCLIToolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftCLIToolTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CA0000000000000CCA0001B /* LICENSE.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.markdown; sourceTree = "<group>"; };
+		5CA0000000000000CCA0001C /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.markdown; sourceTree = "<group>"; };
+		5CA0000000000000CCA00028 /* libSwiftCLIToolCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSwiftCLIToolCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5CA0000000000000CCA0000F /* SwiftCLITool */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SwiftCLITool;
+			sourceTree = "<group>";
+		};
+		5CA0000000000000CCA00018 /* SwiftCLIToolTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SwiftCLIToolTests;
+			sourceTree = "<group>";
+		};
+		5CA0000000000000CCA00029 /* SwiftCLIToolCore */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SwiftCLIToolCore;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5CA0000000000000CCA0000C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				5CA0000000000000CCA0002E /* libSwiftCLIToolCore.a in Frameworks */,
+				5CA0000000000000CCA0001F /* ArgumentParser in Frameworks */,
+			);
+		};
+		5CA0000000000000CCA00015 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				5CA0000000000000CCA0002F /* libSwiftCLIToolCore.a in Frameworks */,
+			);
+		};
+		5CA0000000000000CCA00026 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5CA0000000000000CCA00005 = {
+			isa = PBXGroup;
+			children = (
+				5CA0000000000000CCA00029 /* SwiftCLIToolCore */,
+				5CA0000000000000CCA0000F /* SwiftCLITool */,
+				5CA0000000000000CCA00018 /* SwiftCLIToolTests */,
+				5CA0000000000000CCA0001B /* LICENSE.markdown */,
+				5CA0000000000000CCA0001C /* README.markdown */,
+				5CA0000000000000CCA00006 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5CA0000000000000CCA00006 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5CA0000000000000CCA00028 /* libSwiftCLIToolCore.a */,
+				5CA0000000000000CCA0000E /* SwiftCLITool */,
+				5CA0000000000000CCA00017 /* SwiftCLIToolTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5CA0000000000000CCA00007 /* SwiftCLITool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5CA0000000000000CCA00008 /* Build configuration list for PBXNativeTarget "SwiftCLITool" */;
+			buildPhases = (
+				5CA0000000000000CCA0000B /* Sources */,
+				5CA0000000000000CCA00020 /* SwiftLint Project */,
+				5CA0000000000000CCA0000C /* Frameworks */,
+				5CA0000000000000CCA0000D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5CA0000000000000CCA0002A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5CA0000000000000CCA0000F /* SwiftCLITool */,
+			);
+			name = SwiftCLITool;
+			packageProductDependencies = (
+				5CA0000000000000CCA0001E /* ArgumentParser */,
+			);
+			productName = SwiftCLITool;
+			productReference = 5CA0000000000000CCA0000E /* SwiftCLITool */;
+			productType = "com.apple.product-type.tool";
+		};
+		5CA0000000000000CCA00010 /* SwiftCLIToolTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5CA0000000000000CCA00011 /* Build configuration list for PBXNativeTarget "SwiftCLIToolTests" */;
+			buildPhases = (
+				5CA0000000000000CCA00014 /* Sources */,
+				5CA0000000000000CCA00015 /* Frameworks */,
+				5CA0000000000000CCA00016 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5CA0000000000000CCA00019 /* PBXTargetDependency */,
+				5CA0000000000000CCA0002C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5CA0000000000000CCA00018 /* SwiftCLIToolTests */,
+			);
+			name = SwiftCLIToolTests;
+			productName = SwiftCLIToolTests;
+			productReference = 5CA0000000000000CCA00017 /* SwiftCLIToolTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5CA0000000000000CCA00021 /* SwiftCLIToolCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5CA0000000000000CCA00022 /* Build configuration list for PBXNativeTarget "SwiftCLIToolCore" */;
+			buildPhases = (
+				5CA0000000000000CCA00025 /* Sources */,
+				5CA0000000000000CCA00026 /* Frameworks */,
+				5CA0000000000000CCA00027 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5CA0000000000000CCA00029 /* SwiftCLIToolCore */,
+			);
+			name = SwiftCLIToolCore;
+			productName = SwiftCLIToolCore;
+			productReference = 5CA0000000000000CCA00028 /* libSwiftCLIToolCore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5CA0000000000000CCA00027 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXProject section */
+		5CA0000000000000CCA00001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 2620;
+				ORGANIZATIONNAME = CompanyName;
+				TargetAttributes = {
+					5CA0000000000000CCA00007 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					5CA0000000000000CCA00010 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 5CA0000000000000CCA00007;
+					};
+					5CA0000000000000CCA00021 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+				};
+			};
+			buildConfigurationList = 5CA0000000000000CCA00002 /* Build configuration list for PBXProject "SwiftCLITool" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5CA0000000000000CCA00005;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5CA0000000000000CCA0001D /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+			);
+			preferredProjectObjectVersion = 90;
+			productRefGroup = 5CA0000000000000CCA00006 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5CA0000000000000CCA00021 /* SwiftCLIToolCore */,
+				5CA0000000000000CCA00007 /* SwiftCLITool */,
+				5CA0000000000000CCA00010 /* SwiftCLIToolTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5CA0000000000000CCA0000D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		5CA0000000000000CCA00016 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5CA0000000000000CCA00020 /* SwiftLint Project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			name = "SwiftLint Project";
+			shellPath = /bin/sh;
+			shellScript = (
+				"#!/usr/bin/env zsh",
+				"#*****************************************************************************************",
+				"# swiftlint-project.sh",
+				"#",
+				"# This script will run SwiftLint over the current project",
+				"#",
+				"# Author   :  Gary Ash <gary.ash@icloud.com>",
+				"# Created  :  20-Feb-2026  5:21pm",
+				"# Modified :",
+				"#",
+				"# Copyright © 2026 By CompanyName All rights reserved.",
+				"#*****************************************************************************************",
+				" ",
+				"if [ -f \"/opt/homebrew/bin/brew\" ]; then",
+				"\texport PATH=\"/opt/homebrew/bin:/opt/homebrew/sbin:$PATH\"",
+				"fi",
+				" ",
+				"if ! command -v swiftlint; then",
+				"\tbrew install swiftlint",
+				"fi",
+				" ",
+				"cd \"${SRCROOT}\"",
+				"swiftlint --fix --config \"${PROJECT_DIR}/.swiftlint.yml\" .",
+				"",
+			);
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5CA0000000000000CCA0000B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		5CA0000000000000CCA00014 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		5CA0000000000000CCA00025 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5CA0000000000000CCA00019 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5CA0000000000000CCA00007 /* SwiftCLITool */;
+			targetProxy = 5CA0000000000000CCA0001A /* PBXContainerItemProxy */;
+		};
+		5CA0000000000000CCA0002A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5CA0000000000000CCA00021 /* SwiftCLIToolCore */;
+			targetProxy = 5CA0000000000000CCA0002B /* PBXContainerItemProxy */;
+		};
+		5CA0000000000000CCA0002C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5CA0000000000000CCA00021 /* SwiftCLIToolCore */;
+			targetProxy = 5CA0000000000000CCA0002D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		5CA0000000000000CCA00003 /* Debug configuration for PBXProject "SwiftCLITool" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5CA0000000000000CCA00004 /* Release configuration for PBXProject "SwiftCLITool" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		5CA0000000000000CCA00009 /* Debug configuration for PBXNativeTarget "SwiftCLITool" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				GENERATE_INFOPLIST_FILE = NO;
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.SwiftCLITool;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		5CA0000000000000CCA0000A /* Release configuration for PBXNativeTarget "SwiftCLITool" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				GENERATE_INFOPLIST_FILE = NO;
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.SwiftCLITool;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		5CA0000000000000CCA00012 /* Debug configuration for PBXNativeTarget "SwiftCLIToolTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.SwiftCLIToolTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		5CA0000000000000CCA00013 /* Release configuration for PBXNativeTarget "SwiftCLIToolTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.geedbla.SwiftCLIToolTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		5CA0000000000000CCA00023 /* Debug configuration for PBXNativeTarget "SwiftCLIToolCore" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				ENABLE_TESTABILITY = YES;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		5CA0000000000000CCA00024 /* Release configuration for PBXNativeTarget "SwiftCLIToolCore" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = H46K66JBHS;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5CA0000000000000CCA00002 /* Build configuration list for PBXProject "SwiftCLITool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CA0000000000000CCA00003 /* Debug */,
+				5CA0000000000000CCA00004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5CA0000000000000CCA00008 /* Build configuration list for PBXNativeTarget "SwiftCLITool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CA0000000000000CCA00009 /* Debug */,
+				5CA0000000000000CCA0000A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5CA0000000000000CCA00011 /* Build configuration list for PBXNativeTarget "SwiftCLIToolTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CA0000000000000CCA00012 /* Debug */,
+				5CA0000000000000CCA00013 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5CA0000000000000CCA00022 /* Build configuration list for PBXNativeTarget "SwiftCLIToolCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5CA0000000000000CCA00023 /* Debug */,
+				5CA0000000000000CCA00024 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5CA0000000000000CCA0001D /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5CA0000000000000CCA0001E /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5CA0000000000000CCA0001D /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5CA0000000000000CCA00001 /* Project object */;
+}

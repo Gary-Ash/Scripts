@@ -361,7 +361,9 @@ Reusable Xcode project templates located in `templates/Xcode/`, used by `new-xco
 |----------|-------------|
 | `2DGame` | Multiplatform SpriteKit-based game (iOS, macOS, tvOS) |
 | `AppKitProject` | AppKit-based macOS application with unit and UI tests |
+| `CppCLITool` | C++ command-line tool with Objective-C++ unit tests |
 | `MultiPlatform` | SwiftUI multiplatform app (iOS + macOS) with unit and UI tests |
+| `SwiftCLITool` | Swift command-line tool with a separate core library and unit tests |
 | `UIKitProject` | UIKit-based iOS application with unit and UI tests |
 
 Each template directory contains a complete `.xcodeproj` and source tree that `new-xcode-project.pl` copies and customizes with the project name, company, bundle identifier, and license.

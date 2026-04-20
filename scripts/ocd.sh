@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  17-Apr-2026  8:45pm
+# Modified :  19-Apr-2026 11:02pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -332,6 +332,12 @@ use DateTime;
 our $HOME = $ENV{'HOME'};
 
 our @plistKeysToDelete = (
+	"ChatAPIIdentifier",
+	"ChatGPTModel",
+	"ClaudeModel",
+	"NSWindow Frame ChatGPTKeyEntryPanel",
+	"ListSignupEmailAddress",
+	"ListSignupUserName",
     "NewBookmarksLocationUUID",
     "RecentSearchStrings",
     "FXRecentFolders",
@@ -584,6 +590,7 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/Xcode",                                                                                           1],
     ["$HOME/Library/Developer/Xcode/Archives",                                                                                            0],
     ["$HOME/Library/Developer/Xcode/snapshots",                                                                                           0],
+    ["$HOME/Library/Developer/Xcode/CodingAssistant/ClaudeAgentConfig", 																  1],
     ["$HOME/Library/Developer/Xcode/UserData/*.xcuserstate",                                                                              1],
     ["$HOME/Library/Developer/Xcode/UserData/CodingAssistant",                                                                            1],
     ["$HOME/Library/Application Support/Alfred/Caches",                                                                                   1],
@@ -784,7 +791,8 @@ sub BBEdit {
             for (my $index = 0; $index < $items; ++$index) {
                 my $key = $keyNamesArray->objectAtIndex_($index)->UTF8String();
                 if (   rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
-                    || rindex($key, "ImageDisplayGrayLevel_", 0) != -1)
+                    || rindex($key, "ImageDisplayGrayLevel_", 0) != -1
+                    || $key =~ /^~[0-9A-Fa-f]{40}$/)
                 {
                     $plist->removeObjectForKey_($key);
                 }

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  17-Apr-2026  8:30pm
+# Modified :  20-Apr-2026  4:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -83,6 +83,8 @@ dot-files() {
 		"$HOME/.ssh/id_ed25519"
 		"$HOME/.ssh/id_ed25519.pub"
 		"$HOME/.ssh/known_hosts"
+		"$HOME/.ssh/agent"
+		"$HOME/.config/git/allowed_signers"
 	)
 
 	rawdotfiles=$(find "$HOME" -maxdepth 1 -name ".*")
@@ -143,6 +145,7 @@ buildRepository() {
 		--exclude="UserData/Previews" \
 		--exclude="UserData/XcodeCloud" \
 		--exclude="UserData/CodingAssistant" \
+		--exclude="/CodingAssistant" \
 		--exclude="UserData/Provisioning Profiles" \
 		--exclude="UserData/IDEEditorInteractivityHistory" \
 		--exclude="UserData/IDEFindNavigatorScopes.plist" \
@@ -213,8 +216,24 @@ buildRepository() {
 	jq 'del(.userID, .oauthAccount, .projects, .githubRepoPaths,
 			.firstStartTime, .claudeCodeFirstTokenDate,
 			.opusProMigrationTimestamp, .changelogLastFetched,
-			.numStartups, .btwUseCount, .anonymousId) |
-		.hasShownOpus45Notice = {} |
+			.numStartups, .btwUseCount, .anonymousId,
+			.cachedGrowthBookFeatures, .overageCreditGrantCache,
+			.additionalModelOptionsCache, .additionalModelCostsCache,
+			.clientDataCache, .cachedChromeExtensionInstalled,
+			.cachedExtraUsageDisabledReason, .feedbackSurveyState,
+			.tipsHistory, .promptQueueUseCount,
+			.lastOnboardingVersion, .lastReleaseNotesSeen,
+			.hasCompletedOnboarding, .hasShownOpus45Notice,
+			.hasShownOpus46Notice, .hasVisitedExtraUsage,
+			.effortCalloutDismissed, .effortCalloutV2Dismissed,
+			.lspRecommendationIgnoredCount, .birthdayHatAnimationCount,
+			.showSpinnerTree, .penguinModeOrgEnabled,
+			.officialMarketplaceAutoInstallAttempted,
+			.officialMarketplaceAutoInstalled,
+			.autoUpdatesProtectedForNative, .deepLinkTerminal,
+			.migrationVersion, .sonnet45MigrationComplete,
+			.opus45MigrationComplete, .opusProMigrationComplete,
+			.thinkingMigrationComplete, .sonnet1m45MigrationComplete) |
 		.s1mAccessCache = {} |
 		.groveConfigCache = {} |
 		.skillUsage = {}' "$DOTFILES_DIR/home/.claude.json" >"$DOTFILES_DIR/home/.claude.json1"
@@ -223,12 +242,6 @@ buildRepository() {
 
 	rm -f "$DOTFILES_DIR/home/.claude.json"
 	mv "$DOTFILES_DIR/home/.claude.json1" "$DOTFILES_DIR/home/.claude.json"
-
-	local xcode_agent_json="$DOTFILES_DIR/xcode/CodingAssistant/ClaudeAgentConfig/.claude.json"
-	if [[ -f $xcode_agent_json ]]; then
-		jq 'del(.userID, .oauthAccount, .firstStartTime)' "$xcode_agent_json" >"${xcode_agent_json}1"
-		mv -f "${xcode_agent_json}1" "$xcode_agent_json"
-	fi
 
 	cp -f /opt/geedbla/scripts/bootstrap.sh "$DOTFILES_DIR"
 	rm -rf "$package_temp"
@@ -270,6 +283,12 @@ use File::Find;
 our $HOME = $ENV{'HOME'};
 
 our @plistKeysToDelete = (
+	"ChatAPIIdentifier",
+	"ChatGPTModel",
+	"ClaudeModel",
+	"NSWindow Frame ChatGPTKeyEntryPanel",
+	"ListSignupEmailAddress",
+	"ListSignupUserName",
     "NewBookmarksLocationUUID",
     "RecentSearchStrings",
     "FXRecentFolders",
@@ -419,11 +438,40 @@ our @plistKeysToDelete = (
     "DVTDeveloperAccountManagerAppleIDLists",
     "DVTDevicesWindowControllerSelectedDeviceIdentifier",
     "DVTDevicesWindowControllerSelectedSimulatorIdentifier",
+    "IDEAppStoreProductSourceRateLimiter",
     "DVTDeviceVisibilityPreferences",
     "DVTSourceControlAccountDefaultsKey",
     "IDEProvisioningTeamByIdentifier",
     "IDESourceControlHostAccounts_10",
+    "IDEProductsViewControllerSelectedProductIdentifier",
 );
+
+#*****************************************************************************************
+# private project bundle id pattern - any plist entry whose value tree references
+# this pattern is stripped to prevent leaking private project identifiers
+#*****************************************************************************************
+our $privateBundleIDPattern = qr/com\.garyash\./;
+
+sub stripPrivateBundleIDs {
+    my $dict = shift;
+    return unless $dict && $$dict;
+
+    my $keyNamesArray = $dict->allKeys();
+    my $items         = $keyNamesArray->count;
+    my @keysToRemove;
+    for (my $index = 0; $index < $items; ++$index) {
+        my $key   = $keyNamesArray->objectAtIndex_($index);
+        my $value = $dict->objectForKey_($key);
+        next unless $value && $$value;
+        my $desc = $value->description->UTF8String();
+        if ($desc =~ $privateBundleIDPattern) {
+            push @keysToRemove, $key;
+        }
+    }
+    for my $key (@keysToRemove) {
+        $dict->removeObjectForKey_($key);
+    }
+}
 
 #*****************************************************************************************
 # process the plists in the Containers folder
@@ -442,14 +490,18 @@ sub processFiles {
                 foreach my $key (@plistKeysToDelete) {
                     $valuesDicM->removeObjectForKey_($key);
                 }
+                stripPrivateBundleIDs($valuesDicM);
                 $plistData->setObject_forKey_($valuesDicM, "values");
             }
+            stripPrivateBundleIDs($plistData);
             my $keyNamesArray = $plistData->allKeys();
             my $items         = $keyNamesArray->count;
             for (my $index = 0; $index < $items; ++$index) {
                 my $key = $keyNamesArray->objectAtIndex_($index)->UTF8String();
                 if (   rindex($key, "InstaprojectWindowSavedBounds", 0) != -1
-                    || rindex($key, "ImageDisplayGrayLevel_", 0) != -1)
+                    || rindex($key, "ImageDisplayGrayLevel_", 0) != -1
+                    || rindex($key, "IDEXcodeDeviceSupportLastNotified-", 0) != -1
+                    || $key =~ /^~[0-9A-Fa-f]{40}$/)
                 {
                     $plistData->removeObjectForKey_($key);
                 }

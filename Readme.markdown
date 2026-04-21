@@ -33,15 +33,15 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [new-xcode-project.pl](#new-xcode-projectpl) | Perl | Generate Xcode projects from templates |
 | [ocd.sh](#ocdsh) | Bash | System cleanup and maintenance |
 | [refresh-compile-commands.sh](#refresh-compile-commandssh) | Bash | Regenerate LSP compile_commands.json |
-| [refresh-safari-icons.sh](#refresh-safari-iconssh) | Bash | Restore custom Safari favicons |
 | [reset-dates.pl](#reset-datespl) | Perl | Reset file dates and copyright headers |
-| [safari-cookie-cleaner.pl](#safari-cookie-cleanerpl) | Perl | Delete Safari data for non-bookmarked sites |
+| [safari-cleaner.pl](#safari-cleanerpl) | Perl | Delete Safari data for non-bookmarked sites |
+| [safari-restore-icons.sh](#safari-restore-iconssh) | Bash | Restore custom Safari favicons |
+| [safari-update-icons.sh](#safari-update-iconssh) | Bash | Upload Safari favicon cache to server |
 | [settings.sh](#settingssh) | Bash | Configure macOS system settings |
 | [startup-banner.pl](#startup-bannerpl) | Perl | Display terminal startup banner |
 | [strip-comments.pl](#strip-commentspl) | Perl | Remove comments from C-style source |
 | [sync-mac.sh](#sync-macsh) | Bash | Sync files between Mac systems |
 | [update-dots.sh](#update-dotssh) | Bash | Maintain dotfiles repository |
-| [update-safari-icons.sh](#update-safari-iconssh) | Bash | Upload Safari favicon cache to server |
 | [update-site.sh](#update-sitesh) | Bash | Deploy Jekyll website |
 | [wtf-autolayout.py](#wtf-autolayoutpy) | Python | Debug Auto Layout constraints |
 
@@ -197,12 +197,6 @@ Regenerates `compile_commands.json` files for all Xcode projects in ~/Developer 
 
 ---
 
-### refresh-safari-icons.sh
-
-Downloads and installs custom Safari favicon files from a remote server to replace the default Apple icons.
-
----
-
 ### reset-dates.pl
 
 Resets file creation/modification dates and updates copyright headers in source files. Handles various file types including Xcode project files and compiled AppleScript.
@@ -211,17 +205,31 @@ Resets file creation/modification dates and updates copyright headers in source 
 
 ---
 
-### safari-cookie-cleaner.pl
+### safari-cleaner.pl
 
 Deletes Safari website data (cookies, local storage, observations, URL cache, WebKit cache, Screen Time web usage, and HTTP Alternative Services) for domains that do not match any bookmarked website. Parses and rewrites Safari's `Cookies.binarycookies` file directly.
 
-**Usage:** `safari-cookie-cleaner.pl [--dry-run|-n] [--verbose|-v]`
+**Usage:** `safari-cleaner.pl [--dry-run|-n] [--verbose|-v]`
 
 **Options:**
 - `-n, --dry-run` — Report what would be removed without making changes
 - `-v, --verbose` — Print each deleted entry
 
 **Note:** Safari must be quit before running.
+
+---
+
+### safari-restore-icons.sh
+
+Downloads and installs custom Safari favicon files from a remote server to replace the default Apple icons.
+
+---
+
+### safari-update-icons.sh
+
+Archives Safari favicon cache directories and uploads the archive to a remote server via scp. Retrieves the server password from the macOS Keychain.
+
+**Usage:** `safari-update-icons.sh`
 
 ---
 
@@ -264,14 +272,6 @@ Synchronizes directories, files, and package manager installations between multi
 Maintains a dotfiles Git repository by collecting configuration files, preferences, and application settings from the system and pushing updates to GitHub.
 
 **Usage:** `update-dots.sh [--package]`
-
----
-
-### update-safari-icons.sh
-
-Archives Safari favicon cache directories and uploads the archive to a remote server via scp. Retrieves the server password from the macOS Keychain.
-
-**Usage:** `update-safari-icons.sh`
 
 ---
 

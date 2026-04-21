@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  19-Apr-2026 11:02pm
+# Modified :  21-Apr-2026  2:35pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -176,7 +176,7 @@ find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".j
 find "$HOME/Developer" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 
 perl /opt/geedbla/scripts/load-simulator.pl &
-perl /opt/geedbla/scripts/safari-cookie-cleaner.pl &>/dev/null
+perl /opt/geedbla/scripts/safari-cleaner.pl &>/dev/null
 #*****************************************************************************************
 # setup the sudo until the script is done
 #*****************************************************************************************
@@ -1166,7 +1166,7 @@ sudo diskutil resetUserPermissions / "$(id -u)" &>/dev/null
 #*****************************************************************************************
 #  refresh Safari icons
 #*****************************************************************************************
-refresh-safari-icons.sh &>/dev/null
+safari-restore-icons.sh &>/dev/null
 
 #*****************************************************************************************
 # clean the font cache

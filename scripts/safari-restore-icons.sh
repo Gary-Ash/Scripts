@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 #*****************************************************************************************
-# refresh-safari-icons.sh
+# safari-restore-icons.sh
 #
 # This script exists for the sillist of reason, that I don't like the black apple on a
 # white circle fav icon. This script will download a saved copy of my preferred icon from
@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  11-Mar-2026  5:54pm
+# Modified :  21-Apr-2026  2:35pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************

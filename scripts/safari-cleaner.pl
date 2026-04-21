@@ -1,12 +1,12 @@
 #!/usr/bin/env perl
 #*****************************************************************************************
-# safari-cookie-cleaner.pl
+# safari-cleaner.pl
 #
 # Delete Safari website data that does not match a bookmarked website domain
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   5-Apr-2026  2:30pm
-# Modified :  17-Apr-2026  3:15pm
+# Modified :  21-Apr-2026  9:54pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -106,6 +106,9 @@ my @BLACKLIST_DOMAINS = qw(
 my %BLACKLIST = map { $_ => 1 } @BLACKLIST_DOMAINS;
 
 my @WHITELIST_DOMAINS = qw(
+	geedbla.com
+	upwork.com
+	costco.com
     apple.com
     x.com
     gitlab.com
@@ -137,7 +140,33 @@ GetOptions(
     'dry-run|n' => \$dry_run,
     'verbose|v' => \$verbose,
 ) or die "Usage: $0 [--dry-run|-n] [--verbose|-v]\n";
+my $applescript = <<'END_SCRIPT';
+tell application "Safari" to activate
+delay 0.2
 
+tell application "System Events" to tell process "Safari"
+
+	click menu item "Show All History" of menu 1 of menu bar item "History" of menu bar 1
+	delay 0.2
+	tell application "Safari" to activate
+	try
+		keystroke "a" using command down
+		keystroke (ASCII character 127)
+		delay 1
+	end try
+
+	tell application "Safari" to activate
+	click menu item "Hide History" of menu 1 of menu bar item "History" of menu bar 1
+
+	tell application "Safari" to quit
+	delay 0.2
+end tell
+END_SCRIPT
+
+# Run the AppleScript
+open(my $osa, "|-", "/usr/bin/osascript") or die "Cannot run osascript: $!";
+print $osa $applescript;
+close($osa);
 check_safari_not_running();
 
 my $bookmark_domains = extract_bookmark_domains();
@@ -196,6 +225,7 @@ clean_favicons($bookmark_domains);
 clean_screen_time($bookmark_domains);
 clean_biome_streams();
 clean_webkit_cache();
+`safari-restore-icons.sh`;
 
 #----- subroutines -----------------------------------------------------------------------
 

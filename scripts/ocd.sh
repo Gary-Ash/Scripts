@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  21-Apr-2026  2:35pm
+# Modified :  24-Apr-2026  4:33pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1113,6 +1113,15 @@ tell application "System Events"
 	do shell script "Killall " & quoted form of activeApp
 end tell
 END2
+
+#*****************************************************************************************
+# Notification Center clean up
+#*****************************************************************************************
+killall NotificationCenter 2>/dev/null
+killall ControlCenter 2>/dev/null
+killall usernoted 2>/dev/null
+defaults delete com.apple.ncprefs 2>/dev/null
+sudo find /private/var/folders -name com.apple.notificationcenter -exec rm -rf {} + &>/dev/null
 
 #*****************************************************************************************
 # clear the icon cache

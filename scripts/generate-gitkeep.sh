@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+shopt -s nullglob dotglob
 #*****************************************************************************************
 # generate-gitkeep.sh
 #
@@ -8,27 +9,28 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  24-Mar-2026  8:38pm
-# Modified :  24-Mar-2026  9:25pm
+# Modified :   5-May-2026  6:19pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
-# If an argument is provided, ensure it's a directory
-if [[ -n ${1:-} ]]; then
-	if [[ ! -d $1 ]]; then
-		echo "Error: '$1' is not a directory"
-		exit 1
-	fi
-	ROOT="$1"
-else
-	ROOT="."
-fi
+TARGET="${1:-.}"
 
-# Traverse all directories
-find "$ROOT" -type d | while read -r dir; do
-	# Check whether the directory contains *any* files (not counting subdirectories)
-	if ! find "$dir" -maxdepth 1 -type f | read -r _; then
-		# Directory has no files — add .gitkeep
+find "$TARGET" -name .git -prune -o -type d -print0 | while IFS= read -r -d '' dir; do
+	has_file=0
+
+	for item in "$dir"/*; do
+		if [[ ! -d $item ]]; then
+			filename="${item##*/}"
+
+			if [[ $filename != ".gitkeep" && $filename != ".DS_Store" ]]; then
+				has_file=1
+				break # We found a file, no need to keep checking this folder
+			fi
+		fi
+	done
+
+	if [[ $has_file -eq 0 ]]; then
 		touch "$dir/.gitkeep"
 	fi
 done

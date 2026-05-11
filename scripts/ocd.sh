@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  25-Apr-2026  6:10pm
+# Modified :  10-May-2026  3:25pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -981,7 +981,7 @@ try
 				delay 0.3
 				keystroke tab
 				delay 3
-				keystroke space
+				keystroke return
 				delay 3
 			end if
 		end try
@@ -995,25 +995,27 @@ end try
  * clean up Slack
  ****************************************************************************************)
 try
-	tell application "Slack" to activate
-	delay 0.5
-
 	tell application "System Events"
+		tell application "Slack" to activate
 		tell process "Slack"
+			repeat
+				if (count of windows) > 0 then exit repeat
+				delay 0.1
+			end repeat
+
+			delay 2.5
+			tell application "Slack" to activate
 
 			repeat with i from 1 to 9
 				keystroke (i as string) using command down
 				delay 0.5
-
 				key code 53 using shift down
-
 				delay 0.3
 			end repeat
 
 			keystroke "1" using command down
 			delay 0.2
 			tell application "Slack" to quit
-
 		end tell
 	end tell
 end try
@@ -1022,10 +1024,13 @@ end try
  * clean Xcode
  ****************************************************************************************)
 tell application "Xcode" to activate
+delay 0.5
+
 tell application "System Events" to tell process "Xcode"
 	set done to false
 	repeat while done = false
 		try
+			tell application "Xcode" to activate
 			click menu item "Clear Menu" of menu of menu item "Open Recent" of menu of menu bar item "File" of menu bar 1
 			set done to true
 		end try

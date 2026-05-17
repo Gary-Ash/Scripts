@@ -44,6 +44,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [update-dots.sh](#update-dotssh) | Bash | Maintain dotfiles repository |
 | [update-site.sh](#update-sitesh) | Bash | Deploy Jekyll website |
 | [wtf-autolayout.py](#wtf-autolayoutpy) | Python | Debug Auto Layout constraints |
+| [make-mac-icon.sh](#make-mac-iconsh) | Bash | Make a macOS icon given image file |
 
 ---
 
@@ -286,6 +287,15 @@ Builds a Jekyll website and deploys it to a remote server via rsync.
 Parses Auto Layout constraint warnings from Xcode and opens wtfautolayout.com with the constraint log for analysis and debugging help.
 
 **Usage:** `wtf-autolayout.py <constraint-log>`
+
+---
+
+### make-mac-icon.sh
+
+Make a macOS icon file gen a graphical image file
+Note thate Image Magick is required
+
+**Usage:** `make-mac-icon.sh <graphic fie>`
 
 ---
 

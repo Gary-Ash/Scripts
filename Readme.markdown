@@ -30,6 +30,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [git-plist-filter.sh](#git-plist-filtersh) | Bash | Git clean/smudge filter for plist files |
 | [git-rebase-mine-to.sh](#git-rebase-mine-tosh) | Bash | Git merge and rebase utility |
 | [load-simulator.pl](#load-simulatorpl) | Perl | Restore iOS simulator state |
+| [make-mac-icon.sh](#make-mac-iconsh) | Bash | Make a macOS icon given image file |
 | [meeting-direct-link.py](#meeting-direct-linkpy) | Python | Convert meeting URLs to app links |
 | [new-xcode-project.pl](#new-xcode-projectpl) | Perl | Generate Xcode projects from templates |
 | [ocd.sh](#ocdsh) | Bash | System cleanup and maintenance |
@@ -45,7 +46,6 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [update-dots.sh](#update-dotssh) | Bash | Maintain dotfiles repository |
 | [update-site.sh](#update-sitesh) | Bash | Deploy Jekyll website |
 | [wtf-autolayout.py](#wtf-autolayoutpy) | Python | Debug Auto Layout constraints |
-| [make-mac-icon.sh](#make-mac-iconsh) | Bash | Make a macOS icon given image file |
 
 ---
 
@@ -168,6 +168,15 @@ Merges the current branch into a target branch (with --no-ff) and then rebases t
 ### load-simulator.pl
 
 Resets all iOS simulators and restores a consistent state by loading media files from a backup folder into each simulator.
+
+---
+
+### make-mac-icon.sh
+
+Make a macOS icon file gen a graphical image file
+Note thate Image Magick is required
+
+**Usage:** `make-mac-icon.sh <graphic fie>`
 
 ---
 
@@ -298,15 +307,6 @@ Builds a Jekyll website and deploys it to a remote server via rsync.
 Parses Auto Layout constraint warnings from Xcode and opens wtfautolayout.com with the constraint log for analysis and debugging help.
 
 **Usage:** `wtf-autolayout.py <constraint-log>`
-
----
-
-### make-mac-icon.sh
-
-Make a macOS icon file gen a graphical image file
-Note thate Image Magick is required
-
-**Usage:** `make-mac-icon.sh <graphic fie>`
 
 ---
 

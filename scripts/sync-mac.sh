@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   6-Mar-2026  4:02pm
+# Modified :  28-May-2026 12:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -208,6 +208,15 @@ sync_custom_apps() {
 	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "rm -rf ${staging_dir}"
 }
 
+restore_bbedit_layout() {
+	local target_system="$1"
+	local restore_script="/opt/geedbla/scripts/bbedit-restore-layout.sh"
+
+	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${restore_script}'"; then
+		echo "BBEdit layout restore failed on ${target_system}" >&2
+	fi
+}
+
 main() {
 	trap finish EXIT
 
@@ -228,6 +237,7 @@ main() {
 			sync_homebrew_packages "${target_system}"
 			sync_npm_packages "${target_system}"
 			sync_custom_apps "${target_system}"
+			restore_bbedit_layout "${target_system}"
 		fi
 	done
 }

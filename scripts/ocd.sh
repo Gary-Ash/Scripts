@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  10-May-2026  3:25pm
+# Modified :  29-May-2026  1:50pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -978,10 +978,10 @@ try
 				keystroke tab
 				delay 0.3
 				keystroke "a" using {command down}
-				delay 0.3
-				keystroke tab
-				delay 3
-				keystroke return
+				delay 0.5
+				tell window "Previous Recipients"
+					click button "Remove From List"
+				end tell
 				delay 3
 			end if
 		end try
@@ -990,7 +990,6 @@ try
 		click menu item "Quit Mail" of menu 1 of menu bar item "Mail" of menu bar 1
 	end tell
 end try
-
 (*****************************************************************************************
  * clean up Slack
  ****************************************************************************************)

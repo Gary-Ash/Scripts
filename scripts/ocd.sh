@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  29-May-2026  1:50pm
+# Modified :  12-Jun-2026  2:26pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -54,8 +54,6 @@ set backgroundsToKill to ¬
 	{"Keyboard Maestro Engine", ¬
 		"Bartender 6", ¬
 		"Safari", ¬
-		"Dash", ¬
-		"Alfred", ¬
 		"Moom", ¬
 		"SnippetsLab", ¬
 		"Slack", ¬
@@ -990,6 +988,7 @@ try
 		click menu item "Quit Mail" of menu 1 of menu bar item "Mail" of menu bar 1
 	end tell
 end try
+
 (*****************************************************************************************
  * clean up Slack
  ****************************************************************************************)
@@ -1047,24 +1046,22 @@ osascript <<END2 2>/dev/null 1>&2
  * clean up Pastebot
  ****************************************************************************************)
 try
-	tell application "Pastebot" to quit
-	delay 0.1
-	tell application "Pastebot" to launch
-
+	tell application "Pastebot" to activate
+	delay 0.5
 	tell application "System Events" to tell process "Pastebot"
 		set frontmost to true
 		try
-			delay 0.1
 			tell application "Pastebot" to activate
 			click menu item "Clear Clipboard" of menu 1 of menu bar item "Edit" of menu bar 1
 			delay 0.2
-			keystroke tab
-			delay 0.1
-			keystroke return
+			try
+				click button "Clear" of sheet 1 of window 1
+			on error
+				try
+					click button "Clear" of window 1
+				end try
+			end try
 		end try
-		delay 0.4
-		tell application "Pastebot" to activate
-		click menu item "Close Window" of menu 1 of menu bar item "File" of menu bar 1
 	end tell
 end try
 
@@ -1073,33 +1070,61 @@ end try
  ****************************************************************************************)
 try
 	tell application "Finder"
-		activate
-		repeat with w in (get every Finder window)
-			activate w
-			tell application "System Events" to tell process "Finder"
-				keystroke "a" using {command down}
-				delay 0.5
-				key code 123
-				keystroke "a" using {command down, option down}
-				delay 0.5
-			end tell
-		end repeat
-
+		-- Calculate centered window bounds
 		set desktopBounds to bounds of window of desktop
-		set w to round (((item 3 of desktopBounds) - 1100) / 2) rounding as taught in school
-		set h to round (((item 4 of desktopBounds) - 1000) / 2) rounding as taught in school
-		set finderBounds to {w, h, 1100 + w, 1000 + h}
 
-		try
-			set (bounds of window 1) to finderBounds
-		on error
-			make new Finder window to home
-		end try
-		set (bounds of window 1) to finderBounds
-		close every window
+		set windowX to round (((item 3 of desktopBounds) - 1100) / 2) rounding as taught in school
+		set windowY to round (((item 4 of desktopBounds) - 1000) / 2) rounding as taught in school
 
-		tell application "System Events" to tell process "Finder"
+		set finderBounds to {windowX, windowY, windowX + 1100, windowY + 1000}
+
+		-- Snapshot window list before changing z-order
+		set windowList to every Finder window
+
+		repeat with aWindow in windowList
+			activate
+
+			-- Bring window to the front
+			set index of aWindow to 1
+
+			tell application "System Events"
+				tell process "Finder"
+					-- Select everything
+					click menu item "Select All" of menu 1 of menu bar item "Edit" of menu bar 1
+
+					delay 0.2
+
+					-- Collapse all selected folders in list view
+					key code 123 -- Left Arrow
+				end tell
+			end tell
+
+			-- Resize and reposition window
+			try
+				set bounds of aWindow to finderBounds
+			on error
+				make new Finder window to home
+				set bounds of front Finder window to finderBounds
+			end try
+		end repeat
+	end tell
+
+	-- Deselect All (⌥⌘A)
+	tell application "Finder" to activate
+
+	tell application "System Events"
+		keystroke "a" using {command down, option down}
+	end tell
+
+	delay 0.1
+
+end try
+
+try
+	tell application "System Events"
+		tell process "Finder"
 			click menu item "Clear Menu" of menu of menu item "Recent Items" of menu of menu bar item 1 of menu bar 1
+
 			click menu item "Clear Menu" of menu of menu item "Recent Folders" of menu of menu bar item "Go" of menu bar 1
 		end tell
 	end tell

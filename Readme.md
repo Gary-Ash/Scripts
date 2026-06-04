@@ -1,3 +1,5 @@
+![header](/opt/geedbla/.github/header.png)
+
 ### Gary's Utility Scripts
 
 A collection of utility scripts and shell libraries for macOS development, system maintenance, and workflow automation.

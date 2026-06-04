@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   5-Apr-2026  2:30pm
-# Modified :  21-Apr-2026  9:54pm
+# Modified :  4-Jun-2026  3:35pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -141,9 +141,30 @@ GetOptions(
     'verbose|v' => \$verbose,
 ) or die "Usage: $0 [--dry-run|-n] [--verbose|-v]\n";
 my $applescript = <<'END_SCRIPT';
+tell application "Safari" to quit
+delay 0.3
+
 tell application "Safari" to activate
 delay 0.2
 
+tell application "System Events"
+	tell process "Safari"
+		set frontmost to true
+
+		keystroke "l" using command down
+		delay 0.2
+
+		key code 125 -- down arrow
+		delay 0.2
+
+		repeat 20 times
+			key code 125
+			delay 0.05
+		end repeat
+
+		key code 36 -- Return
+	end tell
+end tell
 tell application "System Events" to tell process "Safari"
 
 	click menu item "Show All History" of menu 1 of menu bar item "History" of menu bar 1

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  16-Apr-2026 10:04pm
+# Modified :  11-Jun-2026  8:50pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -375,9 +375,9 @@ sub prepareTemplateVariables {
         # the user wants "in the source code license statement"
         # load the text of selected license (open or closed) to allow for faster processing
         #=================================================================================
-        my $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Open.markdown";
+        my $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Open.md";
         if ($openSourceProject == 0) {
-            $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Closed.markdown";
+            $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Closed.md";
         }
 
         my $licenseFH;
@@ -451,11 +451,11 @@ sub createProjectFileStructure {
         exit(1);
     }
 
-    my $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Open.markdown";
+    my $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Open.md";
     if ($openSourceProject == 0) {
-        $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Closed.markdown";
+        $licenseFilePath = "$TEMPLATE_LOCATION/_Files/LICENSE-Closed.md";
     }
-    if (copy($licenseFilePath, "$projectLocation/$projectName/LICENSE.markdown") == 0) {
+    if (copy($licenseFilePath, "$projectLocation/$projectName/LICENSE.md") == 0) {
         print STDERR "*** Error: disk error : $!\n";
         exit(1);
     }
@@ -482,7 +482,7 @@ sub createProjectFileStructure {
     make_path("$projectLocation/$projectName/Documentation");
 
     my $readmefh;
-    unless (open($readmefh, '>', "$projectLocation/$projectName/README.markdown")) {
+    unless (open($readmefh, '>', "$projectLocation/$projectName/README.md")) {
         print STDERR "*** Error: disk error: $!\n";
         exit(1);
     }

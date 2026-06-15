@@ -18,8 +18,8 @@ A collection of utility scripts and shell libraries for macOS development, syste
 
 | Script | Language | Description |
 |--------|----------|-------------|
-| [bbedit-restore-layout.sh](#bbedit-restore-layoutsh) | Bash | Restore BBEdit window layout, scaled to the current display |
-| [blog-post.sh](#blog-postsh) | Bash | Create Jekyll blog posts |
+|                                                              |          |                                                |
+| blog-post.sh](#blog-postsh)                                  | Bash | Create Jekyll blog posts |
 | [bootstrap.sh](#bootstrapsh) | Bash | Bootstrap a new Mac setup |
 | [check-path.pl](#check-pathpl) | Perl | Validate PATH directories |
 | [find-permission-based-API-usage.sh](#find-permission-based-api-usagesh) | Bash | Find iOS permission-requiring APIs |
@@ -52,14 +52,6 @@ A collection of utility scripts and shell libraries for macOS development, syste
 ---
 
 ## Script Details
-
-### bbedit-restore-layout.sh
-
-Restores a saved BBEdit window and panel layout, scaling every captured window frame, browser bounds, and default position from the original 2560×1440 capture display to the current main display's point resolution. Writes directly to BBEdit's sandboxed preferences container and rebuilds the per-display default-properties dictionaries with PlistBuddy.
-
-**Usage:** `bbedit-restore-layout.sh`
-
-**Note:** Quits BBEdit before editing its preferences — relaunch BBEdit to apply the layout. Requires Automation permission for Finder (used to read the display's point resolution).
 
 ---
 

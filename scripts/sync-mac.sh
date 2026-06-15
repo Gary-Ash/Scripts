@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  14-Jun-2026  10:38pm
+# Modified :  18-Jun-2026  8:04pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -182,7 +182,7 @@ sync_npm_packages() {
 			echo "npm global uninstall failed on ${target_system}" >&2
 		fi
 	fi
-	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm install -g --silent $(echo "${host_packages}" | tr '\n' ' ')'"; then
+	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'PUPPETEER_SKIP_DOWNLOAD=1 npm install -g --silent $(echo "${host_packages}" | tr '\n' ' ')'"; then
 		echo "npm global install failed on ${target_system}" >&2
 	fi
 }
@@ -242,7 +242,6 @@ main() {
 			sync_homebrew_packages "${target_system}"
 			sync_npm_packages "${target_system}"
 			sync_custom_apps "${target_system}"
-			restore_bbedit_layout "${target_system}"
 		fi
 	done
 }

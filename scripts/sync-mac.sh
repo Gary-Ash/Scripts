@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 #*****************************************************************************************
 # sync-mac.sh
 #
@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  28-May-2026 12:00pm
+# Modified :  14-Jun-2026  10:38pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -149,7 +149,7 @@ sync_homebrew_packages() {
 			echo "Homebrew formula uninstall failed on ${target_system}" >&2
 		fi
 	fi
-	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew install -q $(echo "${host_formulae}" | tr '\n' ' ') >/dev/null 2>&1'"; then
+	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'NONINTERACTIVE=1 brew install -q $(echo "${host_formulae}" | tr '\n' ' ') >/dev/null 2>&1'"; then
 		echo "Homebrew formula install failed on ${target_system}" >&2
 	fi
 
@@ -173,14 +173,18 @@ sync_npm_packages() {
 	local target_packages
 	local packages_to_remove
 
-	host_packages="$(npm list -g --depth=0 --parseable | tail -n +2 | xargs -n1 basename | sort)"
-	target_packages="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm list -g --depth=0 --parseable | tail -n +2 | xargs -n1 basename | sort'")"
+	host_packages="$(npm list -g --depth=0 --parseable | tail -n +2 | sed 's#.*/node_modules/##' | sort)"
+	target_packages="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm list -g --depth=0 --parseable | tail -n +2 | sed \"s#.*/node_modules/##\" | sort'")"
 	packages_to_remove="$(comm -23 <(echo "${target_packages}") <(echo "${host_packages}") | tr '\n' ' ')"
 
 	if [[ -n ${packages_to_remove} ]]; then
-		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm uninstall -g --silent ${packages_to_remove}'"
+		if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm uninstall -g --silent ${packages_to_remove}'"; then
+			echo "npm global uninstall failed on ${target_system}" >&2
+		fi
 	fi
-	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm install -g --silent $(echo "${host_packages}" | tr '\n' ' ')'"
+	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'npm install -g --silent $(echo "${host_packages}" | tr '\n' ' ')'"; then
+		echo "npm global install failed on ${target_system}" >&2
+	fi
 }
 
 sync_custom_apps() {
@@ -199,7 +203,7 @@ sync_custom_apps() {
 				continue
 			fi
 			if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" \
-				"echo '${sudo_password}' | sudo -S rsync -aq --delete '${staging_dir}/${app}/' '${base_path}/${app}/' 2>/dev/null"; then
+				"echo '${sudo_password}' | sudo -S -p '' rsync -aq --delete '${staging_dir}/${app}/' '${base_path}/${app}/'"; then
 				echo "Failed to install ${app} on ${target_system}" >&2
 			fi
 		fi
@@ -219,6 +223,7 @@ restore_bbedit_layout() {
 
 main() {
 	trap finish EXIT
+	trap 'rc=$?; echo "sync-mac: aborted at line ${LINENO} (exit ${rc}): ${BASH_COMMAND}" >&2' ERR
 
 	local current_host
 	local target_system

@@ -1,4 +1,4 @@
-![header](/opt/geedbla/.github/header.png)
+![header](.github/header.png)
 
 ### Gary's Utility Scripts
 

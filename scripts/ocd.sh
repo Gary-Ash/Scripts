@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  12-Jun-2026  2:26pm
+# Modified :  22-Jun-2026  3:39pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -52,7 +52,6 @@ killEverything() {
 	osascript <<"CLOSE_SCRIPT" &>/dev/null
 set backgroundsToKill to ¬
 	{"Keyboard Maestro Engine", ¬
-		"Bartender 6", ¬
 		"Safari", ¬
 		"Moom", ¬
 		"SnippetsLab", ¬

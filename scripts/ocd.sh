@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  22-Jun-2026  3:39pm
+# Modified :  25-Jun-2026  3:58pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -537,6 +537,7 @@ our @itemsToDelete = (
     ["$HOME/.config/configstore",                                                                                                         0],
     ["$HOME/Pictures/Pixelmator Pro Sidecar Files/",                                                                                      0],
     ["$HOME/Library/Application Support/BBEdit/Workspaces",                                                                               0],
+    ["$'/Users/garyash/Library/Logs/Xcode/Coding Assistant'",                                                                             0],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Rescued Documents",                                               1],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Library/BBEdit/Auto-Save Recovery",                                              0],
     ["$HOME/Library/Containers/com.barebones.bbedit/Data/Sleep State.appstate",                                                           0],

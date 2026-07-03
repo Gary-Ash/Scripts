@@ -51,8 +51,7 @@ finish() {
 killEverything() {
 	osascript <<"CLOSE_SCRIPT" &>/dev/null
 set backgroundsToKill to ¬
-	{"Keyboard Maestro Engine", ¬
-		"Safari", ¬
+	{	"Safari", ¬
 		"Moom", ¬
 		"SnippetsLab", ¬
 		"Slack", ¬
@@ -166,7 +165,6 @@ done < <(find "$HOME/Developer" "$HOME/Documents" -type d -name ".git" 2>/dev/nu
 find "$HOME/Developer" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 find "$HOME/Documents" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 
-find "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Preferences" -name "Keyboard Maestro Macros \(*.kmsync" -delete &>/dev/null
 find "$HOME/Library/Application Support/AddressBook" -name "*.abbu.tbz" -delete &>/dev/null
 find "/Users/Shared/CleanMyMac_5/" -depth 1 ! -name ".licence" -exec rm -rfv {} \; &>/dev/null
 find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
@@ -626,8 +624,6 @@ our @itemsToDelete = (
     ["$HOME/Library/Application Support/Dash/Temp",                                                                                       1],
     ["$HOME/Library/Developer/Xcode/UserData/IB Support",                                                                                 0],
     ["$HOME/Library/Containers/com.koolesache.ColorSnapper2/Data/Library/Caches/com.koolesache.ColorSnapper2",                            0],
-    ["$HOME/Library/Application Support/Keyboard Maestro/Keyboard Maestro Recent Applications.plist",                                     0],
-    ["$HOME/Library/Application Support/Keyboard Maestro/Keyboard Maestro Clipboards.kmchunked",                                          0],
     ["$HOME/Library/Colors/NSColorPanelSwatches.plist",                                                                                   1],
     ["$HOME/Library/Preferences/embeddedBinaryValidationUtility.plist",                                                                   1],
     ["$HOME/Library/Containers/com.apple.podcasts/Data/Library/Preferences/com.apple.podcasts.plist",                                     0],
@@ -936,10 +932,6 @@ sub processFiles {
 PERL
 
 osascript <<END
-try
-	tell application "Keyboard Maestro Engine" to quit
-end try
-
 (*****************************************************************************************
  * clean  Mail
  ****************************************************************************************)
@@ -1268,19 +1260,6 @@ if [[ $OCD_OPTION == "" ]]; then
 	finish
 	perl /opt/geedbla/scripts/startup-banner.pl --dark
 	osascript <<"END2" &>/dev/null
-try
-    tell application "Keyboard Maestro Engine" to launch
-    try
-		repeat while application "Keyboard Maestro Engine"  is not running
-			delay 0.01
-		end repeat
-	end try
-    tell application "Keyboard Maestro Engine" to activate
-	tell application "System Events" to tell process "Keyboard Maestro"
-			click menu item "Close" of menu 1 of menu bar item "File" of menu bar 1
-	end tell
-end try
-
 set volume output volume 40 with output muted --100%
 set volume without output muted
 

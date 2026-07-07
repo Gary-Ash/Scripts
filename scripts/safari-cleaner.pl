@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   5-Apr-2026  2:30pm
-# Modified :  4-Jun-2026  3:35pm
+# Modified :  7-Jul-2026  7:42pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -33,6 +33,7 @@ my $ALT_SERVICES  = "$SAFARI_DATA/Caches/WebKit/AlternativeServices/AlternativeS
 my $URL_CACHE_DIR = "$SAFARI_DATA/Caches/com.apple.Safari/fsCachedData";
 my $URL_CACHE_DB  = "$SAFARI_DATA/Caches/com.apple.Safari/Cache.db";
 my $HISTORY_DB    = "$ENV{HOME}/Library/Safari/History.db";
+my $CLOSED_TABS   = "$ENV{HOME}/Library/Safari/RecentlyClosedTabs.plist";
 my $CB_STATS_DB   = "$ENV{HOME}/Library/Safari/ContentBlockerStatistics.db";
 my $HSTS_PLIST    = "$SAFARI_DATA/Caches/WebKit/HSTS/HSTS.plist";
 my $FAVICONS_DB   = "$ENV{HOME}/Library/Safari/Favicon Cache/favicons.db";
@@ -163,6 +164,13 @@ tell application "System Events"
 		end repeat
 
 		key code 36 -- Return
+
+		keystroke "l" using command down
+		delay 0.2
+
+		key code 125 -- down arrow
+		delay 0.2
+		key code 36 -- Return
 	end tell
 end tell
 tell application "System Events" to tell process "Safari"
@@ -240,6 +248,7 @@ clean_website_data($bookmark_domains);
 clean_alt_services($bookmark_domains);
 clean_url_cache();
 clean_history_db($bookmark_domains);
+clean_recently_closed_tabs();
 clean_content_blocker_stats($bookmark_domains);
 clean_hsts($bookmark_domains);
 clean_favicons($bookmark_domains);
@@ -689,6 +698,17 @@ sub clean_history_db ($bookmark_domains) {
     chomp $remaining;
     if ($remaining && $remaining > 0) {
         warn "History.db still has $remaining rows after DELETE — com.apple.Safari.History helper may have respawned.\n";
+    }
+}
+
+sub clean_recently_closed_tabs {
+    return unless -f $CLOSED_TABS;
+
+    if ($dry_run) {
+        say "Would remove RecentlyClosedTabs.plist";
+    } else {
+        unlink $CLOSED_TABS or warn "Failed to remove $CLOSED_TABS: $!\n";
+        say "Cleared recently closed tabs";
     }
 }
 

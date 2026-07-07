@@ -44,7 +44,6 @@ sync_directories() {
 
 	local files_to_sync=(
 		~/.claude.json
-		~/Library/Preferences/com.apple.controlcenter.plist
 		~/Library/Preferences/com.apple.systemuiserver.plist
 	)
 
@@ -68,13 +67,13 @@ sync_mail_archive() {
 		~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist
 	)
 
-	SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${mail_dir}/" "${target_system}:${remote_dir}/"
+	SSHPASS="${sudo_password}" sshpass -e rsync -azq -E --delete "${mail_dir}/" "${target_system}:${remote_dir}/"
 
 	for file in "${pref_files[@]}"; do
 		if [[ -f $file ]]; then
 			local remote_file="${file// /\\ }"
 			# We use rsync without --delete here as these are individual files
-			SSHPASS="${sudo_password}" sshpass -e rsync -azq "${file}" "${target_system}:${remote_file}"
+			SSHPASS="${sudo_password}" sshpass -e rsync -azq -E "${file}" "${target_system}:${remote_file}"
 		fi
 	done
 }

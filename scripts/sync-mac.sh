@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  25-Jun-2026  4:51pm
+# Modified :   7-Jul-2026  9:02pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -49,12 +49,12 @@ sync_directories() {
 
 	for dir in "${directories_to_sync[@]}"; do
 		local remote_dir="${dir// /\\ }"
-		SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${dir}/" "${target_system}:${remote_dir}/"
+		SSHPASS="${sudo_password}" sshpass -e rsync -azqE --delete "${dir}/" "${target_system}:${remote_dir}/"
 	done
 
 	for file in "${files_to_sync[@]}"; do
 		local remote_file="${file// /\\ }"
-		SSHPASS="${sudo_password}" sshpass -e rsync -azq "${file}" "${target_system}:${remote_file}"
+		SSHPASS="${sudo_password}" sshpass -e rsync -azqE "${file}" "${target_system}:${remote_file}"
 	done
 }
 
@@ -67,13 +67,13 @@ sync_mail_archive() {
 		~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist
 	)
 
-	SSHPASS="${sudo_password}" sshpass -e rsync -azq -E --delete "${mail_dir}/" "${target_system}:${remote_dir}/"
+	SSHPASS="${sudo_password}" sshpass -e rsync -azqE --delete "${mail_dir}/" "${target_system}:${remote_dir}/"
 
 	for file in "${pref_files[@]}"; do
 		if [[ -f $file ]]; then
 			local remote_file="${file// /\\ }"
 			# We use rsync without --delete here as these are individual files
-			SSHPASS="${sudo_password}" sshpass -e rsync -azq -E "${file}" "${target_system}:${remote_file}"
+			SSHPASS="${sudo_password}" sshpass -e rsync -azqE "${file}" "${target_system}:${remote_file}"
 		fi
 	done
 }
@@ -203,12 +203,12 @@ sync_custom_apps() {
 	for app in "${apps_to_sync[@]}"; do
 		local app_path="${base_path}/${app}"
 		if [[ -d ${app_path} ]]; then
-			if ! SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${app_path}" "${target_system}:${staging_dir}/"; then
+			if ! SSHPASS="${sudo_password}" sshpass -e rsync -azqE --delete "${app_path}" "${target_system}:${staging_dir}/"; then
 				echo "Failed to sync ${app} to ${target_system}" >&2
 				continue
 			fi
 			if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" \
-				"echo '${sudo_password}' | sudo -S -p '' rsync -aq --delete '${staging_dir}/${app}/' '${base_path}/${app}/'"; then
+				"echo '${sudo_password}' | sudo -S -p '' rsync -aqE --delete '${staging_dir}/${app}/' '${base_path}/${app}/'"; then
 				echo "Failed to install ${app} on ${target_system}" >&2
 			fi
 		fi

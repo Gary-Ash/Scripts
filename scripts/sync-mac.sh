@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   7-Jul-2026  9:02pm
+# Modified :   7-Jul-2026  9:50pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -49,13 +49,47 @@ sync_directories() {
 
 	for dir in "${directories_to_sync[@]}"; do
 		local remote_dir="${dir// /\\ }"
-		SSHPASS="${sudo_password}" sshpass -e rsync -azqE --delete "${dir}/" "${target_system}:${remote_dir}/"
+		SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${dir}/" "${target_system}:${remote_dir}/"
+		sync_custom_icons "${dir}" "${target_system}"
 	done
 
 	for file in "${files_to_sync[@]}"; do
 		local remote_file="${file// /\\ }"
-		SSHPASS="${sudo_password}" sshpass -e rsync -azqE "${file}" "${target_system}:${remote_file}"
+		SSHPASS="${sudo_password}" sshpass -e rsync -azq "${file}" "${target_system}:${remote_file}"
 	done
+}
+
+sync_custom_icons() {
+	local dir="$1"
+	local target_system="$2"
+	local icon_name
+	icon_name="$(printf 'Icon\r')"
+
+	# Custom folder icons live in a file named "Icon\r"; the icon image is stored
+	# in that file's resource fork and the enclosing folder records the custom-icon
+	# flag in its FinderInfo. openrsync cannot carry resource forks or extended
+	# attributes over ssh, so overlay just those bytes onto the already-synced files:
+	# stream each resource fork through the ..namedfork/rsrc path and re-apply the
+	# FinderInfo of both the icon file and its folder with xattr.
+	local script=""
+	local icon parent rf_b64 file_fi dir_fi
+	while IFS= read -r -d '' icon; do
+		parent="$(dirname "${icon}")"
+		rf_b64="$(base64 <"${dir}/${icon}/..namedfork/rsrc" 2>/dev/null || true)"
+		file_fi="$(xattr -px com.apple.FinderInfo "${dir}/${icon}" 2>/dev/null | tr -d ' \n' || true)"
+		dir_fi="$(xattr -px com.apple.FinderInfo "${dir}/${parent}" 2>/dev/null | tr -d ' \n' || true)"
+
+		if [[ -n ${rf_b64} ]]; then
+			script+="base64 -D > '${icon}/..namedfork/rsrc' <<'__RF__'"$'\n'"${rf_b64}"$'\n'"__RF__"$'\n'
+		fi
+		[[ -n ${file_fi} ]] && script+="xattr -wx com.apple.FinderInfo '${file_fi}' '${icon}'"$'\n'
+		[[ -n ${dir_fi} ]] && script+="xattr -wx com.apple.FinderInfo '${dir_fi}' '${parent}'"$'\n'
+	done < <(cd "${dir}" && find . -type f -name "${icon_name}" -print0)
+
+	if [[ -n ${script} ]]; then
+		printf '%s' "${script}" |
+			SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "cd '${dir}' && bash -s"
+	fi
 }
 
 sync_mail_archive() {
@@ -67,13 +101,13 @@ sync_mail_archive() {
 		~/Library/Containers/com.apple.mail/Data/Library/Preferences/com.apple.mail.plist
 	)
 
-	SSHPASS="${sudo_password}" sshpass -e rsync -azqE --delete "${mail_dir}/" "${target_system}:${remote_dir}/"
+	SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${mail_dir}/" "${target_system}:${remote_dir}/"
 
 	for file in "${pref_files[@]}"; do
 		if [[ -f $file ]]; then
 			local remote_file="${file// /\\ }"
 			# We use rsync without --delete here as these are individual files
-			SSHPASS="${sudo_password}" sshpass -e rsync -azqE "${file}" "${target_system}:${remote_file}"
+			SSHPASS="${sudo_password}" sshpass -e rsync -azq "${file}" "${target_system}:${remote_file}"
 		fi
 	done
 }
@@ -203,12 +237,12 @@ sync_custom_apps() {
 	for app in "${apps_to_sync[@]}"; do
 		local app_path="${base_path}/${app}"
 		if [[ -d ${app_path} ]]; then
-			if ! SSHPASS="${sudo_password}" sshpass -e rsync -azqE --delete "${app_path}" "${target_system}:${staging_dir}/"; then
+			if ! SSHPASS="${sudo_password}" sshpass -e rsync -azq --delete "${app_path}" "${target_system}:${staging_dir}/"; then
 				echo "Failed to sync ${app} to ${target_system}" >&2
 				continue
 			fi
 			if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" \
-				"echo '${sudo_password}' | sudo -S -p '' rsync -aqE --delete '${staging_dir}/${app}/' '${base_path}/${app}/'"; then
+				"echo '${sudo_password}' | sudo -S -p '' rsync -aq --delete '${staging_dir}/${app}/' '${base_path}/${app}/'"; then
 				echo "Failed to install ${app} on ${target_system}" >&2
 			fi
 		fi

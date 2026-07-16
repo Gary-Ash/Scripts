@@ -164,15 +164,50 @@ tell application "System Events"
 		end repeat
 
 		key code 36 -- Return
+	end tell
 
-		keystroke "l" using command down
-		delay 0.2
 
-		key code 125 -- down arrow
-		delay 0.2
-		key code 36 -- Return
+	tell application "System Events"
+		tell process "Safari"
+			-- Open Safari Settings
+			keystroke "," using command down
+			delay 0.7
+
+			-- Click the Search tab
+			try
+				click button "Search" of toolbar 1 of window "Search"
+			on error
+				click radio button "Search" of tab group 1 of window "Search"
+			end try
+
+			delay 0.5
+
+			-- Target the main Search engine popup
+			set mainPopup to pop up button "Search engine:" of group 1 of group 1 of window "Search"
+			tell mainPopup
+				click
+				delay 0.2
+				click menu item "DuckDuckGo" of menu 1
+			end tell
+
+			-- Optional: also set Private Browsing search engine
+			try
+				set privatePopup to pop up button "Search engine:" of group 1 of group 1 of window "Search"
+				tell privatePopup
+					click
+					delay 0.2
+					click menu item "DuckDuckGo" of menu 1
+				end tell
+			end try
+
+			delay 0.3
+
+			-- Close the Preferences window
+			click button 1 of window "Search" -- button 1 is the red close button
+		end tell
 	end tell
 end tell
+
 tell application "System Events" to tell process "Safari"
 
 	click menu item "Show All History" of menu 1 of menu bar item "History" of menu bar 1

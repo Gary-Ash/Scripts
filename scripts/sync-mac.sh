@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :   7-Jul-2026  9:50pm
+# Modified :  16-Jul-2026  8:59pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -251,12 +251,45 @@ sync_custom_apps() {
 	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "rm -rf ${staging_dir}"
 }
 
-restore_bbedit_layout() {
+save_bbedit_window_placement() {
 	local target_system="$1"
-	local restore_script="/opt/geedbla/scripts/bbedit-restore-layout.sh"
 
-	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c '${restore_script}'"; then
-		echo "BBEdit layout restore failed on ${target_system}" >&2
+	# BBEdit's default window placement/size is stored per display arrangement and is
+	# specific to each Mac. Back up the target's own preferences before the host's
+	# BBEdit settings overwrite them, so the target's window geometry can be restored.
+	SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" \
+		'cp -f "$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist" /tmp/bbedit-window-placement-backup.plist 2>/dev/null || true'
+}
+
+restore_bbedit_window_placement() {
+	local target_system="$1"
+
+	# Re-apply the target Mac's own window placement (saved before the sync) on top of
+	# the freshly-synced BBEdit preferences, then flush the preferences cache so BBEdit
+	# reads the restored geometry on next launch. The placement is held in top-level
+	# keys prefixed "DefaultPosition:" (bounds rect) and "DefaultProperties:" (window
+	# state); each such key is copied back from the backup into the synced preferences.
+	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" 'bash -s' <<'REMOTE'
+set -euo pipefail
+backup="/tmp/bbedit-window-placement-backup.plist"
+prefs="$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist"
+[[ -f $backup && -f $prefs ]] || exit 0
+
+keys=$(plutil -convert xml1 -o - "$backup" |
+	grep -oE '<key>(DefaultPosition|DefaultProperties):[^<]*</key>' |
+	sed -E 's#</?key>##g') || true
+
+while IFS= read -r key; do
+	[[ -n $key ]] || continue
+	frag=$(plutil -extract "$key" xml1 -o - "$backup" 2>/dev/null) || continue
+	plutil -replace "$key" -xml "$frag" "$prefs" 2>/dev/null || true
+done <<<"$keys"
+
+rm -f "$backup"
+killall cfprefsd 2>/dev/null || true
+REMOTE
+	then
+		echo "BBEdit window placement restore failed on ${target_system}" >&2
 	fi
 }
 
@@ -274,6 +307,7 @@ main() {
 	for system in "${systems_to_sync[@]}"; do
 		if [[ ${system} != "${current_host}" ]]; then
 			target_system="${USER}@${system}"
+			save_bbedit_window_placement "${target_system}"
 			sync_directories "${target_system}"
 			sync_mail_archive "${target_system}"
 			sync_ruby_gems "${target_system}"
@@ -281,6 +315,7 @@ main() {
 			sync_homebrew_packages "${target_system}"
 			sync_npm_packages "${target_system}"
 			sync_custom_apps "${target_system}"
+			restore_bbedit_window_placement "${target_system}"
 		fi
 	done
 }

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  25-Jun-2026  3:58pm
+# Modified :  22-Jul-2026  3:47pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -104,7 +104,11 @@ export OCD_OPTION="$cmd"
 error_log="$TMPDIR/Error.txt"
 
 killEverything
-cd ~ || exit 1
+
+#*****************************************************************************************
+# clear the pasteboard
+#*****************************************************************************************
+echo -n '' | pbcopy
 
 #*****************************************************************************************
 # brew
@@ -139,6 +143,7 @@ fi
 if command -v pip3 &>/dev/null; then
 	python3 -m pip install --upgrade pip &>"$error_log"
 	pip3 freeze | cut -d = -f 1 | xargs pip3 install -U &>"$error_log"
+	pip3 cache purge &>"$error_log"
 fi
 
 #*****************************************************************************************
@@ -146,15 +151,17 @@ fi
 #*****************************************************************************************
 if command -v npm &>/dev/null; then
 	npm install -g npm@latest &>"$error_log"
+	npm cache clean --force &>"$error_log"
 fi
 #*****************************************************************************************
 pkill -f '.*GradleDaemon.*'
-qlmanage -r &>/dev/null
 killall "Crash Reporter" ReportCrash &>/dev/null
+
+qlmanage -r &>/dev/null
 
 find "$HOME" -name "Icon?" -exec chflags hidden {} \; &>/dev/null
 #*****************************************************************************************
-# clean my git projects
+# clean my git projects and developer areas
 #*****************************************************************************************
 while IFS= read -r gitDir; do
 	[[ -z $gitDir ]] && continue
@@ -164,14 +171,22 @@ done < <(find "$HOME/Developer" "$HOME/Documents" -type d -name ".git" 2>/dev/nu
 
 find "$HOME/Developer" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
 find "$HOME/Documents" -type d -name "*xcuserdatad" ! -name "garyash.xcuserdatad" -exec rm -rf {} \; &>/dev/null
+perl /opt/geedbla/scripts/load-simulator.pl &
 
-find "$HOME/Library/Application Support/AddressBook" -name "*.abbu.tbz" -delete &>/dev/null
-find "/Users/Shared/CleanMyMac_5/" -depth 1 ! -name ".licence" -exec rm -rfv {} \; &>/dev/null
+#*****************************************************************************************
+# clean Jekyll website junk
+#*****************************************************************************************
 find "$HOME/Sites" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 find "$HOME/Developer" \( -name "Gemfile.lock" -or -name ".sass-cache" -or -name ".jekyll*" -or -name "_site" -or -name ".jekyll-metadata" \) -exec rm -rfv {} \; &>/dev/null
 
-perl /opt/geedbla/scripts/load-simulator.pl &
+find "$HOME/Library/Application Support/AddressBook" -name "*.abbu.tbz" -delete &>/dev/null
+find "/Users/Shared/CleanMyMac_5/" -depth 1 ! -name ".licence" -exec rm -rfv {} \; &>/dev/null
+
+#*****************************************************************************************
+# clean and reset Safari
+#*****************************************************************************************
 perl /opt/geedbla/scripts/safari-cleaner.pl &>/dev/null
+
 #*****************************************************************************************
 # setup the sudo until the script is done
 #*****************************************************************************************
@@ -186,16 +201,14 @@ export SUDO_SHELL_PID=$!
 caffeinate -s -b &>/dev/null &
 export CAFFEINATE=$!
 
+#*****************************************************************************************
+# make sure Applications folder permission and ownership is correct
+#*****************************************************************************************
 sudo chown -R garyash:admin /opt/geedbla/* &>/dev/null
 sudo chown -R root:admin /Applications/* &>/dev/null
 sudo chmod -R 775 /Applications/* &>/dev/null
 
 sudo /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -r -domain local -domain system -domain user &>/dev/null
-
-#****************************************************************************************
-# Pause Time Machine while updating and cleaning
-#****************************************************************************************
-sudo tmutil stopbackup
 
 #*****************************************************************************************
 # empty trash
@@ -221,19 +234,10 @@ rm -f ~/.claude.json.backup.*
 #*****************************************************************************************
 # clean up Time Machine local backups and turn it back on
 #*****************************************************************************************
-snapshots=()
-while IFS= read -r line; do
-	if [[ $line =~ com\.apple\.TimeMachine\.([0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6})\.local ]]; then
-		snapshots+=("${BASH_REMATCH[1]}")
-	fi
-done < <(sudo tmutil listlocalsnapshots /)
-
-for snapshot in "${snapshots[@]}"; do
-	tmutil deletelocalsnapshots "$snapshot" &>/dev/null
-done
-
-echo -n '' | pbcopy
-
+if tmutil status | grep -q "Running = 1"; then
+	sudo tmutil stopbackup
+fi
+sudo tmutil thinlocalsnapshots / 100000000000 4 &> /dev/null
 #*****************************************************************************************
 # Clean Messages
 #*****************************************************************************************

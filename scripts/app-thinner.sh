@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  21-Jul-2026  7:47pm
-# Modified :  21-Jul-2026  8:08pm
+# Modified :  22-Jul-2026  3:46pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -49,8 +49,6 @@ strip_intel() {
     [[ -z "${archs}" ]] && return
 
     if [[ "${archs}" == *x86_64* && "${archs}" == *arm64* ]]; then
-        printf '%s\n' "Stripping x86_64: ${file}"
-
         tmp_file=$(mktemp)
         lipo "${file}" -remove x86_64 -output "${tmp_file}"
         chmod "$(stat -f '%A' "${file}")" "${tmp_file}"
@@ -86,8 +84,6 @@ if [[ ! -d "${app}" ]]; then
     exit 1
 fi
 
-printf '%s\n' "Scanning Mach-O files..."
-
 while IFS= read -r -d '' file; do
     strip_intel "${file}"
 done < <(find "${app}" -type f -print0)
@@ -107,19 +103,16 @@ if ${resign}; then
         \) \
         -print0 |
     while IFS= read -r -d '' item; do
-        printf '%s\n' "Signing ${item}"
         codesign --force --sign - --timestamp=none "${item}"
     done
 
     find "${app}/Contents" -type f -perm -111 -print0 |
     while IFS= read -r -d '' exe; do
         if file "${exe}" | grep -q "Mach-O"; then
-            printf '%s\n' "Signing executable: ${exe}"
             codesign --force --sign - --timestamp=none "${exe}"
         fi
     done
 
-    printf '%s\n' "Signing app..."
     codesign \
         --force \
         --deep \
@@ -127,13 +120,9 @@ if ${resign}; then
         --timestamp=none \
         "${app}"
 
-    printf '\n%s\n' "Verifying signature..."
     codesign --verify --deep --strict --verbose=2 "${app}"
-else
-    printf '\n%s\n' "Skipping code signing."
 fi
 
-printf '\n%s\n' "Remaining architectures:"
 find "${app}" -type f -print0 |
 while IFS= read -r -d '' file; do
     if file "${file}" | grep -q "Mach-O"; then
@@ -141,5 +130,3 @@ while IFS= read -r -d '' file; do
         [[ -n "${archs}" ]] && printf '%s\n' "${archs} : ${file}"
     fi
 done
-
-printf '\n%s\n' "Done."

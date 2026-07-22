@@ -19,7 +19,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | Script | Language | Description |
 |--------|----------|-------------|
 | [app-thinner.sh](#app-thinnersh) | Bash | Strip Intel binaries from apps |
-| blog-post.sh](#blog-postsh)                                  | Bash | Create Jekyll blog posts |
+| [blog-post.sh](#blog-postsh)                                 | Bash | Create Jekyll blog posts |
 | [bootstrap.sh](#bootstrapsh) | Bash | Bootstrap a new Mac setup |
 | [check-path.pl](#check-pathpl) | Perl | Validate PATH directories |
 | [find-permission-based-API-usage.sh](#find-permission-based-api-usagesh) | Bash | Find iOS permission-requiring APIs |

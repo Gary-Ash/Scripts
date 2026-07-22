@@ -18,7 +18,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 
 | Script | Language | Description |
 |--------|----------|-------------|
-|                                                              |          |                                                |
+| [app-thinner.sh](#app-thinnersh) | Bash | Strip Intel binaries from apps |
 | blog-post.sh](#blog-postsh)                                  | Bash | Create Jekyll blog posts |
 | [bootstrap.sh](#bootstrapsh) | Bash | Bootstrap a new Mac setup |
 | [check-path.pl](#check-pathpl) | Perl | Validate PATH directories |
@@ -54,6 +54,10 @@ A collection of utility scripts and shell libraries for macOS development, syste
 ## Script Details
 
 ---
+
+### app-thinner.sh
+
+Strip the intel binary from a macOS app bundles, and resign with an adhoc signature if requested
 
 ### blog-post.sh
 

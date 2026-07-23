@@ -269,7 +269,7 @@ restore_bbedit_window_placement() {
 	# reads the restored geometry on next launch. The placement is held in top-level
 	# keys prefixed "DefaultPosition:" (bounds rect) and "DefaultProperties:" (window
 	# state); each such key is copied back from the backup into the synced preferences.
-	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" 'bash -s' <<'REMOTE'
+	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" 'bash -s' <<'REMOTE'; then
 set -euo pipefail
 backup="/tmp/bbedit-window-placement-backup.plist"
 prefs="$HOME/Library/Containers/com.barebones.bbedit/Data/Library/Preferences/com.barebones.bbedit.plist"
@@ -288,7 +288,6 @@ done <<<"$keys"
 rm -f "$backup"
 killall cfprefsd 2>/dev/null || true
 REMOTE
-	then
 		echo "BBEdit window placement restore failed on ${target_system}" >&2
 	fi
 }

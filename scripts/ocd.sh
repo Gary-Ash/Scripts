@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  22-Jul-2026  3:47pm
+# Modified :  28-Jul-2026  8:18pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -237,7 +237,7 @@ rm -f ~/.claude.json.backup.*
 if tmutil status | grep -q "Running = 1"; then
 	sudo tmutil stopbackup
 fi
-sudo tmutil thinlocalsnapshots / 100000000000 4 &> /dev/null
+sudo tmutil thinlocalsnapshots / 100000000000 4 &>/dev/null
 #*****************************************************************************************
 # Clean Messages
 #*****************************************************************************************
@@ -935,7 +935,7 @@ sub processFiles {
 }
 PERL
 
-osascript <<END
+osascript <<END 2>/dev/null 1>&2
 (*****************************************************************************************
  * clean  Mail
  ****************************************************************************************)
@@ -1035,9 +1035,7 @@ repeat while application "Xcode" is running
 	delay 1
 	tell application "Xcode" to quit
 end repeat
-END
 
-osascript <<END2 2>/dev/null 1>&2
 (*****************************************************************************************
  * clean up Pastebot
  ****************************************************************************************)
@@ -1057,6 +1055,7 @@ try
 					click button "Clear" of window 1
 				end try
 			end try
+			tell application "Pastebot" to quit
 		end try
 	end tell
 end try
@@ -1138,7 +1137,7 @@ tell application "System Events"
 	set activeApp to name of first application process whose frontmost is true as string
 	do shell script "Killall " & quoted form of activeApp
 end tell
-END2
+END
 
 #*****************************************************************************************
 # Notification Center clean up
@@ -1258,7 +1257,9 @@ XCODE_BREAKPOINTS
 
 [[ -n ${HISTFILE:-} ]] && rm -f "$HISTFILE" &>/dev/null
 [[ -n ${XDG_CACHE_HOME:-} ]] && mkdir -p "$XDG_CACHE_HOME/zsh"
+
 history -c 2>/dev/null
+zoxide add ~/Developer/GeeDblA ~/Developer/WIP /opt/geedbla /opt/geedbla/scripts &>/dev/null
 
 if [[ $OCD_OPTION == "" ]]; then
 	finish

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   5-Apr-2026  2:30pm
-# Modified :  7-Jul-2026  7:42pm
+# Modified :  31-Jul-2026  7:10pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -171,13 +171,15 @@ tell application "System Events"
 		tell process "Safari"
 			-- Open Safari Settings
 			keystroke "," using command down
-			delay 0.7
+			delay 1
 
 			-- Click the Search tab
 			try
-				click button "Search" of toolbar 1 of window "Search"
+				click button "Search" of toolbar 1 of window 1
 			on error
-				click radio button "Search" of tab group 1 of window "Search"
+				try
+					click radio button "Search" of tab group 1 of window 1
+				end try
 			end try
 
 			delay 0.5
@@ -202,8 +204,10 @@ tell application "System Events"
 
 			delay 0.3
 
+			click button "General" of toolbar 1 of window 1
+
 			-- Close the Preferences window
-			click button 1 of window "Search" -- button 1 is the red close button
+			click button 1 of window "General" -- button 1 is the red close button
 		end tell
 	end tell
 end tell

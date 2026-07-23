@@ -7,14 +7,13 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :
+# Modified :  26-Jul-2026  10:13pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
 get_sudo_password() {
-	local SUDO_PASSWORD
+	local SUDO_PASSWORD=""
 	if ! sudo --validate --non-interactive &>/dev/null; then
-
 		SUDO_PASSWORD=$(security find-generic-password -w -s '__my__Password__' -a "$USER")
 		if [[ -z $SUDO_PASSWORD ]]; then
 			if ! sudo --validate --stdin <<<"$SUDO_PASSWORD" 2>/dev/null; then

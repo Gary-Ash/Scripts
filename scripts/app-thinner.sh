@@ -8,10 +8,18 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  21-Jul-2026  7:47pm
-# Modified :  22-Jul-2026  3:46pm
+# Modified :  23-Jul-2026  7:04pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
+
+#*****************************************************************************************
+# source in library functions
+#*****************************************************************************************
+source "/opt/geedbla/lib/shell/lib/get_sudo_password.sh"
+
+export SUDO_PASSWORD
+SUDO_SHELL_PID=""
 
 resign=false
 app=""
@@ -33,6 +41,11 @@ EOF
 }
 
 cleanup() {
+    [[ -n "$SUDO_SHELL_PID" ]] && kill "$SUDO_SHELL_PID" 2>/dev/null
+    wait 2>/dev/null
+    unset SUDO_SHELL_PID
+    unset SUDO_PASSWORD
+
     rm -f "${tmp_file:-}"
 }
 trap cleanup EXIT
@@ -52,7 +65,7 @@ strip_intel() {
         tmp_file=$(mktemp)
         lipo "${file}" -remove x86_64 -output "${tmp_file}"
         chmod "$(stat -f '%A' "${file}")" "${tmp_file}"
-        mv "${tmp_file}" "${file}"
+        sudo mv "${tmp_file}" "${file}"
         tmp_file=""
     fi
 }
@@ -84,6 +97,17 @@ if [[ ! -d "${app}" ]]; then
     exit 1
 fi
 
+#*****************************************************************************************
+# setup the sudo until the script is done
+#*****************************************************************************************
+SUDO_PASSWORD="$(get_sudo_password)"
+echo "$SUDO_PASSWORD" | sudo --validate --stdin &>/dev/null
+while true; do
+    sudo --non-interactive -E true
+    sleep 20
+done &
+export SUDO_SHELL_PID=$!
+
 while IFS= read -r -d '' file; do
     strip_intel "${file}"
 done < <(find "${app}" -type f -print0)
@@ -103,30 +127,29 @@ if ${resign}; then
         \) \
         -print0 |
     while IFS= read -r -d '' item; do
-        codesign --force --sign - --timestamp=none "${item}"
+        sudo codesign --force --sign - --timestamp=none "${item}"
     done
 
     find "${app}/Contents" -type f -perm -111 -print0 |
     while IFS= read -r -d '' exe; do
         if file "${exe}" | grep -q "Mach-O"; then
-            codesign --force --sign - --timestamp=none "${exe}"
+            sudo codesign --force --sign - --timestamp=none "${exe}"
         fi
     done
 
-    codesign \
+    sudo codesign \
         --force \
         --deep \
         --sign - \
         --timestamp=none \
         "${app}"
 
-    codesign --verify --deep --strict --verbose=2 "${app}"
+    sudo codesign --verify --deep --strict --verbose=2 "${app}"
 fi
 
 find "${app}" -type f -print0 |
 while IFS= read -r -d '' file; do
     if file "${file}" | grep -q "Mach-O"; then
         archs=$(lipo -archs "${file}" 2>/dev/null || true)
-        [[ -n "${archs}" ]] && printf '%s\n' "${archs} : ${file}"
     fi
 done

@@ -59,6 +59,12 @@ A collection of utility scripts and shell libraries for macOS development, syste
 
 Strip the intel binary from a macOS app bundles, and resign with an adhoc signature if requested
 
+**Usage:** `app-thinner.sh [--resign] /path/to/MyApp.app`
+
+**Note:** Requires sudo privileges. The password is retrieved automatically via `get_sudo_password.sh`, so no interactive prompt is needed when the password is stored in the Keychain.
+
+---
+
 ### blog-post.sh
 
 Creates a new Jekyll blog post or product page with the appropriate front matter and timestamp. Generates files in the `~/Sites/geedbla.com/` directory structure.

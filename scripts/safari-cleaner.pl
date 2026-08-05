@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   5-Apr-2026  2:30pm
-# Modified :  31-Jul-2026  7:10pm
+# Modified :   5-Aug-2026  2:54pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -158,7 +158,7 @@ tell application "System Events"
 		key code 125 -- down arrow
 		delay 0.2
 
-		repeat 20 times
+		repeat 50 times
 			key code 125
 			delay 0.05
 		end repeat

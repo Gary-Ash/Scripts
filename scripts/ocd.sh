@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  28-Jul-2026  8:18pm
+# Modified :  10-Aug-2026  3:53pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1259,7 +1259,7 @@ XCODE_BREAKPOINTS
 [[ -n ${XDG_CACHE_HOME:-} ]] && mkdir -p "$XDG_CACHE_HOME/zsh"
 
 history -c 2>/dev/null
-zoxide add ~/Developer/GeeDblA ~/Developer/WIP /opt/geedbla /opt/geedbla/scripts &>/dev/null
+zoxide add ~/Developer/GeeDblA /opt/geedbla /opt/geedbla/scripts /opt/geedbla/lib
 
 if [[ $OCD_OPTION == "" ]]; then
 	finish

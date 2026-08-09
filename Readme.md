@@ -42,8 +42,10 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [safari-update-icons.sh](#safari-update-iconssh) | Bash | Upload Safari favicon cache to server |
 | [settings.sh](#settingssh) | Bash | Configure macOS system settings |
 | [startup-banner.pl](#startup-bannerpl) | Perl | Display terminal startup banner |
+| [strip-app.sh](#strip-appsh) | Bash | Strip Intel slices and dead languages from app bundles |
 | [strip-comments.pl](#strip-commentspl) | Perl | Remove comments from C-style source |
 | [sync-mac.sh](#sync-macsh) | Bash | Sync files between Mac systems |
+| [test-sync-custom-apps.sh](#test-sync-custom-appssh) | Bash | Test harness for the custom app sync path |
 | [update-dots.sh](#update-dotssh) | Bash | Maintain dotfiles repository |
 | [update-site.sh](#update-sitesh) | Bash | Deploy Jekyll website |
 | [wtf-autolayout.py](#wtf-autolayoutpy) | Python | Debug Auto Layout constraints |
@@ -262,6 +264,28 @@ Displays a colorful terminal startup banner with system information including OS
 
 ---
 
+### strip-app.sh
+
+Reclaims disk space in macOS application bundles by removing the Intel (`x86_64`/`i386`) slices from universal Mach-O files and deleting localization resources that do not match the current system language. Dry-run by default. With no bundle named, every app in `/Applications` is scanned; Apple's own apps are always skipped.
+
+An app is treated as *protected* when it carries team-scoped entitlements (app groups, iCloud, push) or an embedded provisioning profile. Ad-hoc re-signing would silently break those, so protected apps are thinned only, never re-signed, and any thin that invalidates the signature is reverted automatically. Unprotected apps are stripped fully and ad-hoc re-signed.
+
+**Usage:** `strip-app.sh [options] [<app-bundle> ...]`
+
+**Options:**
+- `-n, --dry-run` — Report only, change nothing (default)
+- `-a, --apply` — Actually modify the bundles
+- `-b, --backup DIR` — Archive each bundle into DIR before modifying it
+- `--keep LANGS` — Comma separated extra languages to preserve (e.g. `de,ja`)
+- `--no-lang` — Skip language resource stripping
+- `--no-thin` — Skip Intel slice thinning
+- `--force` — Fully strip and ad-hoc re-sign even a protected app
+- `-v, --verbose` — List every file acted on
+
+**Note:** Re-signed apps lose notarization, so macOS re-prompts for privacy permissions they had already been granted. An app update replaces the bundle, so the script must be re-run afterwards. Escalates to sudo automatically when a target bundle is root owned.
+
+---
+
 ### strip-comments.pl
 
 Removes all C-style comments (both `//` and `/* */`) from source files in a directory tree. Handles nested comments and preserves strings.
@@ -279,6 +303,16 @@ Synchronizes directories, files, and package manager installations between multi
 - **Mail** — Mail archive (`~/Library/Mail`) and Mail preferences
 - **Package managers** — Homebrew formulae and casks, pip packages, Ruby gems, npm packages (installs missing, removes extras)
 - **Custom apps** — Bespoke applications (CleanStart.app, XcodeGeDblA.app) installed to `/Applications` via sudo. Sudo password prompts are suppressed and sync failures produce descriptive error messages without aborting the remaining sync operations.
+
+---
+
+### test-sync-custom-apps.sh
+
+Standalone harness that exercises `sync-mac.sh`'s custom `.app` install path against a single target host, leaving all stdout/stderr visible for diagnosis. Stages `CleanStart.app` and `XcodeGeDblA.app` to a temporary directory on the target over rsync, then installs them into `/Applications` via sudo.
+
+**Usage:** `test-sync-custom-apps.sh <target-host>`
+
+**Requirements:** `sshpass`, SSH access to the target, sudo password available in the login Keychain.
 
 ---
 
@@ -394,8 +428,8 @@ Files in `templates/Xcode/_Files/` are applied to every generated project regard
 | `IDETemplateMacros.plist` | Xcode file header template macros |
 | `IDETemplateMacros-Open.plist` | Header macros variant for open-source projects |
 | `IDETemplateMacros-Closed.plist` | Header macros variant for closed-source projects |
-| `LICENSE-Open.markdown` | Open-source license text |
-| `LICENSE-Closed.markdown` | Closed-source license text |
+| `LICENSE-Open.md` | Open-source license text |
+| `LICENSE-Closed.md` | Closed-source license text |
 | `ci.sh` | Local CI runner script |
 | `organizations.txt` | Known organization names for copyright substitution |
 

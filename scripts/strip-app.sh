@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  11-Aug-2026  8:15pm
-# Modified :
+# Modified :  12-Aug-2026  6:00pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -364,8 +364,11 @@ live_arches_of() {
 	printf '%s' "${live# }"
 }
 
-# Universal Mach-O files carrying a dead slice that can be removed without breaking
-# a seal.
+# Every universal Mach-O carrying a dead slice, one NUL terminated "verdict<TAB>path"
+# record each: `thin` when the seal permits it, `skip` when the seal records the file by
+# content.  The rejects are reported rather than dropped so the caller can log them - a
+# producer writing its data to stdout cannot also narrate on stdout, or the commentary
+# lands in the middle of a path.
 #
 # Spawning lipo once per executable is unusable on a large bundle - Xcode alone holds
 # tens of thousands.  A universal file always begins with the fat magic
@@ -394,8 +397,8 @@ find_fat_binaries() {
 		while IFS= read -r -d '' file; do
 			[[ -n "$(dead_arches_of "${file}")" ]] || continue
 			case "$(seal_class "${app}" "${file}")" in
-				own | cdhash) printf '%s\0' "${file}" ;;
-				*) verbose "left fat: ${file#"${APP}"/} (sealed as a resource)" ;;
+				own | cdhash) printf 'thin\t%s\0' "${file}" ;;
+				*) printf 'skip\t%s\0' "${file}" ;;
 			esac
 		done
 }
@@ -411,13 +414,19 @@ find_fat_binaries() {
 # arm slice is left there is no reason to keep a fat wrapper around it, so use -thin and
 # get the padding back too.  Anything with both arm64 and arm64e still has to go through
 # -remove, since -thin would throw one of them away.
+#
+# The reclaimed byte count comes back in THIN_BYTES rather than on stdout: the function
+# also emits verbose output, and `$(thin_binary ...)` would capture the message along
+# with the number and feed the pair to $(( )).
+THIN_BYTES=0
+
 thin_binary() {
 	local file="$1"
 	local dead live tmp before after arch args=()
 
+	THIN_BYTES=0
 	dead="$(dead_arches_of "${file}")"
 	if [[ -z ${dead} ]]; then
-		printf '0'
 		return 0
 	fi
 
@@ -434,7 +443,6 @@ thin_binary() {
 	tmp="${WORK_DIR}/thin.$$"
 	if ! lipo "${file}" "${args[@]}" -output "${tmp}" 2>/dev/null; then
 		rm -f "${tmp}"
-		printf '0'
 		return 1
 	fi
 	after="$(stat -f '%z' "${tmp}")"
@@ -447,7 +455,7 @@ thin_binary() {
 	fi
 
 	rm -f "${tmp}"
-	printf '%s' "$((before - after))"
+	THIN_BYTES=$((before - after))
 	return 0
 }
 
@@ -508,6 +516,10 @@ stage_move() {
 
 # Put one staged path back where it came from.  Regular files go back through the
 # existing inode so the extended attributes survive a rollback too.
+#
+# A staged symlink needs -L everywhere -e appears: its target is relative to the place it
+# came from, so inside the staging directory it dangles, and every -e test on it answers
+# no.  Untreated, a rollback silently drops the one thing it was asked to put back.
 stage_restore() {
 	local path slot backup
 
@@ -516,9 +528,9 @@ stage_restore() {
 	[[ -n ${slot} ]] || return 1
 
 	backup="${WORK_DIR}/stage/${slot}"
-	[[ -e ${backup} ]] || return 1
+	[[ -e ${backup} || -L ${backup} ]] || return 1
 
-	if [[ -d ${backup} ]]; then
+	if [[ -L ${backup} || -d ${backup} ]]; then
 		rm -rf "${path}"
 		mv "${backup}" "${path}"
 	elif [[ -e ${path} ]]; then
@@ -539,6 +551,57 @@ stage_restore_all() {
 		[[ -n ${path} ]] && stage_restore "${path}" || true
 	done < <(tail -r "${WORK_DIR}/stage.index")
 	return 0
+}
+
+#*****************************************************************************************
+# symlink pinning
+#
+# A symlink is sealed as an entry in its own right and carries no optional flag, so no
+# symlink is ever removable and every one of them outlives the strip.  codesign resolves
+# the links it walks, and a surviving link whose target has been deleted stops the verify
+# with ENOENT - which fails the whole bundle, not the one resource.  So anything a link
+# points at is pinned in place along with the link.
+#
+# Typora's Sparkle.framework is the case in point: fr_CA.lproj -> fr.lproj and
+# pt.lproj -> pt_BR.lproj pin two of the 34 localizations that would otherwise all go.
+#
+# The targets are resolved before anything is deleted, in one perl pass rather than a
+# readlink per link - a bundle the size of Xcode holds tens of thousands.  abs_path
+# resolves every symlinked component, not just the last one, so the answers can be
+# compared against the physical paths real_path hands back.
+#
+# shellcheck disable=SC2016  # the perl program is single quoted on purpose
+#*****************************************************************************************
+
+index_symlink_targets() {
+	local app="${1%/}"
+
+	find "${app}" -type l -print0 |
+		perl -0 -MCwd=abs_path -ne '
+			chomp;
+			my $target = readlink $_;
+			next unless defined $target;
+			unless ($target =~ m{^/}) {
+				(my $dir = $_) =~ s{/[^/]*$}{};
+				$target = "$dir/$target";
+			}
+			my $real = abs_path($target);
+			print "$real\n" if defined $real;
+		' 2>/dev/null | sort -u >"${WORK_DIR}/pinned"
+	return 0
+}
+
+# Is this path a symlink target, or does it hold one?
+is_pinned() {
+	local path
+
+	[[ -s "${WORK_DIR}/pinned" ]] || return 1
+	path="$(real_path "$1")"
+
+	awk -v p="${path}" '
+		$0 == p || index($0, p "/") == 1 { found = 1; exit }
+		END { exit(found ? 0 : 1) }
+	' "${WORK_DIR}/pinned"
 }
 
 #*****************************************************************************************
@@ -583,6 +646,20 @@ seal_lproj_optional() {
 # not care what it holds - which is exactly how Sparkle's 34 localizations can be deleted
 # from inside a framework the app seals as nested code.  A parent that lists the interior
 # file by file does care, and there the optional rule has to hold as well.
+#
+# A .lproj is not always a directory.  Sparkle ships fr_CA.lproj -> fr.lproj and
+# pt.lproj -> pt_BR.lproj, and the seal records a symlink as an entry of its own:
+#
+#   <key>Resources/fr_CA.lproj</key>
+#   <dict><key>symlink</key><string>fr.lproj</string></dict>
+#
+# The optional rule is anchored at ^Resources/.*\.lproj/ - with the trailing slash - so
+# it reaches the files inside a localization directory but never the symlink itself, and
+# a symlink entry carries no optional flag of its own.  Deleting one is therefore fatal,
+# which is exactly what Typora's Sparkle.framework was failing on.  A real localization
+# directory has no entry for itself at all, only entries for the files beneath it, so
+# demanding that the path be absent from the seal separates the two cases without having
+# to ask what is on disk.
 lproj_removable() {
 	local app="${1%/}" lproj="$2"
 	local dir rel
@@ -593,6 +670,7 @@ lproj_removable() {
 			rel="${lproj#"${dir}"/}"
 			seal_covers_subtree "${dir}" "${rel}" || return 0
 			[[ ${rel} == Resources/*.lproj ]] || return 1
+			[[ "$(seal_lookup "${dir}" "${rel}")" == absent ]] || return 1
 			seal_lproj_optional "${dir}" || return 1
 		fi
 		dir="$(dirname "${dir}")"
@@ -649,6 +727,10 @@ strip_lproj_dir() {
 			match) in_list "${norm}" "${candidates[@]}" && continue ;;
 			english) english_token "${norm}" && continue ;;
 		esac
+		if is_pinned "${child}"; then
+			verbose "kept ${child#"${APP}"/} (a symlink elsewhere in the bundle points into it)"
+			continue
+		fi
 
 		if ! lproj_removable "${APP}" "${child}"; then
 			verbose "kept ${child#"${APP}"/} (not covered by an optional seal rule)"
@@ -663,6 +745,26 @@ strip_lproj_dir() {
 	done
 
 	bytes_lang=$((bytes_lang + freed))
+	return 0
+}
+
+# A gettext catalogue is not a .lproj, so the optional rule the localization pruner
+# leans on - ^Resources/.*\.lproj/ - does not reach it, and a bundle is free to seal
+# Resources/locale/<lang>/LC_MESSAGES/*.mo by content.  Ghostty does exactly that.
+# Missing the catalogue costs gettext nothing; missing it costs the seal everything.
+gettext_removable() {
+	local dir="$1" file
+
+	# A symlinked catalogue directory is sealed as a symlink entry in its own right, and
+	# such an entry is never optional.  `find` does not descend into it either, so the
+	# file walk below would find nothing to object to and wave it through.
+	[[ "$(seal_class "${APP}" "${dir}")" == own ]] || return 1
+
+	while IFS= read -r -d '' file; do
+		if [[ "$(seal_class "${APP}" "${file}")" == content ]]; then
+			return 1
+		fi
+	done < <(find "${dir}" -type f -print0)
 	return 0
 }
 
@@ -691,6 +793,16 @@ strip_gettext_root() {
 
 		[[ ${matched} == true ]] && in_list "${norm}" "${candidates[@]}" && continue
 
+		if is_pinned "${child}"; then
+			verbose "kept ${child#"${APP}"/} (a symlink elsewhere in the bundle points into it)"
+			continue
+		fi
+
+		if ! gettext_removable "${child}"; then
+			verbose "kept ${child#"${APP}"/} (sealed as a mandatory resource)"
+			continue
+		fi
+
 		size="$(du -sk "${child}" | cut -f1)"
 		freed=$((freed + size * 1024))
 		n_lang_removed=$((n_lang_removed + 1))
@@ -710,6 +822,8 @@ strip_languages() {
 	while IFS= read -r line; do
 		[[ -n ${line} ]] && candidates+=("${line}")
 	done < <(language_candidates "${SYS_LANG}")
+
+	index_symlink_targets "${app}"
 
 	while IFS= read -r parent; do
 		[[ -n ${parent} ]] || continue
@@ -841,7 +955,7 @@ skip_reason() {
 #*****************************************************************************************
 
 process_app() {
-	local app before after reason freed file
+	local app before after reason record file
 
 	app="$(real_path "${1%/}")"
 	APP="${app}"
@@ -865,10 +979,15 @@ process_app() {
 	stage_reset
 
 	if [[ ${DO_THIN} == true ]]; then
-		while IFS= read -r -d '' file; do
+		while IFS= read -r -d '' record; do
+			file="${record#*$'\t'}"
+			if [[ ${record} == skip$'\t'* ]]; then
+				verbose "left fat: ${file#"${APP}"/} (sealed as a resource)"
+				continue
+			fi
 			[[ ${APPLY} == true ]] && stage_file "${file}"
-			freed="$(thin_binary "${file}")" || freed=0
-			bytes_thin=$((bytes_thin + freed))
+			thin_binary "${file}" || true
+			bytes_thin=$((bytes_thin + THIN_BYTES))
 			n_thinned=$((n_thinned + 1))
 		done < <(find_fat_binaries "${app}")
 	fi
@@ -917,39 +1036,60 @@ is_mach_o() {
 	[[ ${kind} == Mach-O* ]]
 }
 
-# The paths codesign objects to, one per line.
+# What codesign objects to, one "verb<TAB>path" line each.  The verb has to survive:
+# a path codesign calls missing is not on disk any more, so asking `file` what kind it
+# was answers "not Mach-O" for every one of them - which is how a localization deleted
+# out from under its seal gets filed as damage of some other kind entirely.
 damaged_paths() {
 	local app="$1" output
 
 	output="$(codesign --verify --deep --strict --verbose=4 "${app}" 2>&1)" && return 1
-	printf '%s\n' "${output}" | sed -n -E 's/^(file|resource) (modified|added|missing): //p'
+	printf '%s\n' "${output}" | sed -n -E 's/^(file|resource) (modified|added|missing): /\2\t/p'
 }
 
 # Non-zero when the bundle is healthy.
 damage_report() {
-	local app="${1%/}" path count=0 machos=0 first=""
+	local app="${1%/}" line verb path
+	local count=0 machos=0 gone=0 first=""
 
-	while IFS= read -r path; do
-		[[ -n ${path} ]] || continue
+	while IFS= read -r line; do
+		[[ -n ${line} ]] || continue
+		verb="${line%%$'\t'*}"
+		path="${line#*$'\t'}"
 		count=$((count + 1))
 		[[ -z ${first} ]] && first="${path}"
-		is_mach_o "${path}" && machos=$((machos + 1))
+		if [[ ${verb} == missing ]]; then
+			gone=$((gone + 1))
+		elif is_mach_o "${path}"; then
+			machos=$((machos + 1))
+		fi
 	done < <(damaged_paths "${app}")
 
 	[[ ${count} -gt 0 ]] || return 1
 
-	if [[ ${machos} -eq ${count} ]]; then
+	if [[ ${gone} -eq ${count} ]]; then
+		info "${count} sealed resource(s) deleted - a localization strip that ignored"
+		info "the seal"
+	elif [[ ${machos} -eq ${count} ]]; then
 		info "${count} Mach-O file(s) were thinned despite being sealed by content"
-	elif [[ ${machos} -gt 0 ]]; then
-		info "${count} sealed file(s) altered, ${machos} of them Mach-O - part of this"
-		info "looks like thinning that ignored the seal"
+	elif [[ $((gone + machos)) -gt 0 ]]; then
+		info "${count} sealed item(s) altered: ${machos} Mach-O thinned, ${gone} deleted,"
+		info "$((count - gone - machos)) otherwise rewritten - part of this is a strip"
+		info "that ignored the seal"
 	else
 		info "${count} sealed file(s) altered, none of them Mach-O - this is not"
 		info "stripping damage; something else rewrote them"
 	fi
 
 	info "first: ${first#"${app}"/}"
-	[[ ${VERBOSE} == true ]] && damaged_paths "${app}" | sed "s|^${app}/|      |"
+	if [[ ${VERBOSE} == true ]]; then
+		while IFS= read -r line; do
+			[[ -n ${line} ]] || continue
+			verb="${line%%$'\t'*}"
+			path="${line#*$'\t'}"
+			verbose "${verb}: ${path#"${app}"/}"
+		done < <(damaged_paths "${app}")
+	fi
 
 	return 0
 }

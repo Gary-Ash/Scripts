@@ -266,23 +266,27 @@ Displays a colorful terminal startup banner with system information including OS
 
 ### strip-app.sh
 
-Reclaims disk space in macOS application bundles by removing the Intel (`x86_64`/`i386`) slices from universal Mach-O files and deleting localization resources that do not match the current system language. Dry-run by default. With no bundle named, every app in `/Applications` is scanned; Apple's own apps are always skipped.
+Reclaims disk space in macOS application bundles by removing the Intel (`x86_64`/`i386`) slices from universal Mach-O files and deleting localizations that do not match the current system language. With no bundle named, every app in `/Applications` is processed.
 
-An app is treated as *protected* when it carries team-scoped entitlements (app groups, iCloud, push) or an embedded provisioning profile. Ad-hoc re-signing would silently break those, so protected apps are thinned only, never re-signed, and any thin that invalidates the signature is reverted automatically. Unprotected apps are stripped fully and ad-hoc re-signed.
+**Nothing is ever re-signed.** Only changes that provably cannot break the seal are made, so bundles keep their original Developer ID, notarization ticket, and the privacy permissions macOS records in `com.apple.macl`. Two facts make that possible:
+
+- Every slice of a universal Mach-O carries its own complete signature, so dropping the Intel slice leaves the arm64 slice — and its CDHash — byte for byte identical. A binary can therefore be thinned whenever its bundle seals it by CDHash (nested code) or not at all (the bundle's own executable). A Mach-O sealed as plain *content*, in practice anything under `Resources/`, is left fat: thinning it is exactly the mistake that leaves a bundle failing `codesign --verify`.
+- `codesign`'s default resource rules mark `^Resources/.*\.lproj/` as *optional*, so a missing localization does not invalidate the seal. `Base.lproj` carries no optional flag and is always kept, as is the last localization of any bundle that has no `Base` or English fallback.
+
+Every change is staged before it is made and `codesign` gets the last word on each bundle; anything it objects to is put back, and a bundle that still will not verify is rolled back completely. Bundles are skipped when they are Apple-signed, SIP-protected, currently running, or already failing verification before the run starts.
 
 **Usage:** `strip-app.sh [options] [<app-bundle> ...]`
 
 **Options:**
-- `-n, --dry-run` — Report only, change nothing (default)
-- `-a, --apply` — Actually modify the bundles
-- `-b, --backup DIR` — Archive each bundle into DIR before modifying it
+- `-n, --dry-run` — Report only, change nothing
 - `--keep LANGS` — Comma separated extra languages to preserve (e.g. `de,ja`)
-- `--no-lang` — Skip language resource stripping
-- `--no-thin` — Skip Intel slice thinning
-- `--force` — Fully strip and ad-hoc re-sign even a protected app
+- `--no-lang` — Skip localization pruning
+- `--no-thin` — Skip Intel slice removal
+- `--check` — Report bundles whose seal is already broken, and why
+- `--repair` — Report how to repair the bundles `--check` found
 - `-v, --verbose` — List every file acted on
 
-**Note:** Re-signed apps lose notarization, so macOS re-prompts for privacy permissions they had already been granted. An app update replaces the bundle, so the script must be re-run afterwards. Escalates to sudo automatically when a target bundle is root owned.
+**Note:** An app update replaces the bundle, so the script must be re-run afterwards. Escalates to sudo automatically when a target bundle is root owned. Tests live in `tests/strip-app.bats` and run with `bats tests/strip-app.bats`.
 
 ---
 

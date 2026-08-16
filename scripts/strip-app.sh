@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  11-Aug-2026  8:15pm
-# Modified :  12-Aug-2026  6:00pm
+# Modified :  15-Aug-2026  8:56pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -43,13 +43,60 @@ total_bytes=0
 
 #*****************************************************************************************
 # output helpers
+#
+# A run that changes nothing should say nothing.  A sweep of /Applications touches every
+# bundle on the machine and the great majority of them have nothing left to strip, so the
+# per-app banner and the run preamble are held back until something actually has news to
+# report: the first line of real output flushes them, and an app that turns out to be a
+# no-op simply discards its own banner.
 #*****************************************************************************************
 
+PENDING_PREAMBLE=()
+PENDING_HEADER=""
+
 log() { printf '%s\n' "$*"; }
-info() { printf '  %s\n' "$*"; }
-warn() { printf 'warning: %s\n' "$*" >&2; }
-err() { printf 'error: %s\n' "$*" >&2; }
-verbose() { [[ ${VERBOSE} == true ]] && printf '    %s\n' "$*" || true; }
+
+# Queue a line of run-level preamble.  It is printed only if some app later speaks.
+pending_log() { PENDING_PREAMBLE+=("$*"); }
+
+# Print whatever is still held back, in the order it was queued.
+flush_pending() {
+	local line
+
+	if [[ ${#PENDING_PREAMBLE[@]} -gt 0 ]]; then
+		for line in "${PENDING_PREAMBLE[@]}"; do
+			printf '%s\n' "${line}"
+		done
+		PENDING_PREAMBLE=()
+	fi
+
+	if [[ -n ${PENDING_HEADER} ]]; then
+		printf '\n%s\n' "${PENDING_HEADER}"
+		PENDING_HEADER=""
+	fi
+	return 0
+}
+
+info() {
+	flush_pending
+	printf '  %s\n' "$*"
+}
+
+warn() {
+	flush_pending
+	printf 'warning: %s\n' "$*" >&2
+}
+
+err() {
+	flush_pending
+	printf 'error: %s\n' "$*" >&2
+}
+
+verbose() {
+	[[ ${VERBOSE} == true ]] || return 0
+	flush_pending
+	printf '    %s\n' "$*"
+}
 
 # prefix every mutating action so dry-run output reads honestly
 action_prefix() {
@@ -968,11 +1015,11 @@ process_app() {
 	bytes_lang=0
 
 	before="$(du -sk "${app}" | cut -f1)"
-	log ""
-	log "${app##*/}  (${before} KB)"
+	PENDING_HEADER="${app##*/}  (${before} KB)"
 
 	if reason="$(skip_reason "${app}")"; then
-		info "skipped: ${reason}"
+		verbose "skipped: ${reason}"
+		PENDING_HEADER=""
 		return 0
 	fi
 
@@ -999,6 +1046,14 @@ process_app() {
 			err "${app##*/}: could not be returned to a verifying state - restore it from a backup"
 			return 1
 		fi
+	fi
+
+	# A rollback can take the last change back out, so the tallies are read after the
+	# verify, not before it: an app that ends up byte for byte as it started has nothing
+	# to report and drops its banner unprinted.
+	if [[ $((n_thinned + n_lang_removed)) -eq 0 ]]; then
+		PENDING_HEADER=""
+		return 0
 	fi
 
 	after="$(du -sk "${app}" | cut -f1)"
@@ -1286,14 +1341,21 @@ main() {
 		return "${rc}"
 	fi
 
-	log "system language: ${SYS_LANG}"
+	pending_log "system language: ${SYS_LANG}"
 	[[ ${scanned} == true ]] &&
-		log "scanning ${DEFAULT_SCAN_ROOT}: ${#TARGETS[@]} app bundles"
-	[[ ${APPLY} == true ]] || log "DRY RUN - nothing will be modified"
+		pending_log "scanning ${DEFAULT_SCAN_ROOT}: ${#TARGETS[@]} app bundles"
+	[[ ${APPLY} == true ]] || pending_log "DRY RUN - nothing will be modified"
 
 	for app in "${TARGETS[@]}"; do
 		process_app "${app}" || rc=1
 	done
+
+	# Nothing was stripped, so nothing was said - and the preamble, the totals and the
+	# closing note would be the entire output of a run that did no work.
+	if [[ ${total_apps} -eq 0 ]]; then
+		PENDING_PREAMBLE=()
+		return "${rc}"
+	fi
 
 	if [[ ${#TARGETS[@]} -gt 1 ]]; then
 		log ""

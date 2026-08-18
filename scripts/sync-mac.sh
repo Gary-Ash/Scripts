@@ -79,9 +79,9 @@ report_output() {
 
 	log "${description} failed${output:+ - ${output//$'\n'/; }}"
 	case "${output}" in
-	*"unexpected end of file"* | *"Operation not permitted"* | *"Permission denied"*)
-		log "hint: sshd on ${target_system#*@} may need Full Disk Access - System Settings > Privacy & Security > Full Disk Access"
-		;;
+		*"unexpected end of file"* | *"Operation not permitted"* | *"Permission denied"*)
+			log "hint: sshd on ${target_system#*@} may need Full Disk Access - System Settings > Privacy & Security > Full Disk Access"
+			;;
 	esac
 }
 

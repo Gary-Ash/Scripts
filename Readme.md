@@ -48,6 +48,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [test-sync-custom-apps.sh](#test-sync-custom-appssh) | Bash | Test harness for the custom app sync path |
 | [update-dots.sh](#update-dotssh) | Bash | Maintain dotfiles repository |
 | [update-site.sh](#update-sitesh) | Bash | Deploy Jekyll website |
+| [update-software.sh](#update-softwaresh) | Bash | Update macOS, App Store, Homebrew and Sparkle apps |
 | [wtf-autolayout.py](#wtf-autolayoutpy) | Python | Debug Auto Layout constraints |
 
 ---
@@ -331,6 +332,14 @@ Maintains a dotfiles Git repository by collecting configuration files, preferenc
 ### update-site.sh
 
 Builds a Jekyll website and deploys it to a remote server via rsync.
+
+---
+
+### update-software.sh
+
+Checks macOS system and App Store updates, Homebrew packages, and Sparkle enabled applications in `/Applications` and `~/Applications`, reporting what is out of date and prompting before each group is installed. Sparkle updates are found by reading each bundle's `SUFeedURL` appcast and comparing the advertised version against `CFBundleShortVersionString`, then downloading and replacing the installed bundle.
+
+**Usage:** `update-software.sh`
 
 ---
 

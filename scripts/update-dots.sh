@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  20-Apr-2026  4:00pm
+# Modified :  20-Aug-2026  4:47pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -55,6 +55,7 @@ dot-files() {
 		"$HOME/.claude/plugins/blocklist.json"
 		"$HOME/.config/z"
 		"$HOME/.config/zsh/.zsh_history"
+		"$HOME/.config/zsh/.zsh_sessions"
 		"$HOME/.config/zsh/zcompdump*"
 		"$HOME/.config/github-copilot"
 		"$HOME/.config/thefuck/__pycache__"

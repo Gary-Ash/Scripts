@@ -48,7 +48,7 @@ confirm() {
 
 	read -r -n 1 -p "${prompt} (y/N): " answer
 	printf '\n'
-	[[ "${answer}" == "y" ]]
+	[[ ${answer} == "y" ]]
 }
 
 #*****************************************************************************************
@@ -60,7 +60,7 @@ update_system() {
 	printf '%s\n' "${YELLOW}Checking macOS system & App Store updates...${RESET}"
 	updates=$(softwareupdate -l 2>&1 | grep -E "Label:|recommended" || true)
 
-	if [[ -z "${updates}" ]]; then
+	if [[ -z ${updates} ]]; then
 		printf '%s\n' "${GREEN}No macOS system/App Store updates available.${RESET}"
 		return
 	fi
@@ -86,7 +86,7 @@ update_homebrew() {
 	brew update >/dev/null
 
 	outdated=$(brew outdated || true)
-	if [[ -z "${outdated}" ]]; then
+	if [[ -z ${outdated} ]]; then
 		printf '%s\n' "${GREEN}No Homebrew updates available.${RESET}"
 		return
 	fi
@@ -106,29 +106,29 @@ find_sparkle_updates() {
 	local dir app plist feed_url installed_version feed latest_version
 
 	for dir in "${APP_DIRS[@]}"; do
-		[[ -d "${dir}" ]] || continue
+		[[ -d ${dir} ]] || continue
 
 		while IFS= read -r -d '' app; do
 			plist="${app}/Contents/Info.plist"
 
 			feed_url=$(defaults read "${plist}" SUFeedURL 2>/dev/null || true)
-			if [[ -z "${feed_url}" ]]; then
+			if [[ -z ${feed_url} ]]; then
 				continue
 			fi
 
 			installed_version=$(defaults read "${plist}" CFBundleShortVersionString 2>/dev/null || echo "0")
 
 			feed=$(curl -sL "${feed_url}")
-			if [[ -z "${feed}" ]]; then
+			if [[ -z ${feed} ]]; then
 				continue
 			fi
 
 			latest_version=$(printf '%s' "${feed}" | grep -Eo '<sparkle:shortVersionString>[^<]+' | head -n1 | sed 's/<sparkle:shortVersionString>//')
-			if [[ -z "${latest_version}" ]]; then
+			if [[ -z ${latest_version} ]]; then
 				latest_version=$(printf '%s' "${feed}" | grep -Eo 'sparkle:version="[^"]+"' | head -n1 | sed 's/sparkle:version="//;s/"//')
 			fi
 
-			if [[ "${installed_version}" != "${latest_version}" ]]; then
+			if [[ ${installed_version} != "${latest_version}" ]]; then
 				sparkle_updates+=("${app}|${installed_version}|${latest_version}|${feed_url}")
 			fi
 		done < <(find "${dir}" -maxdepth 2 -name "*.app" -print0)
@@ -157,7 +157,7 @@ install_sparkle_update() {
 	unzip -q "${temp_file}" -d "${temp_dir}"
 
 	new_app=$(find "${temp_dir}" -maxdepth 2 -name "*.app" | head -n1)
-	if [[ -n "${new_app}" ]]; then
+	if [[ -n ${new_app} ]]; then
 		printf '%s\n' "Installing update for $(basename "${app}")..."
 		rm -rf "${app}"
 		mv "${new_app}" "${app}"
@@ -175,7 +175,7 @@ update_sparkle() {
 	printf '%s\n' "${YELLOW}Checking Sparkle-enabled apps...${RESET}"
 	find_sparkle_updates
 
-	if [[ "${#sparkle_updates[@]}" -eq 0 ]]; then
+	if [[ ${#sparkle_updates[@]} -eq 0 ]]; then
 		printf '%s\n' "${GREEN}No Sparkle updates available.${RESET}"
 		return
 	fi

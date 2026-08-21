@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2026  6:46pm
-# Modified :
+# Modified :  21-Aug-2026  3:47pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -118,17 +118,17 @@ find_sparkle_updates() {
 
 			installed_version=$(defaults read "${plist}" CFBundleShortVersionString 2>/dev/null || echo "0")
 
-			feed=$(curl -sL "${feed_url}")
+			feed=$(curl -sL "${feed_url}" || true)
 			if [[ -z ${feed} ]]; then
 				continue
 			fi
 
-			latest_version=$(printf '%s' "${feed}" | grep -Eo '<sparkle:shortVersionString>[^<]+' | head -n1 | sed 's/<sparkle:shortVersionString>//')
+			latest_version=$(printf '%s' "${feed}" | grep -Eo '<sparkle:shortVersionString>[^<]+' | head -n1 | sed 's/<sparkle:shortVersionString>//' || true)
 			if [[ -z ${latest_version} ]]; then
-				latest_version=$(printf '%s' "${feed}" | grep -Eo 'sparkle:version="[^"]+"' | head -n1 | sed 's/sparkle:version="//;s/"//')
+				latest_version=$(printf '%s' "${feed}" | grep -Eo 'sparkle:version="[^"]+"' | head -n1 | sed 's/sparkle:version="//;s/"//' || true)
 			fi
 
-			if [[ ${installed_version} != "${latest_version}" ]]; then
+			if [[ -n ${latest_version} && ${installed_version} != "${latest_version}" ]]; then
 				sparkle_updates+=("${app}|${installed_version}|${latest_version}|${feed_url}")
 			fi
 		done < <(find "${dir}" -maxdepth 2 -name "*.app" -print0)
@@ -146,8 +146,12 @@ install_sparkle_update() {
 
 	printf '%s\n' "${YELLOW}Updating $(basename "${app}")...${RESET}"
 
-	feed_xml=$(curl -sL "${feed}")
-	download_url=$(printf '%s' "${feed_xml}" | grep -Eo '<enclosure url="[^"]+"' | head -n1 | sed 's/<enclosure url="//;s/"//')
+	feed_xml=$(curl -sL "${feed}" || true)
+	download_url=$(printf '%s' "${feed_xml}" | grep -Eo '<enclosure url="[^"]+"' | head -n1 | sed 's/<enclosure url="//;s/"//' || true)
+	if [[ -z ${download_url} ]]; then
+		printf '%s\n' "${RED}Could not find a download URL for $(basename "${app}") — skipping.${RESET}" >&2
+		return
+	fi
 
 	temp_file=$(mktemp "/tmp/$(basename "${app}")-update-XXXXXX.zip")
 	temp_dir=$(mktemp -d)
@@ -156,7 +160,7 @@ install_sparkle_update() {
 	curl -L "${download_url}" -o "${temp_file}"
 	unzip -q "${temp_file}" -d "${temp_dir}"
 
-	new_app=$(find "${temp_dir}" -maxdepth 2 -name "*.app" | head -n1)
+	new_app=$(find "${temp_dir}" -maxdepth 2 -name "*.app" | head -n1 || true)
 	if [[ -n ${new_app} ]]; then
 		printf '%s\n' "Installing update for $(basename "${app}")..."
 		rm -rf "${app}"

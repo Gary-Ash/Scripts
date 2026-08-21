@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  18-Aug-2026  6:46pm
-# Modified :  21-Aug-2026  3:47pm
+# Modified :  21-Aug-2026  4:02pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -116,16 +116,16 @@ find_sparkle_updates() {
 				continue
 			fi
 
-			installed_version=$(defaults read "${plist}" CFBundleShortVersionString 2>/dev/null || echo "0")
+			installed_version=$(defaults read "${plist}" CFBundleVersion 2>/dev/null || echo "0")
 
 			feed=$(curl -sL "${feed_url}" || true)
 			if [[ -z ${feed} ]]; then
 				continue
 			fi
 
-			latest_version=$(printf '%s' "${feed}" | grep -Eo '<sparkle:shortVersionString>[^<]+' | head -n1 | sed 's/<sparkle:shortVersionString>//' || true)
+			latest_version=$(printf '%s' "${feed}" | grep -Eo 'sparkle:version="[^"]+"' | head -n1 | sed 's/sparkle:version="//;s/"//' || true)
 			if [[ -z ${latest_version} ]]; then
-				latest_version=$(printf '%s' "${feed}" | grep -Eo 'sparkle:version="[^"]+"' | head -n1 | sed 's/sparkle:version="//;s/"//' || true)
+				latest_version=$(printf '%s' "${feed}" | grep -Eo '<sparkle:version>[^<]+' | head -n1 | sed 's/<sparkle:version>//' || true)
 			fi
 
 			if [[ -n ${latest_version} && ${installed_version} != "${latest_version}" ]]; then
@@ -142,7 +142,7 @@ find_sparkle_updates() {
 install_sparkle_update() {
 	local app="${1}"
 	local feed="${2}"
-	local feed_xml download_url temp_file temp_dir new_app
+	local feed_xml download_url temp_file temp_dir new_app backup
 
 	printf '%s\n' "${YELLOW}Updating $(basename "${app}")...${RESET}"
 
@@ -163,8 +163,15 @@ install_sparkle_update() {
 	new_app=$(find "${temp_dir}" -maxdepth 2 -name "*.app" | head -n1 || true)
 	if [[ -n ${new_app} ]]; then
 		printf '%s\n' "Installing update for $(basename "${app}")..."
-		rm -rf "${app}"
-		mv "${new_app}" "${app}"
+		backup="${app}.old-$$"
+
+		mv "${app}" "${backup}"
+		if mv "${new_app}" "${app}"; then
+			rm -rf "${backup}"
+		else
+			printf '%s\n' "${RED}Install failed for $(basename "${app}") — restoring the previous version.${RESET}" >&2
+			mv "${backup}" "${app}"
+		fi
 	fi
 
 	rm -rf "${temp_dir}" "${temp_file}"

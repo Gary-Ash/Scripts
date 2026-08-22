@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Feb-2026  2:48pm
-# Modified :  11-Aug-2026  5:05pm
+# Modified :  22-Aug-2026  3:24pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -458,7 +458,7 @@ sync_npm_packages() {
 
 sync_custom_apps() {
 	local target_system="$1"
-	local apps_to_sync=("CleanStart.app" "XcodeGeDblA.app")
+	local apps_to_sync=("CleanStart.app" "XcodeGeeDblA.app")
 	local base_path="/Applications"
 	local staging_dir="/tmp/sync_apps_staging"
 	local status=0

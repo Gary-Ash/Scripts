@@ -1,0 +1,64 @@
+#compdef new-xcode-project.py
+#*****************************************************************************************
+# new-xcode-project
+#
+# The is a completion script for my Xcode project generator
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :   1-Sep-2026  4:42pm
+# Modified :
+#
+# Copyright © 2026 By Gary Ash All rights reserved.
+#*****************************************************************************************
+_new_xcode_project() {
+	local -a options
+	local template_root cache_file
+	local -a specs
+
+	template_root="/opt/geedbla/templates/Xcode"
+
+	# Cache
+	cache_file="$HOME/.cache/new-xcode-project-templates.zsh"
+	mkdir -p "${cache_file:h}"
+
+	# Build cache if needed
+	if [[ ! -f $cache_file || $template_root -nt $cache_file ]]; then
+		{
+			local tpl desc
+			for tpl in "$template_root"/*(/); do
+				[[ -f "$tpl/.ProjectDescription" ]] || continue
+				desc="$(<"$tpl/.ProjectDescription")"
+				printf '%s\t%s\n' "${tpl:t}" "${desc}"
+			done
+		} | sort >|"$cache_file"
+	fi
+
+	# Load cache
+	specs=()
+	while IFS=$'\t' read -r name desc; do
+		specs+=("${name}:${desc}")
+	done <"$cache_file"
+
+	options=(
+		'(-cs --closed)'{-cs,--closed}'[Create project with a closed-source license]'
+		'(-lif --infilelicense)'{-lif,--infilelicense}'[Add the source license to files]'
+		'(-ng --no-github)'{-ng,--no-github}'[Do not create a GitHub repository]'
+		'(-nx --no-xcode)'{-nx,--no-xcode}'[Do not start Xcode after project generation]'
+	)
+
+	_arguments -s \
+		$options \
+		'1:template name:->template' \
+		'2:project name:' \
+		'3:project location:_files -/' \
+		'4:company name (optional):' \
+		'5:bundle identifier (optional):reverse-DNS (e.g. com.company.app)'
+
+	case $state in
+		template)
+			_describe 'template name' specs
+			;;
+	esac
+}
+
+_new_xcode_project

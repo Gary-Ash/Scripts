@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :   5-Sep-2026  4:36pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -997,8 +997,20 @@ is_restricted() {
 
 # Rewriting a live executable fails outright with ETXTBSY, and a half rewritten one is a
 # crash waiting to happen.  Leave running apps for the next run.
+#
+# pgrep is no use here: it refuses to match its own ancestors, and the terminal emulator
+# hosting the run is one of them - so the single bundle that must never be rewritten under
+# our feet is precisely the one pgrep reports as idle.  ps has no such opinion.  It has to
+# be told not to fold its output at 79 columns, which would truncate the deeper helper
+# paths and lose them.
 is_running() {
-	pgrep -f "^${1%/}/Contents/MacOS/" >/dev/null 2>&1
+	local app="${1%/}"
+
+	ps -Awwo comm= 2>/dev/null |
+		awk -v p="${app}/Contents/MacOS/" '
+			index($0, p) == 1 { found = 1; exit }
+			END { exit(found ? 0 : 1) }
+		'
 }
 
 # Why this bundle is being left alone, on stdout; non-zero when there is no reason to.

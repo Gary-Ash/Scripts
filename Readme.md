@@ -291,12 +291,16 @@ Reclaims disk space in macOS application bundles by removing the Intel (`x86_64`
 - Every slice of a universal Mach-O carries its own complete signature, so dropping the Intel slice leaves the arm64 slice — and its CDHash — byte for byte identical. A binary can therefore be thinned whenever its bundle seals it by CDHash (nested code) or not at all (the bundle's own executable). A Mach-O sealed as plain *content*, in practice anything under `Resources/`, is left fat: thinning it is exactly the mistake that leaves a bundle failing `codesign --verify`.
 - `codesign`'s default resource rules mark `^Resources/.*\.lproj/` as *optional*, so a missing localization does not invalidate the seal. `Base.lproj` carries no optional flag and is always kept, as is the last localization of any bundle that has no `Base` or English fallback.
 
-Every change is staged before it is made and `codesign` gets the last word on each bundle; anything it objects to is put back, and a bundle that still will not verify is rolled back completely. Bundles are skipped when they are Apple-signed, SIP-protected, currently running, or already failing verification before the run starts.
+Every change is staged before it is made and `codesign` gets the last word on each bundle; anything it objects to is put back, and a bundle that still will not verify is rolled back completely. Bundles are skipped when they are Apple-signed, SIP-protected, or already failing verification before the run starts.
+
+A running app cannot be rewritten, so you are asked whether to quit it. The request is a normal quit Apple event, so the app closes its documents exactly as it would from its own menu, and one that does not go within twenty seconds is left alone rather than killed. The app hosting the terminal the run is living in is never offered: quitting it would take the script down with it, halfway through a bundle it has already begun to rewrite. Apps quit for a strip are not relaunched afterwards.
 
 **Usage:** `strip-app.sh [options] [<app-bundle> ...]`
 
 **Options:**
 - `-n, --dry-run` — Report only, change nothing
+- `--quit` — Quit a running app without asking, so it can be processed
+- `--no-quit` — Leave running apps alone without asking
 - `--keep LANGS` — Comma separated extra languages to preserve (e.g. `de,ja`)
 - `--no-lang` — Skip localization pruning
 - `--no-thin` — Skip Intel slice removal

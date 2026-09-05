@@ -21,6 +21,8 @@ source "/opt/geedbla/lib/shell/lib/log.sh"
 readonly PROGRAM_NAME="${0##*/}"
 readonly SUDO_HELPER="/opt/geedbla/lib/shell/lib/get_sudo_password.sh"
 readonly DEFAULT_SCAN_ROOT="/Applications"
+readonly RUNNING_REASON="currently running"
+readonly QUIT_TIMEOUT=20
 
 APPLY=true
 LOG_VERBOSE=false
@@ -28,6 +30,7 @@ DO_LANG=true
 DO_THIN=true
 MODE="strip"
 EXTRA_KEEP=""
+QUIT_POLICY="ask" # ask | always | never
 
 WORK_DIR=""
 SYS_LANG=""
@@ -45,6 +48,7 @@ bytes_lang=0
 # run totals
 total_apps=0
 total_bytes=0
+total_quit=0
 
 #*****************************************************************************************
 # output helpers
@@ -108,6 +112,8 @@ ever re-signed.  There are no strategy options: the safe method is the only one.
 
 options:
   -n, --dry-run       report only, change nothing
+      --quit          quit a running app without asking, so it can be processed
+      --no-quit       leave running apps alone without asking
       --keep LANGS    comma separated extra languages to preserve (e.g. de,ja)
       --no-lang       skip localization pruning
       --no-thin       skip Intel slice removal
@@ -1013,6 +1019,126 @@ is_running() {
 		'
 }
 
+#*****************************************************************************************
+# running apps
+#
+# A running app is the one skip the user can actually do something about, so it is put to
+# them rather than quietly reported - with the single exception of the app this run is
+# living inside.  Quitting Ghostty.app from a shell Ghostty.app is hosting takes the script
+# down with it, halfway through a bundle it has already begun to rewrite.
+#*****************************************************************************************
+
+# Can this run reach a terminal to ask on?  /dev/tty exists whether or not there is a
+# controlling terminal to open, so the node has to be opened rather than stat'ed.
+have_tty() {
+	{ : >/dev/tty; } 2>/dev/null
+}
+
+# Does the app host the session this script is running in?
+#
+# The shell is a descendant of its terminal emulator - through login, and through sudo
+# after the re-exec, both of which keep the parentage - so the whole ancestry from here up
+# to launchd is walked and any process living inside the bundle counts.
+hosts_this_session() {
+	local app="${1%/}" pid="$$" exe
+
+	while [[ -n ${pid} && ${pid} -gt 1 ]]; do
+		exe="$(ps -o comm= -p "${pid}" 2>/dev/null || true)"
+		[[ ${exe} == "${app}/"* ]] && return 0
+		pid="$(ps -o ppid= -p "${pid}" 2>/dev/null | tr -d '[:space:]')"
+	done
+	return 1
+}
+
+# Run a command in the invoking user's GUI session.  Root has no session of its own and an
+# Apple event posted from one goes nowhere, so after the sudo re-exec the command has to be
+# handed back into the user's launchd domain.
+run_as_user() {
+	local user uid
+
+	if [[ ${EUID} -ne 0 ]]; then
+		"$@"
+		return
+	fi
+
+	user="${SUDO_USER:-$(stat -f '%Su' /dev/console 2>/dev/null || true)}"
+	[[ -n ${user} && ${user} != root ]] || return 1
+	uid="$(id -u "${user}" 2>/dev/null)" || return 1
+
+	launchctl asuser "${uid}" sudo -u "${user}" "$@"
+}
+
+# Ask the app to quit and wait for it to go.
+#
+# The request is an Apple event rather than a signal: an app told to quit closes its
+# documents and shuts down the way it would from the menu, where SIGTERM would take it down
+# where it stands and lose whatever was unsaved.  For the same reason nothing is escalated
+# when the wait runs out - an app that is still there is usually holding a save dialog open,
+# and that dialog is the user's to answer.
+quit_app() {
+	local app="${1%/}" bundle_id output waited=0
+
+	bundle_id="$(plutil -extract CFBundleIdentifier raw -o - "${app}/Contents/Info.plist" 2>/dev/null || true)"
+	if [[ -z ${bundle_id} ]]; then
+		log_verbose "${app##*/} has no bundle identifier - it cannot be asked to quit"
+		return 1
+	fi
+
+	if ! output="$(run_as_user osascript -e "tell application id \"${bundle_id}\" to quit" 2>&1)"; then
+		log_verbose "quit request refused: ${output}"
+	fi
+
+	while [[ ${waited} -lt ${QUIT_TIMEOUT} ]]; do
+		is_running "${app}" || return 0
+		sleep 1
+		waited=$((waited + 1))
+	done
+	return 1
+}
+
+# Non-zero leaves the bundle for another run, which is what the caller does with a plain
+# "currently running".
+try_quit_running() {
+	local app="${1%/}" reply
+	local name="${app##*/}"
+
+	[[ ${APPLY} == true ]] || return 1
+
+	case "${QUIT_POLICY}" in
+		never) return 1 ;;
+		ask) have_tty || return 1 ;;
+	esac
+
+	if hosts_this_session "${app}"; then
+		log_info "${name} is hosting this session - quitting it would kill this run"
+		return 1
+	fi
+
+	if [[ ${QUIT_POLICY} == ask ]]; then
+		flush_pending
+		printf '%s is running.  Quit it so it can be stripped? [y/N/a=all/x=none] ' "${name}" >/dev/tty
+		IFS= read -r reply </dev/tty || reply=""
+		case "${reply}" in
+			y | Y | yes) ;;
+			a | A | all) QUIT_POLICY="always" ;;
+			x | X | none)
+				QUIT_POLICY="never"
+				return 1
+				;;
+			*) return 1 ;;
+		esac
+	fi
+
+	log_info "quitting ${name}..."
+	if ! quit_app "${app}"; then
+		log_warn "${name} did not quit - left as it was (it may be holding a dialog open)"
+		return 1
+	fi
+
+	total_quit=$((total_quit + 1))
+	return 0
+}
+
 # Why this bundle is being left alone, on stdout; non-zero when there is no reason to.
 skip_reason() {
 	local app="${1%/}"
@@ -1030,7 +1156,7 @@ skip_reason() {
 		return 0
 	}
 	is_running "${app}" && {
-		printf 'currently running'
+		printf '%s' "${RUNNING_REASON}"
 		return 0
 	}
 
@@ -1066,9 +1192,17 @@ process_app() {
 	PENDING_HEADER="${app##*/}  (${before} KB)"
 
 	if reason="$(skip_reason "${app}")"; then
-		log_verbose "skipped: ${reason}"
-		PENDING_HEADER=""
-		return 0
+		# The guards are asked again once the app has gone: the seal check sits behind the
+		# running test and has not run yet.
+		if [[ ${reason} == "${RUNNING_REASON}" ]] && try_quit_running "${app}"; then
+			reason="$(skip_reason "${app}")" || reason=""
+		fi
+
+		if [[ -n ${reason} ]]; then
+			log_verbose "skipped: ${reason}"
+			PENDING_HEADER=""
+			return 0
+		fi
 	fi
 
 	stage_reset
@@ -1301,6 +1435,14 @@ parse_args() {
 				APPLY=false
 				shift
 				;;
+			--quit)
+				QUIT_POLICY="always"
+				shift
+				;;
+			--no-quit)
+				QUIT_POLICY="never"
+				shift
+				;;
 			--keep)
 				EXTRA_KEEP="${2:-}"
 				shift 2
@@ -1397,6 +1539,11 @@ main() {
 	for app in "${TARGETS[@]}"; do
 		process_app "${app}" || rc=1
 	done
+
+	# An app quit for the strip stays quit, whether or not it turned out to have anything
+	# left to strip, so this is said even on a run that reports nothing else.
+	[[ ${total_quit} -gt 0 ]] &&
+		log_line "note: ${total_quit} app(s) quit for the strip - they were not relaunched"
 
 	# Nothing was stripped, so nothing was said - and the preamble, the totals and the
 	# closing note would be the entire output of a run that did no work.

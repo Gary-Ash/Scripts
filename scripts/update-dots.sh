@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :   5-Sep-2026  7:05pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -26,7 +26,7 @@ readonly PREFERENCE_FILES=(
 	"com.apple.Terminal.plist"
 )
 
-readonly DOTFILES_DIR="$HOME/Downloads/dotfiles"
+readonly DOTFILES_DIR="$HOME/Developer/GeeDblA/dotfiles"
 
 #*****************************************************************************************
 # this subroutine will process the "." files in a configuration files

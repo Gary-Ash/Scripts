@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :   5-Sep-2026  4:36pm
+# Modified :  10-Sep-2026  3:29pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1096,6 +1096,23 @@ quit_app() {
 	return 1
 }
 
+# Is there anything here worth closing the app for?
+#
+# Quitting is a real cost to the user, so it has to buy something: an app that is already
+# arm only has nothing to thin and should be left running.  Only the Intel scan can be
+# answered up front - the localization pass decides what goes as it walks - so with
+# --no-thin there is nothing to check ahead of time and the app is worth asking about.
+has_thin_work() {
+	local app="$1" record
+
+	[[ ${DO_THIN} == true ]] || return 0
+
+	while IFS= read -r -d '' record; do
+		[[ ${record} == thin$'\t'* ]] && return 0
+	done < <(find_fat_binaries "${app}")
+	return 1
+}
+
 # Non-zero leaves the bundle for another run, which is what the caller does with a plain
 # "currently running".
 try_quit_running() {
@@ -1194,7 +1211,8 @@ process_app() {
 	if reason="$(skip_reason "${app}")"; then
 		# The guards are asked again once the app has gone: the seal check sits behind the
 		# running test and has not run yet.
-		if [[ ${reason} == "${RUNNING_REASON}" ]] && try_quit_running "${app}"; then
+		if [[ ${reason} == "${RUNNING_REASON}" ]] &&
+			has_thin_work "${app}" && try_quit_running "${app}"; then
 			reason="$(skip_reason "${app}")" || reason=""
 		fi
 

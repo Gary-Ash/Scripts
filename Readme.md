@@ -293,7 +293,7 @@ Reclaims disk space in macOS application bundles by removing the Intel (`x86_64`
 
 Every change is staged before it is made and `codesign` gets the last word on each bundle; anything it objects to is put back, and a bundle that still will not verify is rolled back completely. Bundles are skipped when they are Apple-signed, SIP-protected, or already failing verification before the run starts.
 
-A running app cannot be rewritten, so you are asked whether to quit it. The request is a normal quit Apple event, so the app closes its documents exactly as it would from its own menu, and one that does not go within twenty seconds is left alone rather than killed. The app hosting the terminal the run is living in is never offered: quitting it would take the script down with it, halfway through a bundle it has already begun to rewrite. Apps quit for a strip are not relaunched afterwards.
+A running app cannot be rewritten, so you are asked whether to quit it — but only once the bundle is known to have Intel slices left to remove, so an app that is already arm only is passed over without a prompt. Under `--no-thin` there is nothing that can be checked ahead of time and the question is put as before. The request is a normal quit Apple event, so the app closes its documents exactly as it would from its own menu, and one that does not go within twenty seconds is left alone rather than killed. The app hosting the terminal the run is living in is never offered: quitting it would take the script down with it, halfway through a bundle it has already begun to rewrite. Apps quit for a strip are not relaunched afterwards.
 
 **Usage:** `strip-app.sh [options] [<app-bundle> ...]`
 

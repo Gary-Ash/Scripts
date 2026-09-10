@@ -26,7 +26,7 @@ readonly PREFERENCE_FILES=(
 	"com.apple.Terminal.plist"
 )
 
-readonly DOTFILES_DIR="$HOME/Developer/GeeDblA/dotfiles"
+readonly DOTFILES_DIR="$HOME/Downloads/dotfiles"
 
 #*****************************************************************************************
 # this subroutine will process the "." files in a configuration files

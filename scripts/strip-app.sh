@@ -8,7 +8,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  10-Sep-2026  3:29pm
+# Modified :  20-Sep-2026  6:08pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -36,6 +36,7 @@ WORK_DIR=""
 SYS_LANG=""
 APP=""
 TARGETS=()
+QUIT_APPS=()
 
 # per-app tallies
 n_thinned=0
@@ -48,7 +49,6 @@ bytes_lang=0
 # run totals
 total_apps=0
 total_bytes=0
-total_quit=0
 
 #*****************************************************************************************
 # output helpers
@@ -1152,7 +1152,33 @@ try_quit_running() {
 		return 1
 	fi
 
-	total_quit=$((total_quit + 1))
+	QUIT_APPS+=("${app}")
+	return 0
+}
+
+# Put back what the run took down.  Everything is relaunched together at the end: an app
+# started again the moment its own bundle was done would be running for the rest of the
+# sweep, and a bundle that is named twice - or named and swept - would be skipped as
+# running the second time it came round.
+#
+# `open` rather than the executable itself: it hands the request to launchd, so the app
+# comes up in the user's GUI session the way a double click would start it, rather than as
+# a child of this script - which after the sudo re-exec is running as root.
+relaunch_quit_apps() {
+	local app name output
+
+	[[ ${#QUIT_APPS[@]} -gt 0 ]] || return 0
+
+	for app in "${QUIT_APPS[@]}"; do
+		name="${app##*/}"
+		if output="$(run_as_user open -a "${app}" 2>&1)"; then
+			log_line "relaunched ${name}"
+		else
+			log_verbose "relaunch refused: ${output}"
+			log_warn "${name} could not be relaunched - start it by hand"
+		fi
+	done
+	QUIT_APPS=()
 	return 0
 }
 
@@ -1558,10 +1584,9 @@ main() {
 		process_app "${app}" || rc=1
 	done
 
-	# An app quit for the strip stays quit, whether or not it turned out to have anything
-	# left to strip, so this is said even on a run that reports nothing else.
-	[[ ${total_quit} -gt 0 ]] &&
-		log_line "note: ${total_quit} app(s) quit for the strip - they were not relaunched"
+	# An app quit for the strip is put back whether or not it turned out to have anything
+	# left to strip, so this happens even on a run that reports nothing else.
+	relaunch_quit_apps
 
 	# Nothing was stripped, so nothing was said - and the preamble, the totals and the
 	# closing note would be the entire output of a run that did no work.

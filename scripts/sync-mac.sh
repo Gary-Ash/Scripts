@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :  20-Sep-2026  8:50pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -96,6 +96,7 @@ sync_directories() {
 		"$HOME/.config"
 		"$HOME/Developer"
 		"$HOME/Documents"
+		"$HOME/Sites"
 		"/opt/bin"
 		"/opt/geedbla"
 		"$HOME/Library/Script Libraries"

@@ -47,6 +47,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [strip-app.sh](#strip-appsh) | Bash | Strip Intel slices and dead languages from app bundles |
 | [strip-comments.py](#strip-commentspy) | Python | Remove comments from C-style source |
 | [sync-mac.sh](#sync-macsh) | Bash | Sync files between Mac systems |
+| [unix-le.sh](#unix-lesh) | Bash | Convert text files to Unix line endings |
 | [update-dots.sh](#update-dotssh) | Bash | Maintain dotfiles repository |
 | [update-site.sh](#update-sitesh) | Bash | Deploy Jekyll website |
 | [update-software.sh](#update-softwaresh) | Bash | Update macOS, App Store, Homebrew and Sparkle apps |
@@ -329,6 +330,14 @@ Synchronizes directories, files, and package manager installations between multi
 - **Mail** — Mail archive (`~/Library/Mail`) and Mail preferences
 - **Package managers** — Homebrew formulae and casks, pip packages, Ruby gems, npm packages (installs missing, removes extras)
 - **Custom apps** — Bespoke applications (CleanStart.app, XcodeGeeDblA.app) installed to `/Applications` via sudo. Sudo password prompts are suppressed and sync failures produce descriptive error messages without aborting the remaining sync operations.
+
+---
+
+### unix-le.sh
+
+Walks a directory tree and converts every file that `file` identifies as text from Windows (CRLF) or classic Mac (CR) line endings to Unix line feeds, editing each file in place and naming it as it goes.
+
+**Usage:** `unix-le.sh [directory]`
 
 ---
 

@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  20-Sep-2026  8:50pm
+# Modified :  27-Sep-2026  3:12pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -215,6 +215,31 @@ sync_mail_archive() {
 	done
 
 	return ${status}
+}
+
+sync_photos_library() {
+	local target_system="$1"
+	local library="$HOME/Pictures/Photos Library.photoslibrary"
+	local remote_library="${library// /\\ }"
+
+	if [[ ! -d ${library} ]]; then
+		log_info "Photos library skipped - ${library} is not a directory on this host"
+		return 1
+	fi
+
+	# Photos keeps its database open while running; copying from or over a live
+	# library leaves a corrupt copy, so require it to be closed on both ends.
+	if pgrep -x Photos >/dev/null 2>&1; then
+		log_info "Photos library skipped - Photos is running on this host"
+		return 1
+	fi
+	if SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "pgrep -x Photos >/dev/null 2>&1"; then
+		log_info "Photos library skipped - Photos is running on ${target_system}"
+		return 1
+	fi
+
+	rsync_to_target "rsync of ${library} to ${target_system}" "${target_system}" \
+		--delete "${library}/" "${target_system}:${remote_library}/"
 }
 
 sync_ruby_gems() {
@@ -577,6 +602,7 @@ main() {
 			run_step "BBEdit window placement backup on ${system}" save_bbedit_window_placement "${target_system}"
 			run_step "directory sync to ${system}" sync_directories "${target_system}"
 			run_step "mail archive sync to ${system}" sync_mail_archive "${target_system}"
+			run_step "Photos library sync to ${system}" sync_photos_library "${target_system}"
 			run_step "ruby gem sync to ${system}" sync_ruby_gems "${target_system}"
 			run_step "pip package sync to ${system}" sync_pip_packages "${target_system}"
 			run_step "Homebrew package sync to ${system}" sync_homebrew_packages "${target_system}"

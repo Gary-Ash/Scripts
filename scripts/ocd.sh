@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :  29-Sep-2026  2:24pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1137,6 +1137,14 @@ tell application "System Events"
 	do shell script "Killall " & quoted form of activeApp
 end tell
 END
+
+#*****************************************************************************************
+# reset the iWork template chooser Recents - the list lives in iCloud key-value storage,
+# so set the app's one-shot reset flag; it clears when the template chooser next opens
+#*****************************************************************************************
+for app in Pages Numbers Keynote; do
+	defaults write "com.apple.$app" TSAOpenedTemplatesReset -bool YES
+done
 
 #*****************************************************************************************
 # Notification Center clean up

@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  29-Sep-2026  2:24pm
+# Modified :  12-Oct-2026  3:26pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -805,7 +805,7 @@ def BBEdit():
             continue
 
         for key in list(plist):
-            if key.startswith("InstaprojectWindowSavedBounds") or key.startswith("ImageDisplayGrayLevel_") or checksum.match(key):
+            if key.startswith("InstaprojectWindowSavedBounds") or key.startswith("ImageDisplayGrayLevel_") or key.startswith("ApplyTextTransformPanelSaved") or checksum.match(key):
                 del plist[key]
         writePlist(plistFile, plist, fmt)
 

@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :   5-Sep-2026  7:05pm
+# Modified :  12-Oct-2026  4:05pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -38,6 +38,7 @@ dot-files() {
 
 	local -r ignore_these=(
 		"${CLAUDE_JUNK_PATHS[@]/#/$HOME/}"
+		"$HOME/.claude/skills"
 		"$HOME/.config/z"
 		"$HOME/.config/zsh/.zsh_history"
 		"$HOME/.config/zsh/.zsh_sessions"

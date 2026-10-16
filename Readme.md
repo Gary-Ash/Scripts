@@ -221,7 +221,7 @@ Generates a new Xcode project from customizable templates. Supports options for 
 
 ### ocd.sh
 
-Comprehensive macOS system maintenance script that updates Homebrew, gems, pip, and npm packages; cleans caches, history, and temporary files; resets application preferences; clears browser data; and performs various system optimizations.
+Comprehensive macOS system maintenance script that updates Homebrew, gems, pip, and npm packages; cleans caches, history, and temporary files; resets application preferences; clears browser data; and performs various system optimizations. It also deletes all YouTube history from Google My Activity through Safari, which must be signed in to Google for that step to work.
 
 **Usage:** `ocd.sh [restart|off]`
 

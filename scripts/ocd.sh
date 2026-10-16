@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  12-Oct-2026  3:26pm
+# Modified :  15-Oct-2026  9:30pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -23,6 +23,7 @@ source "/opt/geedbla/lib/shell/lib/claude-scrub.sh"
 export SUDO_PASSWORD
 SUDO_SHELL_PID=""
 CAFFEINATE=""
+SAFARI_PREFS="$HOME/Library/Containers/com.apple.Safari/Data/Library/Preferences/com.apple.Safari"
 
 #*****************************************************************************************
 # set a exit trap to make sure the persistent sudo thread is always cleaned up
@@ -36,6 +37,7 @@ finish() {
 
 	[[ -n $SUDO_SHELL_PID ]] && kill "$SUDO_SHELL_PID" 2>/dev/null
 	[[ -n $CAFFEINATE ]] && kill "$CAFFEINATE" 2>/dev/null
+	defaults write "$SAFARI_PREFS" AllowJavaScriptFromAppleEvents -bool false 2>/dev/null
 	wait 2>/dev/null
 	unset SUDO_SHELL_PID
 	unset CAFFEINATE
@@ -84,6 +86,116 @@ end tell
 CLOSE_SCRIPT
 }
 
+#*****************************************************************************************
+# delete all YouTube history through Google My Activity in Safari - Safari's "Allow
+# JavaScript from Apple Events" is on only while this runs (finish also turns it off)
+#*****************************************************************************************
+cleanYouTubeHistory() {
+	defaults write "$SAFARI_PREFS" AllowJavaScriptFromAppleEvents -bool true
+	osascript <<"YOUTUBE_SCRIPT" &>/dev/null
+property historyURL : "https://myactivity.google.com/product/youtube"
+property timeoutSeconds : 30
+
+on run
+	my ensureSafariRunning()
+	tell application "Safari"
+		if (count of windows) = 0 then
+			make new document with properties {URL:historyURL}
+			set historyTab to current tab of front window
+		else
+			set historyTab to make new tab at end of tabs of front window with properties {URL:historyURL}
+			set current tab of front window to historyTab
+		end if
+	end tell
+
+	try
+		my cleanHistory(historyTab)
+	on error errMsg number errNum
+		my closeTab(historyTab)
+		error errMsg number errNum
+	end try
+	my closeTab(historyTab)
+end run
+
+on ensureSafariRunning()
+	if application "Safari" is running then return
+	tell application "Safari" to launch
+	repeat (timeoutSeconds * 2) times
+		if application "Safari" is running then return
+		delay 0.5
+	end repeat
+	error "Timed out waiting for Safari to start."
+end ensureSafariRunning
+
+on cleanHistory(historyTab)
+	my waitFor(historyTab, "String(location.href !== 'about:blank' && document.readyState === 'complete')", "the page to load")
+	if my onSignInPage(historyTab) then error "Safari is not signed in to Google."
+
+	my waitForHistoryList(historyTab)
+	if my itemCount(historyTab) = 0 then return
+
+	my runJS(historyTab, "document.querySelector('button[jsname=PltDuc]').click()")
+	my waitFor(historyTab, "String(!!document.querySelector('li[jsname=KKr5ne]')?.getClientRects().length)", "the Delete all time menu item")
+	my runJS(historyTab, "document.querySelector('li[jsname=KKr5ne]').click()")
+	my waitFor(historyTab, "String(!!document.querySelector('[jsname=rkUhV] button[jsname=nUV0Pd]')?.getClientRects().length)", "the confirmation dialog")
+	my runJS(historyTab, "document.querySelector('[jsname=rkUhV] button[jsname=nUV0Pd]').click()")
+	-- reloading while the delete request is in flight could cancel it, so wait for the dialog to go first
+	my waitFor(historyTab, "String(!document.querySelector('[jsname=rkUhV] button[jsname=nUV0Pd]')?.getClientRects().length)", "the confirmation dialog to close")
+	delay 2
+
+	-- the sentinel disappears only once the reloaded page replaces this one
+	my runJS(historyTab, "window.ytCleanerSentinel = true; location.reload()")
+	my waitFor(historyTab, "String(!window.ytCleanerSentinel && document.readyState === 'complete')", "the page to reload")
+	if my onSignInPage(historyTab) then error "Google asked to verify the account after Delete; history may not be deleted."
+	my waitForHistoryList(historyTab)
+
+	set remaining to my itemCount(historyTab)
+	if remaining > 0 then error "History still shows " & remaining & " items after Delete."
+end cleanHistory
+
+on waitForHistoryList(historyTab)
+	my waitFor(historyTab, "String(!!document.querySelector('button[jsname=PltDuc]'))", "the DELETE button")
+	-- activity items render after the toolbar
+	delay 2
+end waitForHistoryList
+
+on onSignInPage(historyTab)
+	tell application "Safari" to set pageURL to URL of historyTab
+	return pageURL contains "accounts.google.com"
+end onSignInPage
+
+on itemCount(historyTab)
+	return (my runJS(historyTab, "String(document.querySelectorAll(\"button[aria-label^='Delete activity item']\").length)")) as integer
+end itemCount
+
+on waitFor(historyTab, condition, description)
+	repeat (timeoutSeconds * 2) times
+		if my runJS(historyTab, condition) is "true" then return
+		delay 0.5
+	end repeat
+	error "Timed out waiting for " & description & "."
+end waitFor
+
+-- do JavaScript fails or returns missing value while a page is navigating; treat that as "not yet"
+on runJS(historyTab, js)
+	try
+		tell application "Safari" to set jsResult to do JavaScript js in historyTab
+		if jsResult is missing value then return ""
+		return jsResult as text
+	on error
+		return ""
+	end try
+end runJS
+
+on closeTab(historyTab)
+	try
+		tell application "Safari" to close historyTab
+	end try
+end closeTab
+YOUTUBE_SCRIPT
+	defaults write "$SAFARI_PREFS" AllowJavaScriptFromAppleEvents -bool false
+}
+
 #-----------------------------------------------------------------------------------------
 # SCRIPT MAIN LINE
 #-----------------------------------------------------------------------------------------
@@ -104,6 +216,10 @@ export OCD_OPTION="$cmd"
 
 error_log="$TMPDIR/Error.txt"
 
+#*****************************************************************************************
+# must run before killEverything quits Safari and safari-cleaner.py trims its cookies
+#*****************************************************************************************
+cleanYouTubeHistory
 killEverything
 
 #*****************************************************************************************

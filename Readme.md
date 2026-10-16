@@ -48,6 +48,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [strip-comments.py](#strip-commentspy) | Python | Remove comments from C-style source |
 | [sync-mac.sh](#sync-macsh) | Bash | Sync files between Mac systems |
 | [unix-le.sh](#unix-lesh) | Bash | Convert text files to Unix line endings |
+| [update-ai-tools.sh](#update-ai-toolssh) | Bash | Push Claude Code configuration and skills to GitHub |
 | [update-dots.sh](#update-dotssh) | Bash | Maintain dotfiles repository |
 | [update-site.sh](#update-sitesh) | Bash | Deploy Jekyll website |
 | [update-software.sh](#update-softwaresh) | Bash | Update macOS, App Store, Homebrew and Sparkle apps |
@@ -341,6 +342,14 @@ Walks a directory tree and converts every file that `file` identifies as text fr
 
 ---
 
+### update-ai-tools.sh
+
+Pushes my Claude Code configuration to the AI-Tools GitHub repository. It clones the repository fresh, copies in `CLAUDE.md`, `statusline.pl`, and the skills named in its `SKILLS` list from `~/.claude`, then opens `$EDITOR` for the commit message before committing and pushing. Saving an empty message pushes nothing.
+
+**Usage:** `update-ai-tools.sh [--package]`
+
+---
+
 ### update-dots.sh
 
 Maintains a dotfiles Git repository by collecting configuration files, preferences, and application settings from the system and pushing updates to GitHub.
@@ -480,6 +489,18 @@ lines.
 ```bash
 cd scripts/tests
 python3 -m unittest discover -p 'test_*.py'
+```
+
+A `bats` suite covering the Bash scripts, located in `test/`. Each test drives the script
+end to end against a local bare repository standing in for GitHub.
+
+| File | Covers |
+|------|--------|
+| `update-ai-tools.bats` | Publishing the configuration and skills, the commit message editor, and `--package` |
+
+**Usage:**
+```bash
+bats test/
 ```
 
 ---

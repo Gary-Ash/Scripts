@@ -39,6 +39,9 @@ dot-files() {
 	local -r ignore_these=(
 		"${CLAUDE_JUNK_PATHS[@]/#/$HOME/}"
 		"$HOME/.claude/skills"
+		"$HOME/.claude/plugins/synced"
+		"$HOME/.claude/plugins/plugin-directory-cache-v2.json"
+		"$HOME/.claude/plugins/install-counts-cache.json"
 		"$HOME/.config/z"
 		"$HOME/.config/zsh/.zsh_history"
 		"$HOME/.config/zsh/.zsh_sessions"
@@ -242,6 +245,15 @@ buildRepository() {
 	else
 		echo "Unable to scrub .claude.json, leaving it out of the repository" >&2
 		rm -f "$DOTFILES_DIR/home/.claude.json1" "$DOTFILES_DIR/home/.claude.json"
+	fi
+
+	# every marketplace refresh rewrites lastUpdated, only the list of marketplaces
+	# itself is a preference
+	local -r marketplaces="$DOTFILES_DIR/home/.claude/plugins/known_marketplaces.json"
+	if [[ -f $marketplaces ]] && jq 'del(.[].lastUpdated)' "$marketplaces" >"$marketplaces.1"; then
+		mv "$marketplaces.1" "$marketplaces"
+	else
+		rm -f "$marketplaces.1"
 	fi
 
 	cp -f /opt/geedbla/scripts/bootstrap.sh "$DOTFILES_DIR"
@@ -451,6 +463,9 @@ PLIST_KEYS_TO_DELETE = [
     "IDEProvisioningTeamByIdentifier",
     "IDESourceControlHostAccounts_10",
     "IDEProductsViewControllerSelectedProductIdentifier",
+    "IDESwiftPackageCollectionsAddedDefaultCollectionsDVTToolsVersion",
+    "ApplyTextTransformPanelSavedOperation",
+    "ApplyTextTransformPanelSavedSourcesAndOptions",
 ]
 
 #*****************************************************************************************
@@ -460,6 +475,9 @@ GENERATED_KEY_PREFIXES = (
     "InstaprojectWindowSavedBounds",
     "ImageDisplayGrayLevel_",
     "IDEXcodeDeviceSupportLastNotified-",
+    "AgentExecutableLastNotifiedVersion-",
+    "NSWindow Frame ",
+    "NSSplitView Subview Frames ",
 )
 
 DIGEST_KEY = re.compile(r"^~[0-9A-Fa-f]{40}$")

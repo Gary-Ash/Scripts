@@ -27,7 +27,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :  15-Oct-2026 10:52pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -110,6 +110,7 @@ readonly CLAUDE_SCRUB_KEYS=(
 	"passesLastSeenRemaining"
 	"cachedChromeExtensionInstalled"
 	"cachedExtraUsageDisabledReason"
+	"cachedArtifactRoster"
 )
 
 #*****************************************************************************************
@@ -147,6 +148,7 @@ readonly CLAUDE_SCRUB_KEYS_IDENTITY=(
 	"opusProMigrationComplete"
 	"thinkingMigrationComplete"
 	"sonnet1m45MigrationComplete"
+	"additionalModelOptionsAnsweredAt"
 )
 
 #*****************************************************************************************

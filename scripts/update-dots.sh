@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  12-Oct-2026  4:05pm
+# Modified :  15-Oct-2026 10:52pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -183,7 +183,7 @@ buildRepository() {
 		"$DOTFILES_DIR/" &>/dev/null || true
 
 	for preference_file in "${PREFERENCE_FILES[@]}"; do
-		rsync -arz -E "$HOME/Library/Preferences/$preference_file" "$DOTFILES_DIR/preferences" &>/dev/null || true
+		rsync -arcz -E "$HOME/Library/Preferences/$preference_file" "$DOTFILES_DIR/preferences" &>/dev/null || true
 	done
 
 	local package_temp="$HOME/Downloads/package-temp"
@@ -572,13 +572,9 @@ if [[ $# -gt 0 ]]; then
 			buildRepository
 			;;
 
-		-*)
+		*)
 			echo "Unknown option -- $1" >&2
 			exit 1
-			;;
-
-		*)
-			updateGitHub
 			;;
 	esac
 else

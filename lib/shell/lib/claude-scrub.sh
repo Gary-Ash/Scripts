@@ -27,7 +27,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  15-Oct-2026 10:52pm
+# Modified :  15-Oct-2026 11:28pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -86,6 +86,7 @@ readonly CLAUDE_SCRUB_KEYS=(
 	"lspRecommendationIgnoredCount"
 	"birthdayHatAnimationCount"
 	"tipsHistory"
+	"tipsHistoryByCommand"
 	"tipLifetimeShownCounts"
 	"lastShownEmergencyTip"
 	"seenNotifications"
@@ -111,6 +112,8 @@ readonly CLAUDE_SCRUB_KEYS=(
 	"cachedChromeExtensionInstalled"
 	"cachedExtraUsageDisabledReason"
 	"cachedArtifactRoster"
+	"githubWebConnectionStatusCache"
+	"promoStartupStatusCache"
 )
 
 #*****************************************************************************************
@@ -149,6 +152,7 @@ readonly CLAUDE_SCRUB_KEYS_IDENTITY=(
 	"thinkingMigrationComplete"
 	"sonnet1m45MigrationComplete"
 	"additionalModelOptionsAnsweredAt"
+	"autoModeEnvSetup"
 )
 
 #*****************************************************************************************

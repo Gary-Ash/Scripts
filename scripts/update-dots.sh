@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  15-Oct-2026 10:52pm
+# Modified :  15-Oct-2026 11:28pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -171,6 +171,7 @@ buildRepository() {
 		--exclude="/SDKToSimulatorIndexMapping.plist" \
 		--exclude="/XcodeToMetalToolchainIndexMapping.plist" \
 		--exclude="/.derived-data-log*" \
+		--exclude="/.knownDerivedDataLocations.log" \
 		"$HOME/Library/Developer/Xcode/" "$DOTFILES_DIR/xcode/" &>/dev/null || true
 
 	rsync -arcz -E --rsh=ssh \
@@ -466,6 +467,7 @@ PLIST_KEYS_TO_DELETE = [
     "IDESwiftPackageCollectionsAddedDefaultCollectionsDVTToolsVersion",
     "ApplyTextTransformPanelSavedOperation",
     "ApplyTextTransformPanelSavedSourcesAndOptions",
+    "ProductMappingKey",
 ]
 
 #*****************************************************************************************
@@ -478,6 +480,7 @@ GENERATED_KEY_PREFIXES = (
     "AgentExecutableLastNotifiedVersion-",
     "NSWindow Frame ",
     "NSSplitView Subview Frames ",
+    "IDE_CA_Daily_",
 )
 
 DIGEST_KEY = re.compile(r"^~[0-9A-Fa-f]{40}$")

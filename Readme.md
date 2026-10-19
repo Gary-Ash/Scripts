@@ -119,9 +119,7 @@ Configures Finder preferences including list view with specific columns (name, s
 
 ### fix-xcode-templates.py
 
-Modifies Xcode's internal file and project templates to remove the `//` comment prefix from `___FILEHEADER___` placeholders, allowing custom file headers to work correctly.
-
-**Note:** Requires sudo privileges.
+Copies Xcode's file templates into `~/Library/Developer/Xcode/Templates` with the `//` comment prefix removed from `___FILEHEADER___`, so custom block-comment file headers work. Xcode.app itself is never modified, which keeps its code signature intact. Re-run after each Xcode update.
 
 ---
 

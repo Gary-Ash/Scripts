@@ -7,12 +7,12 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  15-Oct-2026  9:55pm
-# Modified :  15-Oct-2026 10:21pm
+# Modified :  19-Oct-2026  6:59pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
 
-SCRIPT="$BATS_TEST_DIRNAME/../scripts/update-ai-tools.sh"
+SCRIPT="$BATS_TEST_DIRNAME/../../scripts/update-ai-tools.sh"
 
 setup() {
 	export GIT_CONFIG_GLOBAL="$BATS_TEST_TMPDIR/gitconfig"

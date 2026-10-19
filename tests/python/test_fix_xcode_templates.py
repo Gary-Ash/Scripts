@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  19-Oct-2026  3:47pm
-# Modified :  19-Oct-2026  4:19pm
+# Modified :  19-Oct-2026  6:59pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 # *****************************************************************************************
@@ -17,7 +17,7 @@ import struct
 import zlib
 from pathlib import Path
 
-SCRIPT = Path(__file__).resolve().parent.parent / "scripts" / "fix-xcode-templates.py"
+SCRIPT = Path(__file__).resolve().parent.parent.parent / "scripts" / "fix-xcode-templates.py"
 _spec = importlib.util.spec_from_file_location("fix_xcode_templates", SCRIPT)
 assert _spec is not None and _spec.loader is not None
 fix_xcode_templates = importlib.util.module_from_spec(_spec)

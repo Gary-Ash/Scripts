@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  15-Oct-2026  9:30pm
+# Modified :  19-Oct-2026 10:28pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -425,6 +425,24 @@ SQL
 sqlite3 "$DB" </tmp/messages_triggers.sql 2>/dev/null
 rm -f /tmp/messages_triggers.sql
 
+#*****************************************************************************************
+# reset the emoji & symbols picker - Messages (quit above) and the picker must be stopped
+# before the deletes, because either one writes its in-memory recents back when it exits
+#*****************************************************************************************
+killall CharacterPalette EmojiFunctionRowIM 2>/dev/null
+# the XPC file-service helper ignores SIGTERM
+killall -KILL com.apple.CharacterPicker.FileService 2>/dev/null
+
+defaults delete com.apple.EmojiPreferences 2>/dev/null
+defaults delete com.apple.CharacterPicker 2>/dev/null
+# StickerKit shares the recents list across apps; the picker reseeds from Messages' copy
+defaults delete com.apple.MobileSMS com.apple.StickerKit.DataSourceState.UnifiedRecentImageGlyphDataSource 2>/dev/null
+rm -f "$HOME/Library/Containers/com.apple.CharacterPaletteIM/Data/Library/Preferences/com.apple.CharacterPaletteIM.plist"
+rm -f "$HOME/Library/Containers/com.apple.CharacterPaletteIM/Data/Library/Preferences/com.apple.EmojiCache.plist"
+
+# cfprefsd caches prefs in memory and would write the old values back
+killall -u "$USER" cfprefsd 2>/dev/null
+
 sudo -E /usr/bin/python3 - "${CLAUDE_JUNK_PATHS[@]}" <<'PYTHON' &>/dev/null
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -747,6 +765,11 @@ ITEMS_TO_DELETE = (
     (f"{HOME}/Library/Caches/com.apple.Music/SubscriptionPlayCache/", 0),
     (f"{HOME}/Library/Application Support/iTerm2/SavedState/lock", 0),
     ("/Library/Logs", 1),
+    ("/opt/geedbla/.mypy_cache", 0),
+    ("/opt/geedbla/.pytest_cache", 0),
+    ("/opt/geedbla/.ruff_cache", 0),
+    ("/opt/geedbla/*/__pycache__", 0),
+    ("/opt/geedbla/*/*/__pycache__", 0),
     ("/private/var/folders/sf/_p_7qs4n7gg_r4yrrrvmphd00000gn/C/us.zoom.ZoomAutoUpdater", 0),
     ("/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/C/com.koolesache.ColorSnapper2", 0),
     ("/private/var/folders/3j/tgfs5z8x2wg2krlgnzj4jzc00000gn/T/com.koolesache.ColorSnapper2", 0),

@@ -467,29 +467,23 @@ log_die "required command not found"
 
 ## Tests
 
-A `unittest` suite covering the Python scripts, located in `scripts/tests/`. The scripts
-carry hyphenated names, so `scripts.py` loads them as importable modules by path; the
-tests exercise the parsing and rewriting logic directly rather than driving the command
-lines.
+Tests live in `tests/`, with one subfolder per language.
+
+A `pytest` suite covering the Python scripts, located in `tests/python/`. The scripts
+carry hyphenated names, so each test file loads its script as a module by path and
+exercises it against scratch directories standing in for Xcode and
+`~/Library/Developer/Xcode/Templates`.
 
 | File | Covers |
 |------|--------|
-| `scripts.py` | Helper that imports a hyphenated script as a module |
-| `test_check_folder_icons.py` | The resource fork parser behind the custom folder icon checker |
-| `test_load_simulator.py` | The simulator loader's device and media discovery |
-| `test_new_xcode_project.py` | The project generator's text wrapping and header rewriting |
-| `test_reset_dates.py` | The header rewriting done by the date resetter |
-| `test_safari_cleaner.py` | The Safari cleaner's domain matching and binary cookie handling |
-| `test_startup_banner.py` | The banner's parsing of `system_profiler` output |
-| `test_strip_comments.py` | The comment stripper's scanner |
+| `test_fix_xcode_templates.py` | Copying fixed file and project templates, renamed identifiers, and badged template icons |
 
 **Usage:**
 ```bash
-cd scripts/tests
-python3 -m unittest discover -p 'test_*.py'
+python3 -m pytest tests/python -v
 ```
 
-A `bats` suite covering the Bash scripts, located in `test/`. Each test drives the script
+A `bats` suite covering the Bash scripts, located in `tests/bash/`. Each test drives the script
 end to end against a local bare repository standing in for GitHub.
 
 | File | Covers |
@@ -498,7 +492,7 @@ end to end against a local bare repository standing in for GitHub.
 
 **Usage:**
 ```bash
-bats test/
+bats tests/bash/
 ```
 
 ---

@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :  20-Oct-2026  6:50pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -36,5 +36,5 @@ if command -v shfmt &>/dev/null; then
 fi
 
 if command -v perltidy &>/dev/null; then
-	find -E "$directory" -type f -regex ".*\.(pl|pm)" -print0 | xargs -0 -S4096 perltidy -b -bext='/' --profile="$HOME/.config/.perltidyrc" 2>/dev/null || true
+	find -E "$directory" -type f -regex ".*\.(pl|pm)" -print0 | xargs -0 -S4096 perltidy -b -bext='/' --profile="$HOME/.config/perltidy/perltidyrc" 2>/dev/null || true
 fi

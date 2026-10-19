@@ -119,7 +119,7 @@ Configures Finder preferences including list view with specific columns (name, s
 
 ### fix-xcode-templates.py
 
-Copies Xcode's file templates into `~/Library/Developer/Xcode/Templates` with the `//` comment prefix removed from `___FILEHEADER___`, so custom block-comment file headers work. Xcode.app itself is never modified, which keeps its code signature intact. Re-run after each Xcode update.
+Copies Xcode's file and project templates into `~/Library/Developer/Xcode/Templates` with the `//` comment prefix removed from `___FILEHEADER___`, so custom block-comment file headers work. The copies show up in Xcode's New File and New Project dialogs next to Apple's originals, marked with the Geedbla logo; project template copies get a `.geedbla` identifier suffix because Xcode ignores user templates that reuse its identifiers. Xcode.app itself is never modified, which keeps its code signature intact. Re-run after each Xcode update.
 
 ---
 

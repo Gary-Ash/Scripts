@@ -4,12 +4,12 @@ set -euo pipefail
 # bootstrap.sh
 #
 # This script bootstraps a new Mac — it installs the dot files, Homebrew, the
-# /opt/geedbla script tree, the Prompt and startup-banner binaries, and the
-# Ruby, Python, and npm packages
+# /opt/geedbla script tree, the Claude Code AI tools, the Prompt and
+# startup-banner binaries, and the Ruby, Python, and npm packages
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :  23-Oct-2026  3:30pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -141,6 +141,19 @@ if [[ ! -d /opt/geedbla/.git ]]; then
 	sudo chmod 755 /opt/geedbla
 	git clone https://github.com/Gary-Ash/Scripts.git /opt/geedbla
 fi
+
+# CLAUDE.md, the skills, and the status line that settings.json points at live in
+# their own repository rather than in the dot files
+AI_TOOLS="$(mktemp -d)"
+if git clone --quiet https://github.com/Gary-Ash/AI-Tools.git "$AI_TOOLS"; then
+	mkdir -p "$HOME/.claude/skills"
+	cp -f "$AI_TOOLS/CLAUDE.md" "$AI_TOOLS/statusline.pl" "$HOME/.claude/"
+	chmod 755 "$HOME/.claude/statusline.pl"
+	"${RSYNC[@]}" "$AI_TOOLS/skills/" "$HOME/.claude/skills/"
+else
+	echo "bootstrap: could not clone AI-Tools, install it by hand" >&2
+fi
+rm -rf "$AI_TOOLS"
 
 installRelease "Gary-Ash/Prompt" "Prompt"
 installRelease "Gary-Ash/StartupBanner" "startup-banner"

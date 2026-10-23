@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  15-Oct-2026 11:28pm
+# Modified :  23-Oct-2026  3:30pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -39,6 +39,8 @@ dot-files() {
 	local -r ignore_these=(
 		"${CLAUDE_JUNK_PATHS[@]/#/$HOME/}"
 		"$HOME/.claude/skills"
+		"$HOME/.claude/CLAUDE.md"
+		"$HOME/.claude/statusline.pl"
 		"$HOME/.claude/plugins/synced"
 		"$HOME/.claude/plugins/plugin-directory-cache-v2.json"
 		"$HOME/.claude/plugins/install-counts-cache.json"

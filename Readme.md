@@ -71,7 +71,7 @@ Creates a new Jekyll blog post or product page with the appropriate front matter
 
 ### bootstrap.sh
 
-Bootstraps a fresh macOS installation by setting up dotfiles, installing Homebrew packages, configuring shells (bash/zsh), installing Ruby gems and Python packages, and setting up the ZDOTDIR environment.
+Bootstraps a fresh macOS installation by setting up dotfiles, installing Homebrew packages, installing the Claude Code configuration and skills from the AI-Tools repository, configuring shells (bash/zsh), installing Ruby gems and Python packages, and setting up the ZDOTDIR environment.
 
 ---
 

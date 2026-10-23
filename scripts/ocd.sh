@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  19-Oct-2026 10:28pm
+# Modified :  23-Oct-2026  2:36pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -424,6 +424,21 @@ SQL
 # Restore triggers
 sqlite3 "$DB" </tmp/messages_triggers.sql 2>/dev/null
 rm -f /tmp/messages_triggers.sql
+
+#*****************************************************************************************
+# reset the Mail, Notes and Safari windows to their defaults - killEverything quit them
+#*****************************************************************************************
+for domain in com.apple.mail com.apple.Notes com.apple.Safari; do
+	defaults export "$domain" - 2>/dev/null | python3 -c '
+import plistlib, re, sys
+for key in plistlib.loads(sys.stdin.buffer.read()):
+    if re.match(r"NSWindow Frame |NSSplitView Subview Frames |NSToolbar Configuration |NSOutlineView Items |DefaultWindowState$|ColumnConfiguration$", key):
+        print(key)
+' | while IFS= read -r key; do
+		defaults delete "$domain" "$key" 2>/dev/null
+	done
+	rm -rf "$HOME/Library/Containers/$domain/Data/Library/Saved Application State/"*
+done
 
 #*****************************************************************************************
 # reset the emoji & symbols picker - Messages (quit above) and the picker must be stopped

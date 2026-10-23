@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  23-Oct-2026  2:36pm
+# Modified :  23-Oct-2026  7:35pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -426,9 +426,9 @@ sqlite3 "$DB" </tmp/messages_triggers.sql 2>/dev/null
 rm -f /tmp/messages_triggers.sql
 
 #*****************************************************************************************
-# reset the Mail, Notes and Safari windows to their defaults - killEverything quit them
+# reset the Mail, Notes, Safari, Calendar and Reminders windows to their defaults - killEverything quit them
 #*****************************************************************************************
-for domain in com.apple.mail com.apple.Notes com.apple.Safari; do
+for domain in com.apple.mail com.apple.Notes com.apple.Safari com.apple.iCal com.apple.reminders; do
 	defaults export "$domain" - 2>/dev/null | python3 -c '
 import plistlib, re, sys
 for key in plistlib.loads(sys.stdin.buffer.read()):

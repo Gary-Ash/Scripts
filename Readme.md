@@ -506,7 +506,6 @@ Tab completion definitions located in `zsh-completions/` that can be added to a 
 | `_jekyll` | `jekyll` | Tab completion for Jekyll subcommands and options |
 | `_new-xcode-project` | `new-xcode-project.py` | Tab completion for project templates (dynamically read from `templates/Xcode/`) and all command-line flags |
 | `_ocd` | `ocd.sh` | Tab completion for `ocd.sh` providing the `restart` and `off` subcommands |
-| `_tv` | `tv` | Tab completion for the television (tv) TUI fuzzy finder |
 
 ---
 

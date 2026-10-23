@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  23-Oct-2026  3:30pm
+# Modified :  23-Oct-2026  3:49pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -96,7 +96,7 @@ find . -path ./.git -prune -o -type d -exec chmod 755 {} +
 
 # the blanket 600 above strips the execute bit from everything meant to run
 find . -path ./.git -prune -o -type f \( -name "*.sh" -o -name "*.pl" \) -exec chmod 755 {} +
-find "home/.config/git/template/hooks" -type f -exec chmod 755 {} +
+find "home/.config/git/hooks" -type f -exec chmod 755 {} +
 find "BBEdit/Text Filters" -type f -exec chmod 755 {} +
 
 mkdir -p "$HOME/Library/Script Libraries"

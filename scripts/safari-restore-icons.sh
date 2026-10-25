@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :  24-Oct-2026  8:03pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -34,14 +34,22 @@ password="$(security find-internet-password -ws geedbla.com)"
 echo "Downloading Safari.zip from $REMOTE_HOST"
 
 expect <<EOF
-set timeout -1
+set timeout 60
+set sent 0
 spawn scp ${USER_NAME}@${REMOTE_HOST}:${REMOTE_FILE} "$ZIP_FILE"
+# a second password prompt means the first was rejected - give up rather than wait forever
 expect {
     "*password:*" {
+        if {\$sent} { exit 1 }
+        set sent 1
         send "$password\r"
+        set timeout 300
+        exp_continue
     }
+    timeout { exit 1 }
+    eof
 }
-expect eof
+exit [lindex [wait] 3]
 EOF
 
 if [[ ! -s $ZIP_FILE ]]; then

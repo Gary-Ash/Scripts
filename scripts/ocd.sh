@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  23-Oct-2026  7:35pm
+# Modified :  25-Oct-2026  3:46pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -1134,6 +1134,10 @@ try
 		end try
 		keystroke "w" using {command down}
 		delay 2
+		try
+			click menu item "Hide Sidebar" of menu 1 of menu bar item "View" of menu bar 1
+			delay 1
+		end try
 		click menu item "Quit Mail" of menu 1 of menu bar item "Mail" of menu bar 1
 	end tell
 end try

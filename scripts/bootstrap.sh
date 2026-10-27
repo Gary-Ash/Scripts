@@ -5,12 +5,11 @@ set -euo pipefail
 #
 # This script bootstraps a new Mac — it installs the dot files, Homebrew, the
 # /opt/geedbla script tree, the Claude Code AI tools, the Prompt and
-# startup-banner binaries, the Ruby, Python, and npm packages, and the launch
-# agent that loads the keychain's SSH keys into ssh-agent at login
+# startup-banner binaries, and the Ruby, Python, and npm packages
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  25-Oct-2026  3:00pm
+# Modified :  26-Oct-2026 10:24pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -239,42 +238,6 @@ if [[ -e /etc/zshenv ]]; then
 else
 	sudo touch /etc/zshenv
 	setZDOTDIR
-fi
-
-# load the SSH key passphrases stored in the keychain into ssh-agent at login
-SSH_AGENT_LABEL="com.local.ssh-add-keychain"
-SSH_AGENT_PLIST="$HOME/Library/LaunchAgents/$SSH_AGENT_LABEL.plist"
-mkdir -p "$HOME/Library/LaunchAgents"
-cat >"$SSH_AGENT_PLIST" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>$SSH_AGENT_LABEL</string>
-
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/bin/ssh-add</string>
-        <string>--apple-load-keychain</string>
-    </array>
-
-    <key>RunAtLoad</key>
-    <true/>
-</dict>
-</plist>
-EOF
-chmod 600 "$SSH_AGENT_PLIST"
-plutil -lint "$SSH_AGENT_PLIST" >/dev/null
-
-# bootstrap refuses a job that is already loaded, and a headless run has no gui
-# domain to load into, so neither case is allowed to abort the run
-if ! launchctl print "gui/$(id -u)/$SSH_AGENT_LABEL" &>/dev/null; then
-	if ! launchctl bootstrap "gui/$(id -u)" "$SSH_AGENT_PLIST" ||
-		! launchctl kickstart "gui/$(id -u)/$SSH_AGENT_LABEL"; then
-		echo "bootstrap: could not load $SSH_AGENT_LABEL, it will load at next login" >&2
-	fi
 fi
 
 importShortcuts

@@ -27,7 +27,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  15-Oct-2026 11:28pm
+# Modified :   1-Nov-2026  7:51pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -153,6 +153,7 @@ readonly CLAUDE_SCRUB_KEYS_IDENTITY=(
 	"sonnet1m45MigrationComplete"
 	"additionalModelOptionsAnsweredAt"
 	"autoModeEnvSetup"
+	"groveChoiceSeenAt"
 )
 
 #*****************************************************************************************

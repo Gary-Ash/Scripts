@@ -3,11 +3,11 @@ set -euo pipefail
 #*****************************************************************************************
 # update-ai-tools.sh
 #
-# This script pushes my Claude Code configuration and skills to my AI-Tools repository
+# This script pushes my Claude Code configuration, skills and agents to my AI-Tools repository
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  15-Oct-2026  9:55pm
-# Modified :  15-Oct-2026 10:21pm
+# Modified :   7-Nov-2026 10:17pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -32,6 +32,7 @@ readonly SKILLS=(
 	"git-commit-skill"
 	"perl-skill"
 	"python3-skill"
+	"swift-skill"
 	"tdd-skill"
 )
 
@@ -49,6 +50,10 @@ buildRepository() {
 			rsync -ac --delete --exclude=.DS_Store "$CLAUDE_DIR/skills/$skill" "$AI_TOOLS_DIR/skills/"
 		fi
 	done
+
+	if [[ -d "$CLAUDE_DIR/agents" ]]; then
+		rsync -ac --delete --exclude=.DS_Store "$CLAUDE_DIR/agents" "$AI_TOOLS_DIR/"
+	fi
 }
 
 #****************************************************************************************

@@ -38,6 +38,7 @@ A collection of utility scripts and shell libraries for macOS development, syste
 | [new-xcode-project.py](#new-xcode-projectpy) | Python | Generate Xcode projects from templates |
 | [ocd.sh](#ocdsh) | Bash | System cleanup and maintenance |
 | [refresh-compile-commands.sh](#refresh-compile-commandssh) | Bash | Regenerate LSP compile_commands.json |
+| [rename_snippets.py](#rename_snippetspy) | Python | Rename Xcode code snippet files after their titles |
 | [reset-dates.py](#reset-datespy) | Python | Reset file dates and copyright headers |
 | [safari-cleaner.py](#safari-cleanerpy) | Python | Delete Safari data for non-bookmarked sites |
 | [safari-restore-icons.sh](#safari-restore-iconssh) | Bash | Restore custom Safari favicons |
@@ -229,6 +230,14 @@ Comprehensive macOS system maintenance script that updates Homebrew, gems, pip, 
 ### refresh-compile-commands.sh
 
 Regenerates `compile_commands.json` files for all Xcode projects in ~/Developer to enable LSP support in editors.
+
+---
+
+### rename_snippets.py
+
+Renames each `.codesnippet` file in `~/Library/Developer/Xcode/UserData/CodeSnippets` to a slug of its `IDECodeSnippetTitle` (lower case, runs of other characters collapsed to `-`). Adds a numeric suffix (`-2`, `-3`, …) when the name is taken, leaves correctly named files alone, prints each rename as `old -> new`, and reports files that are not valid plists, have no title, or whose title has no letters or digits on stderr.
+
+**Usage:** `rename_snippets.py`
 
 ---
 

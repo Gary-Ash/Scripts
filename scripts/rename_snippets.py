@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   8-Nov-2026  8:31pm
-# Modified :   8-Nov-2026  9:21pm
+# Modified :   9-Nov-2026  7:46pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 # *****************************************************************************************
@@ -24,22 +24,24 @@ def slug_for(title: str) -> str:
 
 
 def report_skipped(path: Path, reason: str) -> None:
-    print(f"skipped {path.name}: {reason}", file=sys.stderr)
+    print(f"skipped {path}: {reason}", file=sys.stderr)
 
 
 def rename_snippets(directory: Path) -> None:
-    for path in directory.glob("*" + SNIPPET_SUFFIX):
+    # Collect first so renames cannot disturb the tree walk.
+    for path in sorted(directory.rglob("*" + SNIPPET_SUFFIX)):
+        name = path.relative_to(directory)
         try:
             title = plistlib.loads(path.read_bytes())["IDECodeSnippetTitle"]
         except (ValueError, ExpatError):
-            report_skipped(path, "not a valid plist")
+            report_skipped(name, "not a valid plist")
             continue
         except KeyError:
-            report_skipped(path, "no IDECodeSnippetTitle")
+            report_skipped(name, "no IDECodeSnippetTitle")
             continue
         slug = slug_for(title)
         if not slug:
-            report_skipped(path, "title has no letters or digits")
+            report_skipped(name, "title has no letters or digits")
             continue
         target = path.with_name(slug + SNIPPET_SUFFIX)
         number = 2
@@ -49,7 +51,7 @@ def rename_snippets(directory: Path) -> None:
         if target == path:
             continue
         path.rename(target)
-        print(f"{path.name} -> {target.name}")
+        print(f"{name} -> {target.relative_to(directory)}")
 
 
 def main(argv: list[str]) -> int:

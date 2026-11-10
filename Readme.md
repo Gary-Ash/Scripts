@@ -235,7 +235,7 @@ Regenerates `compile_commands.json` files for all Xcode projects in ~/Developer 
 
 ### rename_snippets.py
 
-Renames each `.codesnippet` file in `~/Library/Developer/Xcode/UserData/CodeSnippets` to a slug of its `IDECodeSnippetTitle` (lower case, runs of other characters collapsed to `-`). Adds a numeric suffix (`-2`, `-3`, …) when the name is taken, leaves correctly named files alone, prints each rename as `old -> new`, and reports files that are not valid plists, have no title, or whose title has no letters or digits on stderr.
+Renames each `.codesnippet` file in `~/Library/Developer/Xcode/UserData/CodeSnippets` and its subdirectories to a slug of its `IDECodeSnippetTitle` (lower case, runs of other characters collapsed to `-`). Adds a numeric suffix (`-2`, `-3`, …) when the name is taken in that directory, leaves correctly named files alone, prints each rename as `old -> new` with paths relative to that folder, and reports files that are not valid plists, have no title, or whose title has no letters or digits on stderr.
 
 **Usage:** `rename_snippets.py`
 

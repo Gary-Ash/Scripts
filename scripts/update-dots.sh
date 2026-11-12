@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :   8-Nov-2026  8:08pm
+# Modified :  11-Nov-2026  8:51pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -605,3 +605,11 @@ else
 	updateGitHub
 fi
 cleanSettingsFiles
+
+# the copied plists and compiled scripts differ in size from what the filters smudged at
+# checkout, and git reports a size change as a modification without running the clean
+# filter, so stage and unstage everything to refresh the index and leave only real changes
+if git -C "$DOTFILES_DIR" rev-parse --git-dir &>/dev/null; then
+	git -C "$DOTFILES_DIR" add -A
+	git -C "$DOTFILES_DIR" reset -q
+fi

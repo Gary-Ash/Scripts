@@ -22,6 +22,6 @@ SCRIPT="$BATS_TEST_DIRNAME/../../scripts/format-project.sh"
 
 	[ "$status" -eq 0 ]
 	run cat "$project/aliases.sh"
-	[[ "$output" == *'$+commands[bat]'* ]]
-	[[ "$output" != *'$ + commands'* ]]
+	[[ $output == *'$+commands[bat]'* ]]
+	[[ $output != *'$ + commands'* ]]
 }

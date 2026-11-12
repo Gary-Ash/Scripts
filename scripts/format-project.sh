@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  20-Oct-2026  6:50pm
+# Modified :  11-Nov-2026  8:36pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -32,7 +32,7 @@ if command -v black &>/dev/null; then
 fi
 
 if command -v shfmt &>/dev/null; then
-	shfmt -s -ci -i 0 -w -ln bash "$directory" &>/dev/null || true
+	shfmt -s -ci -i 0 -w "$directory" &>/dev/null || true
 fi
 
 if command -v perltidy &>/dev/null; then

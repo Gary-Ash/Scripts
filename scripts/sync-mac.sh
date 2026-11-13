@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  13-Nov-2026  4:03pm
+# Modified :  13-Nov-2026  4:05pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -506,6 +506,14 @@ sync_gh_extensions() {
 			status=1
 		fi
 	done < <(comm -23 <(echo "${target_extensions}") <(echo "${host_extensions}"))
+
+	while IFS= read -r extension; do
+		[[ -n ${extension} ]] || continue
+		if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'gh extension install ${extension}'"; then
+			log_info "gh extension install ${extension} failed on ${target_system}"
+			status=1
+		fi
+	done < <(comm -13 <(echo "${target_extensions}") <(echo "${host_extensions}"))
 
 	return ${status}
 }

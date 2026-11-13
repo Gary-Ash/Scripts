@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  13-Nov-2026  4:05pm
+# Modified :  13-Nov-2026  4:06pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -514,6 +514,15 @@ sync_gh_extensions() {
 			status=1
 		fi
 	done < <(comm -13 <(echo "${target_extensions}") <(echo "${host_extensions}"))
+
+	# Freshly installed extensions are already current, so upgrade only those kept
+	while IFS= read -r extension; do
+		[[ -n ${extension} ]] || continue
+		if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'gh extension upgrade ${extension##*/}'"; then
+			log_info "gh extension upgrade ${extension##*/} failed on ${target_system}"
+			status=1
+		fi
+	done < <(comm -12 <(echo "${target_extensions}") <(echo "${host_extensions}"))
 
 	return ${status}
 }

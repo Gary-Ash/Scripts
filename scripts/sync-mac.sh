@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  27-Sep-2026  3:12pm
+# Modified :  13-Nov-2026  4:03pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -45,7 +45,7 @@ check_requirements() {
 	local missing=()
 	local cmd
 
-	for cmd in sshpass rsync ssh base64 xattr comm find brew npm; do
+	for cmd in sshpass rsync ssh base64 xattr comm find brew npm gh; do
 		command -v "${cmd}" >/dev/null 2>&1 || missing+=("${cmd}")
 	done
 
@@ -471,6 +471,45 @@ sync_npm_packages() {
 	return ${status}
 }
 
+sync_gh_extensions() {
+	local target_system="$1"
+	local host_list
+	local target_list
+	local host_extensions
+	local target_extensions
+	local extension
+	local status=0
+
+	if ! host_list="$(gh extension list)"; then
+		log_info "unable to read the gh extension list on this host"
+		return 1
+	fi
+	if ! target_list="$(SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'gh extension list'")"; then
+		log_info "unable to read the gh extension list on ${target_system}"
+		return 1
+	fi
+
+	# An empty host list would mark every extension on the target for removal
+	if [[ -z ${host_list} ]]; then
+		log_info "host gh extension list is empty - refusing to sync extensions to ${target_system}"
+		return 1
+	fi
+
+	# Rows are "gh <name>\t<owner>/<repo>\t<version>"; compare on owner/repo
+	host_extensions="$(echo "${host_list}" | awk -F'\t' '$2 != "" { print $2 }' | sort -u)"
+	target_extensions="$(echo "${target_list}" | awk -F'\t' '$2 != "" { print $2 }' | sort -u)"
+
+	while IFS= read -r extension; do
+		[[ -n ${extension} ]] || continue
+		if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'gh extension remove ${extension##*/}'"; then
+			log_info "gh extension remove ${extension##*/} failed on ${target_system}"
+			status=1
+		fi
+	done < <(comm -23 <(echo "${target_extensions}") <(echo "${host_extensions}"))
+
+	return ${status}
+}
+
 sync_custom_apps() {
 	local target_system="$1"
 	local apps_to_sync=("CleanStart.app" "XcodeGeeDblA.app")
@@ -607,6 +646,7 @@ main() {
 			run_step "pip package sync to ${system}" sync_pip_packages "${target_system}"
 			run_step "Homebrew package sync to ${system}" sync_homebrew_packages "${target_system}"
 			run_step "npm package sync to ${system}" sync_npm_packages "${target_system}"
+			run_step "gh extension sync to ${system}" sync_gh_extensions "${target_system}"
 			run_step "custom app sync to ${system}" sync_custom_apps "${target_system}"
 			run_step "BBEdit window placement restore on ${system}" restore_bbedit_window_placement "${target_system}"
 		fi

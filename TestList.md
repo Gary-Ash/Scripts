@@ -10,4 +10,4 @@
 - [x] a dot file deleted from $HOME is removed from the repo copy
 - [x] a dot folder deleted from $HOME is removed from the repo copy
 - [x] an ignored path already in the repo copy (e.g. .claude/skills) is kept
-- [ ] a dangling symlink in $HOME keeps its repo copy
+- [x] a dangling symlink in $HOME keeps its repo copy

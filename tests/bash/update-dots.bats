@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  13-Nov-2026 10:10pm
-# Modified :  13-Nov-2026 10:18pm
+# Modified :  13-Nov-2026 10:19pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -88,4 +88,16 @@ setup() {
 
 	[ "$status" -eq 0 ]
 	[ -f "$copy/SKILL.md" ]
+}
+
+@test "a dangling symlink in HOME keeps its repo copy" {
+	ln -s "$HOME/missing" "$HOME/.linkrc"
+	local copy="$HOME/Downloads/dotfiles/home"
+	mkdir -p "$copy"
+	printf 'link\n' >"$copy/.linkrc"
+
+	run "$SCRIPT" --package
+
+	[ "$status" -eq 0 ]
+	[ -e "$copy/.linkrc" ] || [ -L "$copy/.linkrc" ]
 }

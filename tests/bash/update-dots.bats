@@ -1,0 +1,49 @@
+#!/usr/bin/env bats
+#*****************************************************************************************
+# update-dots.bats
+#
+# Tests for update-dots.sh, run against a scratch directory standing in for $HOME with
+# the tools the script calls by name replaced by no-op stubs
+#
+# Author   :  Gary Ash <gary.ash@icloud.com>
+# Created  :  13-Nov-2026 10:10pm
+# Modified :
+#
+# Copyright © 2026 By Gary Ash All rights reserved.
+#*****************************************************************************************
+
+SCRIPT="$BATS_TEST_DIRNAME/../../scripts/update-dots.sh"
+
+setup() {
+	export GIT_CONFIG_GLOBAL="$BATS_TEST_TMPDIR/gitconfig"
+	export GIT_CONFIG_NOSYSTEM=1
+
+	export HOME="$BATS_TEST_TMPDIR/home"
+	mkdir -p "$HOME/Downloads"
+
+	# stand-ins for the tools the script calls by name, so the real repository,
+	# Homebrew and the package managers are left alone
+	local bin="$BATS_TEST_TMPDIR/bin"
+	mkdir -p "$bin"
+	local tool
+	for tool in format-project.sh brew gem pip3 npm generate-gitkeep.sh; do
+		printf '#!/usr/bin/env bash\nexit 0\n' >"$bin/$tool"
+		chmod +x "$bin/$tool"
+	done
+	export PATH="$bin:$PATH"
+}
+
+@test "a file deleted from a dot folder in HOME is removed from the repo copy" {
+	mkdir -p "$HOME/.config/tool"
+	printf 'keep\n' >"$HOME/.config/tool/keep.conf"
+	local copy="$HOME/Downloads/dotfiles/home/.config/tool"
+	mkdir -p "$copy"
+	printf 'keep\n' >"$copy/keep.conf"
+	printf 'gone\n' >"$copy/gone.conf"
+
+	run "$SCRIPT" --package
+
+	[ "$status" -eq 0 ]
+	[ ! -e "$copy/gone.conf" ]
+	[ -f "$copy/keep.conf" ]
+}

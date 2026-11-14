@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  11-Nov-2026  8:51pm
+# Modified :  13-Nov-2026 10:10pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -102,7 +102,7 @@ dot-files() {
 	# ".DS_Store" is deliberately left unanchored so it matches at every level, the
 	# rest are anchored to their real location under $HOME so that a common basename
 	# such as "cache" or "data" cannot knock out an unrelated directory deeper down
-	local rsync_args=(-acz --exclude=.DS_Store)
+	local rsync_args=(-acz --delete --exclude=.DS_Store)
 	for exclude in "${ignore_these[@]}"; do
 		exclude="${exclude%/}"
 		rsync_args+=("--exclude=/${exclude#"$HOME"/}")

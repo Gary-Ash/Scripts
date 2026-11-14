@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  13-Nov-2026 10:10pm
-# Modified :  13-Nov-2026 10:13pm
+# Modified :  13-Nov-2026 10:17pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -60,4 +60,19 @@ setup() {
 	[ "$status" -eq 0 ]
 	[ ! -e "$copy/.oldrc" ]
 	[ -f "$copy/.keeprc" ]
+}
+
+@test "a dot folder deleted from HOME is removed from the repo copy" {
+	mkdir -p "$HOME/.keeptool"
+	printf 'keep\n' >"$HOME/.keeptool/config"
+	local copy="$HOME/Downloads/dotfiles/home"
+	mkdir -p "$copy/.keeptool" "$copy/.oldtool"
+	printf 'keep\n' >"$copy/.keeptool/config"
+	printf 'gone\n' >"$copy/.oldtool/config"
+
+	run "$SCRIPT" --package
+
+	[ "$status" -eq 0 ]
+	[ ! -e "$copy/.oldtool" ]
+	[ -f "$copy/.keeptool/config" ]
 }

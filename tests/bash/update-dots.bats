@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  13-Nov-2026 10:10pm
-# Modified :  13-Nov-2026 10:17pm
+# Modified :  13-Nov-2026 10:18pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -75,4 +75,17 @@ setup() {
 	[ "$status" -eq 0 ]
 	[ ! -e "$copy/.oldtool" ]
 	[ -f "$copy/.keeptool/config" ]
+}
+
+@test "an ignored path already in the repo copy is kept" {
+	mkdir -p "$HOME/.claude"
+	printf '{}\n' >"$HOME/.claude/settings.json"
+	local copy="$HOME/Downloads/dotfiles/home/.claude/skills/bash-skill"
+	mkdir -p "$copy"
+	printf 'skill\n' >"$copy/SKILL.md"
+
+	run "$SCRIPT" --package
+
+	[ "$status" -eq 0 ]
+	[ -f "$copy/SKILL.md" ]
 }

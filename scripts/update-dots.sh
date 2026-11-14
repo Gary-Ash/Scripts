@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  13-Nov-2026 10:10pm
+# Modified :  13-Nov-2026 10:13pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -113,6 +113,18 @@ dot-files() {
 			rsync "${rsync_args[@]}" "$dotfile" "$1" || true
 		fi
 	done
+
+	# a top-level entry gone from $HOME is never visited by the loop above, so drop it
+	# here, but keep anything on ignore_these as that may be a submodule or a kept file
+	local kept
+	while IFS= read -r line; do
+		[[ -e "$HOME/${line##*/}" || -L "$HOME/${line##*/}" ]] && continue
+		kept=false
+		for exclude in "${ignore_these[@]}"; do
+			[[ $exclude == "$HOME/${line##*/}" ]] && kept=true
+		done
+		[[ $kept == true ]] || rm -rf "$line"
+	done < <(find "$1" -mindepth 1 -maxdepth 1 -name ".*")
 
 	mkdir -p "$DOTFILES_DIR/home/.config/zsh"
 	touch "$DOTFILES_DIR/home/.config/zsh/.gitkeep"

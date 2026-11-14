@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  13-Nov-2026 10:10pm
-# Modified :
+# Modified :  13-Nov-2026 10:13pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -46,4 +46,18 @@ setup() {
 	[ "$status" -eq 0 ]
 	[ ! -e "$copy/gone.conf" ]
 	[ -f "$copy/keep.conf" ]
+}
+
+@test "a dot file deleted from HOME is removed from the repo copy" {
+	printf 'keep\n' >"$HOME/.keeprc"
+	local copy="$HOME/Downloads/dotfiles/home"
+	mkdir -p "$copy"
+	printf 'keep\n' >"$copy/.keeprc"
+	printf 'gone\n' >"$copy/.oldrc"
+
+	run "$SCRIPT" --package
+
+	[ "$status" -eq 0 ]
+	[ ! -e "$copy/.oldrc" ]
+	[ -f "$copy/.keeprc" ]
 }

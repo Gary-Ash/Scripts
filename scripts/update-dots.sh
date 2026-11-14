@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  13-Nov-2026 10:14pm
+# Modified :  13-Nov-2026 10:22pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -189,6 +189,7 @@ buildRepository() {
 		--exclude="/XcodeToMetalToolchainIndexMapping.plist" \
 		--exclude="/.derived-data-log*" \
 		--exclude="/.knownDerivedDataLocations.log" \
+		--delete \
 		"$HOME/Library/Developer/Xcode/" "$DOTFILES_DIR/xcode/" &>/dev/null || true
 
 	rsync -arcz -E --rsh=ssh \

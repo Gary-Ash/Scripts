@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  13-Nov-2026 10:10pm
-# Modified :  13-Nov-2026 10:19pm
+# Modified :  13-Nov-2026 10:22pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -100,4 +100,19 @@ setup() {
 
 	[ "$status" -eq 0 ]
 	[ -e "$copy/.linkrc" ] || [ -L "$copy/.linkrc" ]
+}
+
+@test "a file deleted from the Xcode folder in HOME is removed from the repo copy" {
+	mkdir -p "$HOME/Library/Developer/Xcode/UserData/KeyBindings"
+	printf 'keep\n' >"$HOME/Library/Developer/Xcode/UserData/KeyBindings/keep.idekeybindings"
+	local copy="$HOME/Downloads/dotfiles/xcode/UserData/KeyBindings"
+	mkdir -p "$copy"
+	printf 'keep\n' >"$copy/keep.idekeybindings"
+	printf 'gone\n' >"$copy/gone.idekeybindings"
+
+	run "$SCRIPT" --package
+
+	[ "$status" -eq 0 ]
+	[ ! -e "$copy/gone.idekeybindings" ]
+	[ -f "$copy/keep.idekeybindings" ]
 }

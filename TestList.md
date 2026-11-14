@@ -11,3 +11,5 @@
 - [x] a dot folder deleted from $HOME is removed from the repo copy
 - [x] an ignored path already in the repo copy (e.g. .claude/skills) is kept
 - [x] a dangling symlink in $HOME keeps its repo copy
+- [x] a file deleted from the Xcode folder in $HOME is removed from the repo copy
+- [ ] an excluded path in the Xcode repo copy (e.g. UserData/IB Support) is kept

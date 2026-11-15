@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  13-Nov-2026  4:06pm
+# Modified :  14-Nov-2026  9:12pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -489,10 +489,10 @@ sync_gh_extensions() {
 		return 1
 	fi
 
-	# An empty host list would mark every extension on the target for removal
+	# No extensions is a valid state on the host; leave the target alone rather than strip it
 	if [[ -z ${host_list} ]]; then
-		log_info "host gh extension list is empty - refusing to sync extensions to ${target_system}"
-		return 1
+		log_info "no gh extensions on this host - skipping gh extension sync to ${target_system}"
+		return 0
 	fi
 
 	# Rows are "gh <name>\t<owner>/<repo>\t<version>"; compare on owner/repo

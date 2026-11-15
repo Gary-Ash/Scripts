@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  14-Nov-2026  9:12pm
+# Modified :  14-Nov-2026  9:16pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -425,8 +425,25 @@ sync_homebrew_packages() {
 			status=1
 		fi
 	fi
-	if ! SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'brew install -q --cask $(echo "${host_casks}" | tr '\n' ' ') >/dev/null 2>&1'"; then
-		log_info "Homebrew cask install failed on ${target_system}"
+	# --adopt takes over an app already in /Applications that Homebrew doesn't track.
+	# Adopting or installing may need sudo with no terminal, so brew gets a temporary
+	# SUDO_ASKPASS helper; the script travels on stdin to keep the password off the
+	# remote command line.
+	local cask_output
+	if ! cask_output="$(
+		SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" "zsh -l -c 'bash -s'" 2>&1 <<-__CASKS__
+			askpass="\$(mktemp)"
+			trap 'rm -f "\${askpass}"' EXIT
+			chmod 700 "\${askpass}"
+			cat >"\${askpass}" <<'__ASKPASS__'
+			#!/bin/bash
+			printf '%s\n' $(printf '%q' "${sudo_password}")
+			__ASKPASS__
+			export SUDO_ASKPASS="\${askpass}"
+			brew install -q --cask --adopt $(echo "${host_casks}" | tr '\n' ' ')
+		__CASKS__
+	)"; then
+		log_info "Homebrew cask install failed on ${target_system}${cask_output:+ - ${cask_output//$'\n'/; }}"
 		status=1
 	fi
 

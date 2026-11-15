@@ -7,7 +7,7 @@ set -Eeuo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  14-Nov-2026  9:16pm
+# Modified :  14-Nov-2026  9:42pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -31,7 +31,20 @@ LOG_STREAM=2
 #-----------------------------------------------------------------------------------------
 
 finish() {
+	stop_keeping_target_awake
 	unset sudo_password
+}
+
+# Closing the coprocess's stdin sends EOF to the remote cat, which exits and takes
+# the remote caffeinate with it.
+stop_keeping_target_awake() {
+	[[ -n ${TARGET_CAFFEINATE_PID:-} ]] || return 0
+	local pid="${TARGET_CAFFEINATE_PID}"
+	local fd="${TARGET_CAFFEINATE[1]:-}"
+
+	[[ -n ${fd} ]] && exec {fd}>&-
+	wait "${pid}" 2>/dev/null || true
+	unset TARGET_CAFFEINATE_PID
 }
 
 # Run one sync step, reporting and counting a failure without aborting the rest of the run.
@@ -45,7 +58,7 @@ check_requirements() {
 	local missing=()
 	local cmd
 
-	for cmd in sshpass rsync ssh base64 xattr comm find brew npm gh; do
+	for cmd in sshpass rsync ssh base64 xattr comm find brew npm gh caffeinate; do
 		command -v "${cmd}" >/dev/null 2>&1 || missing+=("${cmd}")
 	done
 
@@ -508,7 +521,6 @@ sync_gh_extensions() {
 
 	# No extensions is a valid state on the host; leave the target alone rather than strip it
 	if [[ -z ${host_list} ]]; then
-		log_info "no gh extensions on this host - skipping gh extension sync to ${target_system}"
 		return 0
 	fi
 
@@ -643,6 +655,9 @@ main() {
 
 	check_requirements
 
+	# Keep this Mac awake for the run; caffeinate exits on its own when the script does
+	caffeinate -i -s -w $$ &
+
 	current_host="$(hostname)"
 	if [[ -z ${current_host} ]]; then
 		log_die "unable to determine the name of this host"
@@ -672,6 +687,18 @@ main() {
 			fi
 			synced_count=$((synced_count + 1))
 
+			# Keep the target awake while it syncs: the remote shell becomes cat, and
+			# caffeinate waits on that pid, so both end when this session's stdin closes.
+			# Wait for its ready line, because the target rejects password logins that
+			# overlap with the first sync step's.
+			coproc TARGET_CAFFEINATE {
+				SSHPASS="${sudo_password}" sshpass -e ssh "${target_system}" \
+					'caffeinate -i -s -w $$ & echo awake; exec cat >/dev/null' 2>/dev/null || true
+			}
+			local awake=""
+			read -r -t 30 awake <&"${TARGET_CAFFEINATE[0]}" || true
+			[[ ${awake} == "awake" ]] || log_info "unable to keep ${target_system} awake - it may sleep during the sync"
+
 			run_step "BBEdit window placement backup on ${system}" save_bbedit_window_placement "${target_system}"
 			run_step "directory sync to ${system}" sync_directories "${target_system}"
 			run_step "mail archive sync to ${system}" sync_mail_archive "${target_system}"
@@ -683,6 +710,8 @@ main() {
 			run_step "gh extension sync to ${system}" sync_gh_extensions "${target_system}"
 			run_step "custom app sync to ${system}" sync_custom_apps "${target_system}"
 			run_step "BBEdit window placement restore on ${system}" restore_bbedit_window_placement "${target_system}"
+
+			stop_keeping_target_awake
 		fi
 	done
 

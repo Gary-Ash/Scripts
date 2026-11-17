@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  25-Oct-2026  3:46pm
+# Modified :  16-Nov-2026  7:24pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -315,7 +315,7 @@ while true; do
 done &
 
 export SUDO_SHELL_PID=$!
-caffeinate -s -b &>/dev/null &
+caffeinate -i -s -w $$ &>/dev/null &
 export CAFFEINATE=$!
 
 #*****************************************************************************************

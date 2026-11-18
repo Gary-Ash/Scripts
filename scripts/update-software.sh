@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  17-Nov-2026  8:43pm
+# Modified :  17-Nov-2026  9:22pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -38,6 +38,7 @@ readonly CLEANUP_PATHS=(
 	"${CACHE_HOME}/zsh/history"
 )
 
+approve_all=false
 sparkle_updates=()
 temp_files=()
 
@@ -74,11 +75,16 @@ run_quiet() {
 }
 
 #*****************************************************************************************
-# routine to prompt the user for a yes/no answer, returns success for yes
+# routine to prompt the user for a yes/no answer, returns success for yes - with --all
+# it returns success without prompting
 #*****************************************************************************************
 confirm() {
 	local prompt="${1}"
 	local answer
+
+	if [[ ${approve_all} == true ]]; then
+		return 0
+	fi
 
 	read -r -n 1 -p "${prompt} (y/N): " answer
 	printf '\n'
@@ -435,6 +441,20 @@ update_cleanup() {
 # script main-line
 #*****************************************************************************************
 main() {
+	while [[ $# -gt 0 ]]; do
+		case $1 in
+			--all)
+				approve_all=true
+				;;
+
+			*)
+				echo "Unknown option -- $1" >&2
+				exit 1
+				;;
+		esac
+		shift
+	done
+
 	trap cleanup EXIT
 
 	log_color "${LOG_GREEN}" "=== Unified macOS Update Utility ==="

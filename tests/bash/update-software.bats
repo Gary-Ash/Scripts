@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  17-Nov-2026  4:40pm
-# Modified :  17-Nov-2026  8:23pm
+# Modified :  17-Nov-2026  9:01pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -38,6 +38,15 @@ stub_command() {
 		fi
 	EOF
 	chmod +x "$BATS_TEST_TMPDIR/bin/$command"
+}
+
+# runs the whole script with arguments $@, with only the test's stubs and a no-op sudo on
+# PATH, and HOME pointing at the test's own space so the cleanup paths do too
+run_script() {
+	ln -s /usr/bin/true "$BATS_TEST_TMPDIR/bin/sudo"
+
+	HOME="$BATS_TEST_TMPDIR" XDG_CACHE_HOME="$BATS_TEST_TMPDIR/.cache" PATH="$BATS_TEST_TMPDIR/bin" \
+		run "$BASH" "$SCRIPT" "$@"
 }
 
 @test "outdated gems are updated and then cleaned up when confirmed" {
@@ -97,7 +106,7 @@ stub_command() {
 	run bash -c 'source "$1"; update_npm_globals' _ "$SCRIPT" <<<"y"
 
 	[ "$status" -eq 0 ]
-	grep -x -e "update -g" "$BATS_TEST_TMPDIR/npm.log"
+	grep -x -e "update -g --dangerously-allow-all-scripts" "$BATS_TEST_TMPDIR/npm.log"
 }
 
 @test "no npm update runs when npm outdated -g reports nothing" {
@@ -117,13 +126,8 @@ stub_command() {
 }
 
 @test "main runs the gem, pip, and npm updates" {
-	# nothing but a no-op sudo is on PATH, so every update finds its tool missing and
-	# nothing on the real machine is touched; HOME points at the test's own space so the
-	# cleanup paths do too
-	ln -s /usr/bin/true "$BATS_TEST_TMPDIR/bin/sudo"
-
-	HOME="$BATS_TEST_TMPDIR" XDG_CACHE_HOME="$BATS_TEST_TMPDIR/.cache" PATH="$BATS_TEST_TMPDIR/bin" \
-		run "$BASH" "$SCRIPT" <<<""
+	# no stubs are written, so every update finds its tool missing
+	run_script <<<""
 
 	[ "$status" -eq 0 ]
 	[ "$(grep -e "not installed" -e "Checking Sparkle" <<<"$output")" = "Homebrew not installed — skipping brew updates.
@@ -133,4 +137,21 @@ Ruby gems not installed — skipping gem updates.
 Python pip not installed — skipping Python package updates.
 npm not installed — skipping npm global package updates.
 Checking Sparkle-enabled apps..." ]
+}
+
+@test "with --all outdated gems are updated without an answer on stdin" {
+	stub_command gem outdated $'rubocop (1.92.2 < 1.92.3)\n'
+	ln -s "$BASH" "$BATS_TEST_TMPDIR/bin/bash"
+
+	run_script --all </dev/null
+
+	[ "$status" -eq 0 ]
+	grep -x update "$BATS_TEST_TMPDIR/gem.log"
+}
+
+@test "an unknown argument is reported and the script exits non-zero" {
+	run_script --bogus <<<""
+
+	[ "$status" -eq 1 ]
+	grep -x -e "Unknown option -- --bogus" <<<"$output"
 }

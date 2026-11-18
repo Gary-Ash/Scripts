@@ -34,3 +34,8 @@
 
 - [x] the prompt loop gives up with an empty password when stdin reaches EOF
 - [x] a last line with no trailing newline is still tried as the password
+
+## update-software.sh: --all approves every update
+
+- [x] run with --all, outdated gems are updated with no answer on stdin
+- [x] an unknown argument is reported and the script exits non-zero

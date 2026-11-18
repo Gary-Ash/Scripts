@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :  17-Nov-2026  8:32pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -26,7 +26,10 @@ get_sudo_password() {
 	# Otherwise prompt
 	while true; do
 		echo -n "Enter password for sudo: " >&2
-		read -rs pw
+		if ! read -rs pw && [[ -z $pw ]]; then
+			echo >&2
+			return 0
+		fi
 		echo >&2
 		if sudo --validate --stdin <<<"$pw" &>/dev/null; then
 			echo "$pw"

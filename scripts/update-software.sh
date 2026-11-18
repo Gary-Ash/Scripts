@@ -4,12 +4,12 @@ set -euo pipefail
 # update-software.sh
 #
 # This script will check for and install macOS system, App Store, Homebrew, Claude Code,
-# GitHub CLI extension and Sparkle enabled application updates, then sweep up the caches
-# and file permissions left behind
+# GitHub CLI extension, Ruby gem, Python pip package, npm global package and Sparkle
+# enabled application updates, then sweep up the caches and file permissions left behind
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :
+# Modified :  17-Nov-2026  8:23pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -190,6 +190,89 @@ update_gh_extensions() {
 }
 
 #*****************************************************************************************
+# routine to check for and optionally install Ruby gem updates
+#*****************************************************************************************
+update_ruby_gems() {
+	local outdated
+
+	if ! command -v gem >/dev/null 2>&1; then
+		log_color "${LOG_YELLOW}" "Ruby gems not installed — skipping gem updates."
+		return
+	fi
+
+	log_color "${LOG_YELLOW}" "Checking Ruby gem updates..."
+	outdated=$(gem outdated 2>/dev/null || true)
+	if [[ -z ${outdated} ]]; then
+		log_color "${LOG_GREEN}" "No Ruby gem updates available."
+		return
+	fi
+
+	log_color "${LOG_RED}" "Ruby gem updates available:"
+	log_line "${outdated}"
+	log_line ""
+	if confirm "Upgrade Ruby gems?"; then
+		gem update
+		gem cleanup
+	fi
+}
+
+#*****************************************************************************************
+# routine to check for and optionally install Python package updates
+#*****************************************************************************************
+update_pip_packages() {
+	local outdated line
+	local names=()
+
+	if ! command -v pip3 >/dev/null 2>&1; then
+		log_color "${LOG_YELLOW}" "Python pip not installed — skipping Python package updates."
+		return
+	fi
+
+	log_color "${LOG_YELLOW}" "Checking Python package updates..."
+	outdated=$(pip3 list --outdated --format=freeze 2>/dev/null || true)
+	if [[ -z ${outdated} ]]; then
+		log_color "${LOG_GREEN}" "No Python package updates available."
+		return
+	fi
+
+	log_color "${LOG_RED}" "Python package updates available:"
+	log_line "${outdated}"
+	log_line ""
+	if confirm "Upgrade Python packages?"; then
+		while IFS= read -r line; do
+			names+=("${line%%==*}")
+		done <<<"${outdated}"
+		pip3 install --upgrade "${names[@]}"
+	fi
+}
+
+#*****************************************************************************************
+# routine to check for and optionally install npm global package updates
+#*****************************************************************************************
+update_npm_globals() {
+	local outdated
+
+	if ! command -v npm >/dev/null 2>&1; then
+		log_color "${LOG_YELLOW}" "npm not installed — skipping npm global package updates."
+		return
+	fi
+
+	log_color "${LOG_YELLOW}" "Checking npm global package updates..."
+	outdated=$(npm outdated -g 2>/dev/null || true)
+	if [[ -z ${outdated} ]]; then
+		log_color "${LOG_GREEN}" "No npm global package updates available."
+		return
+	fi
+
+	log_color "${LOG_RED}" "npm global package updates available:"
+	log_line "${outdated}"
+	log_line ""
+	if confirm "Upgrade npm global packages?"; then
+		npm update -g
+	fi
+}
+
+#*****************************************************************************************
 # routine to collect the Sparkle enabled applications whose appcast advertises a version
 # other than the one installed, each entry is app|installed|latest|feed
 #*****************************************************************************************
@@ -360,6 +443,9 @@ main() {
 	update_homebrew
 	update_claude_code
 	update_gh_extensions
+	update_ruby_gems
+	update_pip_packages
+	update_npm_globals
 	update_sparkle
 	update_cleanup
 
@@ -367,4 +453,6 @@ main() {
 	log_color "${LOG_GREEN}" "All update checks complete."
 }
 
-main "${@}"
+if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
+	main "${@}"
+fi

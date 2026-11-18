@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  17-Nov-2026  8:37pm
+# Modified :  17-Nov-2026  8:39pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -267,7 +267,7 @@ fi
 #*********************************************************************************
 if command -v pip3 &>/dev/null; then
 	python3 -m pip install --upgrade pip &>>"$error_log"
-	pip3 freeze | cut -d = -f 1 | xargs pip3 install -U &>>"$error_log"
+	{ pip3 freeze | cut -d = -f 1 | xargs pip3 install -U; } &>>"$error_log"
 	pip3 cache purge &>>"$error_log"
 fi
 

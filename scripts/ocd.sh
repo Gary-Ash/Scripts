@@ -6,10 +6,24 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  16-Nov-2026  7:24pm
+# Modified :  17-Nov-2026  8:37pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
+
+#*****************************************************************************************
+# parse the command line for arguments
+#*****************************************************************************************
+cmd=""
+if [[ $# -gt 0 ]]; then
+	cmd=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+
+	if [ "$cmd" != "restart" ] && [ "$cmd" != "off" ]; then
+		echo "Unknown command option -- $cmd"
+		exit 1
+	fi
+fi
+export OCD_OPTION="$cmd"
 
 #*****************************************************************************************
 # source in library functions
@@ -47,6 +61,16 @@ finish() {
 		setopt monitor
 	fi
 }
+
+#*****************************************************************************************
+# keep the Mac awake for the whole run, and log the update commands' output to a file
+# outside $TMPDIR, which the cleanup below empties
+#*****************************************************************************************
+caffeinate -i -s -w $$ &>/dev/null &
+CAFFEINATE=$!
+
+error_log="$HOME/Library/Logs/ocd.log"
+: >"$error_log"
 
 #*****************************************************************************************
 # kill applications
@@ -201,22 +225,6 @@ YOUTUBE_SCRIPT
 #-----------------------------------------------------------------------------------------
 
 #*****************************************************************************************
-# parse the command line for arguments
-#*****************************************************************************************
-cmd=""
-if [[ $# -gt 0 ]]; then
-	cmd=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-
-	if [ "$cmd" != "restart" ] && [ "$cmd" != "off" ]; then
-		echo "Unknown command option -- $cmd"
-		exit 1
-	fi
-fi
-export OCD_OPTION="$cmd"
-
-error_log="$TMPDIR/Error.txt"
-
-#*****************************************************************************************
 # must run before killEverything quits Safari and safari-cleaner.py trims its cookies
 #*****************************************************************************************
 cleanYouTubeHistory
@@ -231,11 +239,11 @@ echo -n '' | pbcopy
 # brew
 #*****************************************************************************************
 if command -v brew &>/dev/null; then
-	brew update &>"$error_log"
-	brew upgrade &>"$error_log"
-	brew upgrade --cask &>"$error_log"
-	brew autoremove &>"$error_log"
-	brew cleanup &>"$error_log"
+	brew update &>>"$error_log"
+	brew upgrade &>>"$error_log"
+	brew upgrade --cask &>>"$error_log"
+	brew autoremove &>>"$error_log"
+	brew cleanup &>>"$error_log"
 	rm -rf "$(brew --cache)" &>/dev/null
 fi
 
@@ -243,32 +251,32 @@ fi
 # Update Github gh extensions
 #*****************************************************************************************
 if command -v gh &>/dev/null; then
-	gh extension upgrade --all >/dev/null
+	gh extension upgrade --all &>>"$error_log"
 fi
 
 #*********************************************************************************
 # ruby update
 #*********************************************************************************
 if command -v gem &>/dev/null; then
-	gem update &>"$error_log"
-	gem cleanup &>"$error_log"
+	gem update &>>"$error_log"
+	gem cleanup &>>"$error_log"
 fi
 
 #*********************************************************************************
 # python 3 update
 #*********************************************************************************
 if command -v pip3 &>/dev/null; then
-	python3 -m pip install --upgrade pip &>"$error_log"
-	pip3 freeze | cut -d = -f 1 | xargs pip3 install -U &>"$error_log"
-	pip3 cache purge &>"$error_log"
+	python3 -m pip install --upgrade pip &>>"$error_log"
+	pip3 freeze | cut -d = -f 1 | xargs pip3 install -U &>>"$error_log"
+	pip3 cache purge &>>"$error_log"
 fi
 
 #*****************************************************************************************
 # npm update
 #*****************************************************************************************
 if command -v npm &>/dev/null; then
-	npm install -g npm@latest &>"$error_log"
-	npm cache clean --force &>"$error_log"
+	npm install -g npm@latest &>>"$error_log"
+	npm cache clean --force &>>"$error_log"
 fi
 #*****************************************************************************************
 pkill -f '.*GradleDaemon.*'
@@ -315,8 +323,6 @@ while true; do
 done &
 
 export SUDO_SHELL_PID=$!
-caffeinate -i -s -w $$ &>/dev/null &
-export CAFFEINATE=$!
 
 #*****************************************************************************************
 # make sure Applications folder permission and ownership is correct
@@ -1322,7 +1328,6 @@ sudo touch /Applications/* &>/dev/null
 find "$HOME/Library/Application Support/com.stclairsoft.DefaultFolderX5/Default Set" ! -name "DefaultFolders.plist" -delete &>/dev/null
 
 rm -rf "$HOME/Movies/Motion Templates" &>/dev/null
-rm -f "$error_log"
 sudo find /private/ -type d -name "org.llvm*" -exec rm -rf {} \; &>/dev/null
 sudo find /private/ -type d -name "com.apple.dt.Xcode" -exec rm -rf {} \; &>/dev/null
 

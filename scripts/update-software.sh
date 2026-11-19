@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  18-Nov-2026 10:30pm
+# Modified :  19-Nov-2026 12:06am
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -38,24 +38,28 @@ readonly CLEANUP_PATHS=(
 	"${CACHE_HOME}/zsh/history"
 )
 
+readonly SUDO_KEEPALIVE_SECONDS=20
+
 approve_all=false
+sudo_keepalive_pid=""
 system_gem=/usr/bin/gem
 sparkle_updates=()
 temp_files=()
 
 #*****************************************************************************************
-# routine to remove any temporary files left behind by an interrupted Sparkle update
+# routine run on exit to stop the sudo keep-alive loop and remove any temporary files
+# left behind by an interrupted Sparkle update
 #*****************************************************************************************
 cleanup() {
 	local exit_code="${?}"
 	local temp_file
 
-	SUDO_PASSWORD=$(get_sudo_password)
-	if printf '%s\n' "${SUDO_PASSWORD}" | sudo -S -v 2>/dev/null; then
-		for temp_file in "${temp_files[@]}"; do
-			sudo rm -rf "${temp_file}"
-		done
+	if [[ -n ${sudo_keepalive_pid} ]]; then
+		kill "${sudo_keepalive_pid}" 2>/dev/null || true
 	fi
+	for temp_file in "${temp_files[@]}"; do
+		sudo rm -rf "${temp_file}"
+	done
 	exit "${exit_code}"
 }
 
@@ -90,6 +94,22 @@ confirm() {
 	read -r -n 1 -p "${prompt} (y/N): " answer
 	printf '\n'
 	[[ ${answer} == "y" ]]
+}
+
+#*****************************************************************************************
+# routine to validate sudo with the password from get_sudo_password, then start a
+# background loop that keeps the sudo timestamp fresh, its pid in sudo_keepalive_pid
+#*****************************************************************************************
+start_sudo_keepalive() {
+	local sudo_password
+	sudo_password="$(get_sudo_password)"
+	printf '%s\n' "${sudo_password}" | sudo --validate --stdin &>/dev/null
+
+	while true; do
+		sudo --non-interactive true
+		sleep "${SUDO_KEEPALIVE_SECONDS}"
+	done &
+	sudo_keepalive_pid=$!
 }
 
 #*****************************************************************************************
@@ -446,16 +466,10 @@ update_cleanup() {
 		run_quiet brew cleanup --quiet --scrub
 		run_quiet rm -rf "$(brew --cache)"
 
-		SUDO_PASSWORD=$(get_sudo_password)
-		if printf '%s\n' "${SUDO_PASSWORD}" | sudo -S -v 2>/dev/null; then
-			sudo xattr -cr /Applications/* >/dev/null 2>&1 || true
-			sudo chown -R root:admin /Applications/* >/dev/null 2>&1 || true
-			sudo chmod -R 775 /Applications/* >/dev/null 2>&1 || true
-			sudo chown -R "${USER}:admin" /opt/geedbla/* >/dev/null 2>&1 || true
-		else
-			log_warn "could not obtain sudo - skipping the /Applications and /opt/geedbla repairs."
-		fi
-		unset SUDO_PASSWORD
+		sudo xattr -cr /Applications/* >/dev/null 2>&1 || true
+		sudo chown -R root:admin /Applications/* >/dev/null 2>&1 || true
+		sudo chmod -R 775 /Applications/* >/dev/null 2>&1 || true
+		sudo chown -R "${USER}:admin" /opt/geedbla/* >/dev/null 2>&1 || true
 	fi
 
 	# the guard keeps a stray or unset XDG_CACHE_HOME from turning this into rm -rf on
@@ -487,6 +501,7 @@ main() {
 	done
 
 	trap cleanup EXIT
+	start_sudo_keepalive
 
 	log_color "${LOG_GREEN}" "=== Unified macOS Update Utility ==="
 

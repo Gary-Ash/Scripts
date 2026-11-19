@@ -47,3 +47,14 @@
 - [x] system gem updates are skipped when the system gem is not installed
 - [x] main runs the system gem update after the virtual environment gem update
 - [x] with --all, system gems are updated without an answer on stdin
+
+## update-software.sh: obtain sudo once and keep it alive for the whole run
+
+- [x] start_sudo_keepalive validates sudo by feeding the get_sudo_password password to `sudo --validate --stdin`
+- [x] start_sudo_keepalive starts a background loop that refreshes the timestamp with `sudo --non-interactive true`
+- [x] cleanup stops the keep-alive loop
+- [x] cleanup removes the Sparkle temp files under sudo without asking for the password again
+- [x] update_cleanup repairs /Applications under sudo without asking for the password again
+- [x] main obtains sudo before the first update runs
+- [ ] start_sudo_keepalive warns when sudo rejects the password
+- [x] a password beginning with -n or -e reaches sudo intact (echo swallows it)

@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  17-Nov-2026  9:22pm
+# Modified :  18-Nov-2026 10:30pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -39,6 +39,7 @@ readonly CLEANUP_PATHS=(
 )
 
 approve_all=false
+system_gem=/usr/bin/gem
 sparkle_updates=()
 temp_files=()
 
@@ -219,6 +220,36 @@ update_ruby_gems() {
 	if confirm "Upgrade Ruby gems?"; then
 		gem update
 		gem cleanup
+	fi
+}
+
+#*****************************************************************************************
+# routine to check for and optionally install system Ruby gem updates
+#
+# The macOS system Ruby keeps its gems in a root-owned directory, so the update and the
+# cleanup run under sudo.
+#*****************************************************************************************
+update_system_gems() {
+	local outdated
+
+	if [[ ! -x ${system_gem} ]]; then
+		log_color "${LOG_YELLOW}" "System Ruby gems not installed — skipping system gem updates."
+		return
+	fi
+
+	log_color "${LOG_YELLOW}" "Checking system Ruby gem updates..."
+	outdated=$("${system_gem}" outdated 2>/dev/null || true)
+	if [[ -z ${outdated} ]]; then
+		log_color "${LOG_GREEN}" "No system Ruby gem updates available."
+		return
+	fi
+
+	log_color "${LOG_RED}" "System Ruby gem updates available:"
+	log_line "${outdated}"
+	log_line ""
+	if confirm "Upgrade system Ruby gems?"; then
+		sudo "${system_gem}" update
+		sudo "${system_gem}" cleanup
 	fi
 }
 
@@ -464,6 +495,7 @@ main() {
 	update_claude_code
 	update_gh_extensions
 	update_ruby_gems
+	update_system_gems
 	update_pip_packages
 	update_npm_globals
 	update_sparkle

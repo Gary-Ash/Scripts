@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  17-Nov-2026  4:40pm
-# Modified :  17-Nov-2026  9:01pm
+# Modified :  18-Nov-2026 10:36pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -40,13 +40,18 @@ stub_command() {
 	chmod +x "$BATS_TEST_TMPDIR/bin/$command"
 }
 
-# runs the whole script with arguments $@, with only the test's stubs and a no-op sudo on
-# PATH, and HOME pointing at the test's own space so the cleanup paths do too
-run_script() {
+# runs command $@ with only the test's stubs and a no-op sudo on PATH, and HOME pointing
+# at the test's own space so the cleanup paths do too
+run_isolated() {
 	ln -s /usr/bin/true "$BATS_TEST_TMPDIR/bin/sudo"
 
 	HOME="$BATS_TEST_TMPDIR" XDG_CACHE_HOME="$BATS_TEST_TMPDIR/.cache" PATH="$BATS_TEST_TMPDIR/bin" \
-		run "$BASH" "$SCRIPT" "$@"
+		run "$@"
+}
+
+# runs the whole script with arguments $@ in the isolated environment
+run_script() {
+	run_isolated "$BASH" "$SCRIPT" "$@"
 }
 
 @test "outdated gems are updated and then cleaned up when confirmed" {
@@ -72,6 +77,75 @@ run_script() {
 
 	[ "$status" -eq 0 ]
 	[ "$output" = "Ruby gems not installed — skipping gem updates." ]
+}
+
+@test "outdated system gems are updated and then cleaned up under sudo when confirmed" {
+	local log
+	stub_command gem outdated $'rexml (3.2.6 < 3.4.4)\n'
+	system_gem="$BATS_TEST_TMPDIR/bin/gem"
+	printf -v log '%q' "$BATS_TEST_TMPDIR/sudo.log"
+	cat >"$BATS_TEST_TMPDIR/bin/sudo" <<-EOF
+		#!/usr/bin/env bash
+		printf '%s\n' "\$*" >>$log
+		exec "\$@"
+	EOF
+	chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
+
+	run update_system_gems <<<"y"
+
+	[ "$status" -eq 0 ]
+	[ "$(grep -F -x -e "$system_gem update" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" = "$BATS_TEST_TMPDIR/bin/gem update
+$BATS_TEST_TMPDIR/bin/gem cleanup" ]
+}
+
+@test "no system gem update runs when the system gem outdated reports nothing" {
+	local log
+	stub_command gem outdated ""
+	system_gem="$BATS_TEST_TMPDIR/bin/gem"
+	printf -v log '%q' "$BATS_TEST_TMPDIR/sudo.log"
+	cat >"$BATS_TEST_TMPDIR/bin/sudo" <<-EOF
+		#!/usr/bin/env bash
+		printf '%s\n' "\$*" >>$log
+		exec "\$@"
+	EOF
+	chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
+	: >"$BATS_TEST_TMPDIR/sudo.log"
+
+	run update_system_gems <<<"y"
+
+	[ "$status" -eq 0 ]
+	[ "$(grep -c -x -e update -e cleanup "$BATS_TEST_TMPDIR/gem.log")" -eq 0 ]
+	[ "$(grep -c -F -x -e "$system_gem update" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" -eq 0 ]
+}
+
+@test "system gem updates are skipped when the system gem is not installed" {
+	system_gem="$BATS_TEST_TMPDIR/bin/gem"
+
+	run update_system_gems <<<"y"
+
+	[ "$status" -eq 0 ]
+	[ "$output" = "System Ruby gems not installed — skipping system gem updates." ]
+}
+
+@test "with --all outdated system gems are updated without an answer on stdin" {
+	local log
+	stub_command gem outdated $'rexml (3.2.6 < 3.4.4)\n'
+	system_gem="$BATS_TEST_TMPDIR/bin/gem"
+	printf -v log '%q' "$BATS_TEST_TMPDIR/sudo.log"
+	cat >"$BATS_TEST_TMPDIR/bin/sudo" <<-EOF
+		#!/usr/bin/env bash
+		printf '%s\n' "\$*" >>$log
+		exec "\$@"
+	EOF
+	chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
+	# shellcheck disable=SC2034
+	approve_all=true
+
+	run update_system_gems </dev/null
+
+	[ "$status" -eq 0 ]
+	[ "$(grep -F -x -e "$system_gem update" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" = "$BATS_TEST_TMPDIR/bin/gem update
+$BATS_TEST_TMPDIR/bin/gem cleanup" ]
 }
 
 @test "outdated pip packages are upgraded when confirmed" {
@@ -125,15 +199,20 @@ run_script() {
 	[ "$output" = "npm not installed — skipping npm global package updates." ]
 }
 
-@test "main runs the gem, pip, and npm updates" {
-	# no stubs are written, so every update finds its tool missing
-	run_script <<<""
+@test "main runs the gem, system gem, pip, and npm updates" {
+	# no stubs are written and the system gem points at a missing path, so every update
+	# finds its tool missing
+	ln -s "$BASH" "$BATS_TEST_TMPDIR/bin/bash"
+
+	# shellcheck disable=SC2016 # $1 and $2 expand in the inner bash
+	run_isolated bash -c 'source "$1"; system_gem="$2"; main' _ "$SCRIPT" "$BATS_TEST_TMPDIR/bin/gem" <<<""
 
 	[ "$status" -eq 0 ]
 	[ "$(grep -e "not installed" -e "Checking Sparkle" <<<"$output")" = "Homebrew not installed — skipping brew updates.
 Claude Code not installed — skipping Claude Code updates.
 GitHub CLI not installed — skipping extension updates.
 Ruby gems not installed — skipping gem updates.
+System Ruby gems not installed — skipping system gem updates.
 Python pip not installed — skipping Python package updates.
 npm not installed — skipping npm global package updates.
 Checking Sparkle-enabled apps..." ]

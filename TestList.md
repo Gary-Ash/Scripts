@@ -39,3 +39,11 @@
 
 - [x] run with --all, outdated gems are updated with no answer on stdin
 - [x] an unknown argument is reported and the script exits non-zero
+
+## update-software.sh: update the macOS system Ruby gems too
+
+- [x] outdated system gems are listed and `sudo /usr/bin/gem update` then `sudo /usr/bin/gem cleanup` run when confirmed
+- [x] no system gem update runs when the system `gem outdated` reports nothing
+- [x] system gem updates are skipped when the system gem is not installed
+- [x] main runs the system gem update after the virtual environment gem update
+- [x] with --all, system gems are updated without an answer on stdin

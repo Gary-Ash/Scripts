@@ -58,3 +58,10 @@
 - [x] main obtains sudo before the first update runs
 - [ ] start_sudo_keepalive warns when sudo rejects the password
 - [x] a password beginning with -n or -e reaches sudo intact (echo swallows it)
+
+## update-software.sh: system gems behind --system, RubyGems update for Homebrew Ruby
+
+- [x] main skips the system gem update when run without --system
+- [x] with --system, main runs the system gem update after the gem update
+- [x] when confirmed, the Homebrew Ruby gem update runs `gem update --system` before `gem update`
+- ~~with --system and --all, outdated system gems are updated without an answer on stdin~~ (dropped: covered by the --all system gem test and the --system main test)

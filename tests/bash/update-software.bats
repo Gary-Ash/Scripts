@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  17-Nov-2026  4:40pm
-# Modified :  19-Nov-2026 12:01am
+# Modified :  19-Nov-2026  7:27pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -115,6 +115,15 @@ run_script() {
 
 	[ "$status" -eq 0 ]
 	[ "$(grep -x -e update -e cleanup "$BATS_TEST_TMPDIR/gem.log")" = $'update\ncleanup' ]
+}
+
+@test "gem update --system runs before gem update when confirmed" {
+	stub_command gem outdated $'rubocop (1.92.2 < 1.92.3)\n'
+
+	run update_ruby_gems <<<"y"
+
+	[ "$status" -eq 0 ]
+	[ "$(grep -x -e "update --system" -e update -e cleanup "$BATS_TEST_TMPDIR/gem.log")" = $'update --system\nupdate\ncleanup' ]
 }
 
 @test "no gem update runs when gem outdated reports nothing" {
@@ -318,9 +327,9 @@ chmod -R 775 /Applications/" ]
 	[ "$output" = "npm not installed — skipping npm global package updates." ]
 }
 
-@test "main runs the gem, system gem, pip, and npm updates" {
+@test "main runs the gem, pip, and npm updates" {
 	# no stubs are written and the system gem points at a missing path, so every update
-	# finds its tool missing
+	# finds its tool missing, and a system gem update would report its line too
 	ln -s "$BASH" "$BATS_TEST_TMPDIR/bin/bash"
 
 	# shellcheck disable=SC2016 # $1 and $2 expand in the inner bash
@@ -331,10 +340,22 @@ chmod -R 775 /Applications/" ]
 Claude Code not installed — skipping Claude Code updates.
 GitHub CLI not installed — skipping extension updates.
 Ruby gems not installed — skipping gem updates.
-System Ruby gems not installed — skipping system gem updates.
 Python pip not installed — skipping Python package updates.
 npm not installed — skipping npm global package updates.
 Checking Sparkle-enabled apps..." ]
+}
+
+@test "with --system main runs the system gem update after the gem update" {
+	# no stubs are written and the system gem points at a missing path, so each update
+	# reports its tool missing, in the order main runs them
+	ln -s "$BASH" "$BATS_TEST_TMPDIR/bin/bash"
+
+	# shellcheck disable=SC2016 # $1 and $2 expand in the inner bash
+	run_isolated bash -c 'source "$1"; system_gem="$2"; main --system' _ "$SCRIPT" "$BATS_TEST_TMPDIR/bin/gem" <<<""
+
+	[ "$status" -eq 0 ]
+	[ "$(grep -e "gems not installed" <<<"$output")" = "Ruby gems not installed — skipping gem updates.
+System Ruby gems not installed — skipping system gem updates." ]
 }
 
 @test "main obtains sudo before the first update runs" {

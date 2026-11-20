@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  19-Nov-2026 12:06am
+# Modified :  19-Nov-2026  7:27pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -41,6 +41,7 @@ readonly CLEANUP_PATHS=(
 readonly SUDO_KEEPALIVE_SECONDS=20
 
 approve_all=false
+include_system_gems=false
 sudo_keepalive_pid=""
 system_gem=/usr/bin/gem
 sparkle_updates=()
@@ -238,6 +239,7 @@ update_ruby_gems() {
 	log_line "${outdated}"
 	log_line ""
 	if confirm "Upgrade Ruby gems?"; then
+		gem update --system
 		gem update
 		gem cleanup
 	fi
@@ -492,6 +494,10 @@ main() {
 				approve_all=true
 				;;
 
+			--system)
+				include_system_gems=true
+				;;
+
 			*)
 				echo "Unknown option -- $1" >&2
 				exit 1
@@ -510,7 +516,9 @@ main() {
 	update_claude_code
 	update_gh_extensions
 	update_ruby_gems
-	update_system_gems
+	if [[ ${include_system_gems} == true ]]; then
+		update_system_gems
+	fi
 	update_pip_packages
 	update_npm_globals
 	update_sparkle

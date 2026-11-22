@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  17-Nov-2026  8:39pm
+# Modified :  21-Nov-2026  8:36pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -445,6 +445,11 @@ for key in plistlib.loads(sys.stdin.buffer.read()):
 	done
 	rm -rf "$HOME/Library/Containers/$domain/Data/Library/Saved Application State/"*
 done
+
+# Spotlight also hosts the Apps.app panel; once moved it reopens at the saved spot instead of centered
+defaults delete com.apple.Spotlight userHasMovedWindow 2>/dev/null
+defaults delete com.apple.Spotlight lastWindowPosition 2>/dev/null
+killall Spotlight 2>/dev/null
 
 #*****************************************************************************************
 # reset the emoji & symbols picker - Messages (quit above) and the picker must be stopped

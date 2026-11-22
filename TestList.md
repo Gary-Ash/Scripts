@@ -65,3 +65,15 @@
 - [x] with --system, main runs the system gem update after the gem update
 - [x] when confirmed, the Homebrew Ruby gem update runs `gem update --system` before `gem update`
 - ~~with --system and --all, outdated system gems are updated without an answer on stdin~~ (dropped: covered by the --all system gem test and the --system main test)
+
+## update-software.sh: only update system gems whose latest version suits the system Ruby
+
+- [x] system_gem_compatible succeeds when the system Ruby satisfies the version's required Ruby version
+- [x] system_gem_compatible fails when the version requires a newer Ruby than the system Ruby
+- [x] system_gem_compatible fails when the version requires a newer RubyGems than the system's
+- ~~system_gem_compatible fails when the version's details cannot be fetched~~ (dropped: already fails through pipefail and the JSON parse error)
+- [x] system_gem_compatible treats a version with no ruby_version requirement as compatible
+- ~~system_gem_compatible honors a compound requirement such as `>= 2.5, < 2.6`~~ (dropped: split(",") already handles it)
+- ~~system_gem_compatible asks rubygems.org for the v2 details of the given gem version~~ (dropped: already requests that URL)
+- [x] when confirmed, only the outdated system gems compatible with the system Ruby are passed to `sudo /usr/bin/gem update`
+- [x] when no outdated system gem is compatible, no system gem update runs and none is listed

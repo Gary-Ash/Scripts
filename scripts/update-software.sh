@@ -9,7 +9,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  19-Nov-2026  7:27pm
+# Modified :  21-Nov-2026  9:32pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -44,6 +44,7 @@ approve_all=false
 include_system_gems=false
 sudo_keepalive_pid=""
 system_gem=/usr/bin/gem
+system_ruby=/usr/bin/ruby
 sparkle_updates=()
 temp_files=()
 
@@ -246,13 +247,36 @@ update_ruby_gems() {
 }
 
 #*****************************************************************************************
+# routine to check whether version VERSION of gem NAME runs on the system Ruby, returns
+# success when the system Ruby and RubyGems satisfy the version's required Ruby and
+# RubyGems versions
+#*****************************************************************************************
+system_gem_compatible() {
+	local name="${1}"
+	local version="${2}"
+
+	curl -fsSL "https://rubygems.org/api/v2/rubygems/${name}/versions/${version}.json" |
+		"${system_ruby}" -rjson -e '
+			def satisfied?(requirement, version)
+				return true if requirement.nil?
+				Gem::Requirement.new(*requirement.split(",")).satisfied_by?(Gem::Version.new(version))
+			end
+			info = JSON.parse(STDIN.read)
+			ruby_ok = satisfied?(info["ruby_version"], RUBY_VERSION)
+			gems_ok = satisfied?(info["rubygems_version"], Gem::VERSION)
+			exit(ruby_ok && gems_ok ? 0 : 1)'
+}
+
+#*****************************************************************************************
 # routine to check for and optionally install system Ruby gem updates
 #
 # The macOS system Ruby keeps its gems in a root-owned directory, so the update and the
-# cleanup run under sudo.
+# cleanup run under sudo. Only gems whose latest version the system Ruby can run are
+# listed and updated.
 #*****************************************************************************************
 update_system_gems() {
-	local outdated
+	local outdated line name latest compatible_lines=""
+	local names=()
 
 	if [[ ! -x ${system_gem} ]]; then
 		log_color "${LOG_YELLOW}" "System Ruby gems not installed — skipping system gem updates."
@@ -266,11 +290,25 @@ update_system_gems() {
 		return
 	fi
 
+	while IFS= read -r line; do
+		name="${line%% *}"
+		latest="${line##*< }"
+		latest="${latest%)}"
+		if system_gem_compatible "${name}" "${latest}"; then
+			names+=("${name}")
+			compatible_lines+="${line}"$'\n'
+		fi
+	done <<<"${outdated}"
+	if [[ ${#names[@]} -eq 0 ]]; then
+		log_color "${LOG_GREEN}" "No compatible system Ruby gem updates available."
+		return
+	fi
+
 	log_color "${LOG_RED}" "System Ruby gem updates available:"
-	log_line "${outdated}"
+	log_line "${compatible_lines%$'\n'}"
 	log_line ""
 	if confirm "Upgrade system Ruby gems?"; then
-		sudo "${system_gem}" update
+		sudo "${system_gem}" update "${names[@]}"
 		sudo "${system_gem}" cleanup
 	fi
 }

@@ -7,7 +7,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  17-Nov-2026  4:40pm
-# Modified :  19-Nov-2026  7:27pm
+# Modified :  21-Nov-2026  9:28pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -89,6 +89,26 @@ stub_command() {
 	chmod +x "$BATS_TEST_TMPDIR/bin/$command"
 }
 
+# writes a curl stub that, for each NAME VERSION JSON triple in $@, answers a request for
+# https://rubygems.org/api/v2/rubygems/NAME/versions/VERSION.json with JSON, and fails any
+# other request
+stub_curl_versions() {
+	local stub="$BATS_TEST_TMPDIR/bin/curl" url json
+	cat >"$stub" <<-'EOF'
+		#!/usr/bin/env bash
+		for arg in "$@"; do
+		case "$arg" in
+	EOF
+	while (($# >= 3)); do
+		printf -v url '%q' "https://rubygems.org/api/v2/rubygems/$1/versions/$2.json"
+		printf -v json '%q' "$3"
+		printf '\t\t%s) printf "%%s\\n" %s; exit 0 ;;\n' "$url" "$json" >>"$stub"
+		shift 3
+	done
+	printf '\tesac\ndone\nexit 22\n' >>"$stub"
+	chmod +x "$stub"
+}
+
 # runs command $@ with only the test's stubs on PATH, and HOME pointing at the test's own
 # space so the cleanup paths do too
 run_with_test_env() {
@@ -144,13 +164,14 @@ run_script() {
 
 @test "outdated system gems are updated and then cleaned up under sudo when confirmed" {
 	stub_command gem outdated $'rexml (3.2.6 < 3.4.4)\n'
+	stub_curl_versions rexml 3.4.4 '{"ruby_version":">= 2.5.0","rubygems_version":">= 0"}'
 	system_gem="$BATS_TEST_TMPDIR/bin/gem"
 	stub_exec_sudo
 
 	run update_system_gems <<<"y"
 
 	[ "$status" -eq 0 ]
-	[ "$(grep -F -x -e "$system_gem update" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" = "$BATS_TEST_TMPDIR/bin/gem update
+	[ "$(grep -F -x -e "$system_gem update rexml" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" = "$BATS_TEST_TMPDIR/bin/gem update rexml
 $BATS_TEST_TMPDIR/bin/gem cleanup" ]
 }
 
@@ -177,6 +198,7 @@ $BATS_TEST_TMPDIR/bin/gem cleanup" ]
 
 @test "with --all outdated system gems are updated without an answer on stdin" {
 	stub_command gem outdated $'rexml (3.2.6 < 3.4.4)\n'
+	stub_curl_versions rexml 3.4.4 '{"ruby_version":">= 2.5.0","rubygems_version":">= 0"}'
 	system_gem="$BATS_TEST_TMPDIR/bin/gem"
 	stub_exec_sudo
 	# shellcheck disable=SC2034
@@ -185,8 +207,69 @@ $BATS_TEST_TMPDIR/bin/gem cleanup" ]
 	run update_system_gems </dev/null
 
 	[ "$status" -eq 0 ]
-	[ "$(grep -F -x -e "$system_gem update" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" = "$BATS_TEST_TMPDIR/bin/gem update
+	[ "$(grep -F -x -e "$system_gem update rexml" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" = "$BATS_TEST_TMPDIR/bin/gem update rexml
 $BATS_TEST_TMPDIR/bin/gem cleanup" ]
+}
+
+@test "only the outdated system gems compatible with the system Ruby are updated when confirmed" {
+	stub_command gem outdated $'rexml (3.2.6 < 3.4.4)\nnokogiri (1.13.8 < 1.19.7)\n'
+	stub_curl_versions \
+		rexml 3.4.4 '{"ruby_version":">= 2.5.0","rubygems_version":">= 0"}' \
+		nokogiri 1.19.7 '{"ruby_version":">= 3.2","rubygems_version":">= 0"}'
+	system_gem="$BATS_TEST_TMPDIR/bin/gem"
+	stub_exec_sudo
+
+	run update_system_gems <<<"y"
+
+	[ "$status" -eq 0 ]
+	[ "$(grep -F -e "$system_gem update" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" = "$BATS_TEST_TMPDIR/bin/gem update rexml
+$BATS_TEST_TMPDIR/bin/gem cleanup" ]
+}
+
+@test "when no outdated system gem is compatible, no system gem update runs and none is listed" {
+	stub_command gem outdated $'nokogiri (1.13.8 < 1.19.7)\n'
+	stub_curl_versions nokogiri 1.19.7 '{"ruby_version":">= 3.2","rubygems_version":">= 0"}'
+	system_gem="$BATS_TEST_TMPDIR/bin/gem"
+	stub_exec_sudo
+
+	run update_system_gems <<<"y"
+
+	[ "$status" -eq 0 ]
+	[ "$(grep -c -F -e "$system_gem update" -e "$system_gem cleanup" "$BATS_TEST_TMPDIR/sudo.log")" -eq 0 ]
+	[ "$output" = "Checking system Ruby gem updates...
+No compatible system Ruby gem updates available." ]
+}
+
+@test "system_gem_compatible succeeds when the system Ruby satisfies the version's required Ruby version" {
+	stub_curl_versions rexml 3.4.4 '{"number":"3.4.4","platform":"ruby","ruby_version":">= 2.5.0","rubygems_version":">= 0"}'
+
+	run system_gem_compatible rexml 3.4.4
+
+	[ "$status" -eq 0 ]
+}
+
+@test "system_gem_compatible fails when the version requires a newer Ruby than the system Ruby" {
+	stub_curl_versions nokogiri 1.19.7 '{"number":"1.19.7","platform":"ruby","ruby_version":">= 3.2","rubygems_version":">= 0"}'
+
+	run system_gem_compatible nokogiri 1.19.7
+
+	[ "$status" -ne 0 ]
+}
+
+@test "system_gem_compatible fails when the version requires a newer RubyGems than the system's" {
+	stub_curl_versions rexml 2.7.0 '{"number":"2.7.0","platform":"ruby","ruby_version":">= 2.5.0","rubygems_version":">= 3.3.22"}'
+
+	run system_gem_compatible rexml 2.7.0
+
+	[ "$status" -ne 0 ]
+}
+
+@test "system_gem_compatible treats a version with no ruby_version requirement as compatible" {
+	stub_curl_versions rake 1.0.0 '{"number":"1.0.0","platform":"ruby","ruby_version":null,"rubygems_version":">= 0"}'
+
+	run system_gem_compatible rake 1.0.0
+
+	[ "$status" -eq 0 ]
 }
 
 @test "start_sudo_keepalive validates sudo by feeding the get_sudo_password password to sudo --validate --stdin" {

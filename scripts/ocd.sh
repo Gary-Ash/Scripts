@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  22-Nov-2026  3:54pm
+# Modified :  25-Nov-2026  4:30pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -83,7 +83,8 @@ set backgroundsToKill to ¬
 		"SnippetsLab", ¬
 		"Slack", ¬
 		"Mona", ¬
-		"Pastebot"}
+		"Pastebot", ¬
+		"Alfred 6"}
 
 repeat with appName in backgroundsToKill
 	try
@@ -108,6 +109,10 @@ tell application "System Events"
 	end repeat
 end tell
 CLOSE_SCRIPT
+
+	# AirBuddyHelper answers quit with a confirmation dialog, and launchd relaunches it
+	# after a signal, so unload its launch agent
+	launchctl bootout "gui/$(id -u)/codes.rambo.AirBuddy.AirBuddyHelper" &>/dev/null || true
 }
 
 #*****************************************************************************************

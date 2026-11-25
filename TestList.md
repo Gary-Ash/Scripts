@@ -77,3 +77,9 @@
 - ~~system_gem_compatible asks rubygems.org for the v2 details of the given gem version~~ (dropped: already requests that URL)
 - [x] when confirmed, only the outdated system gems compatible with the system Ruby are passed to `sudo /usr/bin/gem update`
 - [x] when no outdated system gem is compatible, no system gem update runs and none is listed
+
+## safari-cleaner.py: keep the Microsoft sign-in cookies Copilot needs
+
+- [x] a cookie on .login.microsoftonline.com is kept when the bookmark domains are just the whitelist
+- [x] a cookie on copilot.com is kept when the bookmark domains are just the whitelist
+- [ ] a cookie on a domain that is neither bookmarked nor whitelisted is dropped

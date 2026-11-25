@@ -7,7 +7,7 @@
 #
 #  Author   :  Gary Ash <gary.ash@icloud.com>
 #  Created  :   1-Sep-2026  4:42pm
-#  Modified :
+#  Modified :  24-Nov-2026  7:39pm
 #
 #  Copyright © 2026 By Gary Ash All rights reserved.
 # ****************************************************************************************
@@ -73,7 +73,7 @@ WHITELIST_DOMAINS = """
     atlassian.com atlassian.net bing.com live.com duckduckgo.com discord.com
     discordapp.com stackexchange.com sublimehq.com zenhub.com app.zenhub.com
     wikimedia.org wikipedia.org stackoverflow.com apple.stackexchange.com
-    twitch.tv twitter.com superuser.com
+    twitch.tv twitter.com superuser.com microsoftonline.com copilot.com
     fuckingapproachableswiftconcurrency.com
 """.split()
 

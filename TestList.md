@@ -83,3 +83,19 @@
 - [x] a cookie on .login.microsoftonline.com is kept when the bookmark domains are just the whitelist
 - [x] a cookie on copilot.com is kept when the bookmark domains are just the whitelist
 - [ ] a cookie on a domain that is neither bookmarked nor whitelisted is dropped
+
+## ocd-cleanup.py: remove junk plist keys through cfprefsd
+
+- [x] a junk key at the top level of a plist is removed with `defaults delete`, and the other keys are kept
+- ~~a plist with no junk keys gets no `defaults delete`~~ (dropped: defaults runs only inside the `if key in plist` check)
+- [x] run as root under sudo, `defaults delete` runs as `$SUDO_USER`
+- ~~a junk key nested under `values` is still removed~~ (dropped: unchanged code, and no plist on this Mac has a `values` dictionary)
+- [x] a plist with a top-level junk key and a nested `values` junk key loses both
+- ~~a junk key `defaults` fails to delete does not stop the run~~ (dropped: `check=False` already guards it)
+- [x] podcastapp removes each `playState:` key with `defaults delete`
+- [x] texturePacker removes each key containing `Users` with `defaults delete`
+- [x] BBEdit removes its saved-bounds, gray-level, transform-panel, and checksum keys with `defaults delete`
+- [x] books sets `BKRecentsLastCleared` with `defaults write -string`
+- [x] xcode sets `IDETemplateOptions` with `defaults write -dict` and `NSNavLastRootDirectory` with `defaults write -string`
+- [x] sublimeText sets `NSNavLastRootDirectory` with `defaults write -string`
+- [x] sublimeMerge sets `NSNavLastRootDirectory` with `defaults write -string`

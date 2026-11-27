@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :  11-Nov-2026  8:36pm
+# Modified :  27-Nov-2026  4:26pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -27,8 +27,8 @@ if command -v swiftformat &>/dev/null; then
 	find "$directory" -type f -name "*.swift" -print0 | xargs -0 -S4096 swiftformat --config "$HOME/.config/.swiftformat" 2>/dev/null || true
 fi
 
-if command -v black &>/dev/null; then
-	black --quiet --config "$HOME/.config/black" "$directory"
+if command -v ruff &>/dev/null; then
+	ruff format --quiet "$directory"
 fi
 
 if command -v shfmt &>/dev/null; then

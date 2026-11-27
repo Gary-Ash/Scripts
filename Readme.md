@@ -126,7 +126,7 @@ Copies Xcode's file and project templates into `~/Library/Developer/Xcode/Templa
 
 ### format-project.sh
 
-Runs multiple code formatters on a project directory including uncrustify (C/Objective-C), swiftformat (Swift), black (Python), shfmt (Bash), and perltidy (Perl).
+Runs multiple code formatters on a project directory including uncrustify (C/Objective-C), swiftformat (Swift), ruff (Python), shfmt (Bash), and perltidy (Perl).
 
 **Usage:** `format-project.sh [directory]`
 

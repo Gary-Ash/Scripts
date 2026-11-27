@@ -3,6 +3,9 @@
 - [x] a zsh script keeps `$+commands[bat]` intact after formatting
 - ~~a bash script is still reformatted by shfmt~~ (dropped: verified by hand)
 - ~~a shebang-less .sh script is still formatted as bash~~ (dropped: verified by hand)
+- [x] a .py file in the project is formatted by ruff format
+- [ ] Python formatting is skipped without error when ruff is not on PATH
+- [ ] a .py file in a nested subdirectory is formatted
 
 ## update-dots.sh: prune dot files removed from $HOME
 

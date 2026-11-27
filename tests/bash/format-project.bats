@@ -6,7 +6,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :  11-Nov-2026  8:36pm
-# Modified :
+# Modified :  27-Nov-2026  4:26pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -24,4 +24,16 @@ SCRIPT="$BATS_TEST_DIRNAME/../../scripts/format-project.sh"
 	run cat "$project/aliases.sh"
 	[[ $output == *'$+commands[bat]'* ]]
 	[[ $output != *'$ + commands'* ]]
+}
+
+@test "a .py file in the project is formatted by ruff format" {
+	local project="$BATS_TEST_TMPDIR/project"
+	mkdir -p "$project"
+	printf "x = {  'a':1 }\n" >"$project/sample.py"
+
+	run "$SCRIPT" "$project"
+
+	[ "$status" -eq 0 ]
+	run cat "$project/sample.py"
+	[ "$output" = 'x = {"a": 1}' ]
 }

@@ -27,7 +27,7 @@
 #
 # Author   :  Gary Ash <gary.ash@icloud.com>
 # Created  :   1-Sep-2026  4:42pm
-# Modified :   1-Nov-2026  7:51pm
+# Modified :  27-Nov-2026  4:54pm
 #
 # Copyright © 2026 By Gary Ash All rights reserved.
 #*****************************************************************************************
@@ -58,6 +58,9 @@ readonly CLAUDE_JUNK_PATHS=(
 	".claude/mcp-needs-auth-cache.json"
 	".claude/paste-cache"
 	".claude/sessions"
+	".claude/jobs"
+	".claude/daemon"
+	".claude/daemon.log"
 	".claude/.last-cleanup"
 	".claude/.last-update-result.json"
 	".claude/plugins/cache"

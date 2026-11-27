@@ -25,12 +25,7 @@ _spec.loader.exec_module(ocd_cleanup)
 
 def write_plist_with_junk_key(tmp_path):
     plist_file = tmp_path / "com.example.ocdtest.plist"
-    plist_file.write_bytes(
-        plistlib.dumps(
-            {"RecentDocuments": ["/tmp/a.txt"], "KeepMe": "yes"},
-            fmt=plistlib.FMT_BINARY,
-        )
-    )
+    plist_file.write_bytes(plistlib.dumps({"RecentDocuments": ["/tmp/a.txt"], "KeepMe": "yes"}, fmt=plistlib.FMT_BINARY))
     return plist_file
 
 
@@ -53,12 +48,7 @@ def test_top_level_junk_key_is_removed_with_defaults_delete(run_calls, tmp_path)
 
     ocd_cleanup.processFile(str(plist_file))
 
-    assert [
-        "defaults",
-        "delete",
-        str(tmp_path / "com.example.ocdtest"),
-        "RecentDocuments",
-    ] in run_calls
+    assert ["defaults", "delete", str(tmp_path / "com.example.ocdtest"), "RecentDocuments"] in run_calls
     assert plistlib.loads(plist_file.read_bytes()) == {"KeepMe": "yes"}
 
 
@@ -76,123 +66,59 @@ def test_defaults_delete_runs_as_sudo_user_when_root(monkeypatch, tmp_path):
 
     ocd_cleanup.processFile(str(plist_file))
 
-    assert [
-        "sudo",
-        "-u",
-        "someone",
-        "defaults",
-        "delete",
-        str(tmp_path / "com.example.ocdtest"),
-        "RecentDocuments",
-    ] in calls
+    assert ["sudo", "-u", "someone", "defaults", "delete", str(tmp_path / "com.example.ocdtest"), "RecentDocuments"] in calls
 
 
 def test_top_level_and_nested_values_junk_keys_are_both_removed(tmp_path):
     plist_file = tmp_path / "com.example.ocdnested.plist"
-    plist_file.write_bytes(
-        plistlib.dumps(
-            {
-                "RecentDocuments": ["/tmp/a.txt"],
-                "KeepMe": "yes",
-                "values": {"RecentFindStrings": ["needle"], "KeepNested": 1},
-            },
-            fmt=plistlib.FMT_BINARY,
-        )
-    )
+    plist_file.write_bytes(plistlib.dumps({"RecentDocuments": ["/tmp/a.txt"], "KeepMe": "yes", "values": {"RecentFindStrings": ["needle"], "KeepNested": 1}}, fmt=plistlib.FMT_BINARY))
 
     ocd_cleanup.processFile(str(plist_file))
 
-    assert plistlib.loads(plist_file.read_bytes()) == {
-        "KeepMe": "yes",
-        "values": {"KeepNested": 1},
-    }
+    assert plistlib.loads(plist_file.read_bytes()) == {"KeepMe": "yes", "values": {"KeepNested": 1}}
 
 
-def test_podcast_play_state_key_is_removed_with_defaults_delete(
-    monkeypatch, run_calls, tmp_path
-):
-    prefs_dir = (
-        tmp_path / "Library/Containers/com.apple.podcasts/Data/Library/Preferences"
-    )
+def test_podcast_play_state_key_is_removed_with_defaults_delete(monkeypatch, run_calls, tmp_path):
+    prefs_dir = tmp_path / "Library/Containers/com.apple.podcasts/Data/Library/Preferences"
     prefs_dir.mkdir(parents=True)
     plist_file = prefs_dir / "com.apple.podcasts.plist"
-    plist_file.write_bytes(
-        plistlib.dumps(
-            {"playState:abc": 42, "KeepMe": "yes"},
-            fmt=plistlib.FMT_BINARY,
-        )
-    )
+    plist_file.write_bytes(plistlib.dumps({"playState:abc": 42, "KeepMe": "yes"}, fmt=plistlib.FMT_BINARY))
     monkeypatch.setattr(ocd_cleanup, "HOME", str(tmp_path))
 
     ocd_cleanup.podcastapp()
 
-    assert [
-        "defaults",
-        "delete",
-        str(prefs_dir / "com.apple.podcasts"),
-        "playState:abc",
-    ] in run_calls
+    assert ["defaults", "delete", str(prefs_dir / "com.apple.podcasts"), "playState:abc"] in run_calls
     assert plistlib.loads(plist_file.read_bytes()) == {"KeepMe": "yes"}
 
 
-def test_texturepacker_users_key_is_removed_with_defaults_delete(
-    monkeypatch, run_calls, tmp_path
-):
+def test_texturepacker_users_key_is_removed_with_defaults_delete(monkeypatch, run_calls, tmp_path):
     prefs_dir = tmp_path / "Library/Preferences"
     prefs_dir.mkdir(parents=True)
     plist_file = prefs_dir / "de.code-and-web.TexturePacker.plist"
-    plist_file.write_bytes(
-        plistlib.dumps(
-            {"/Users/someone/project.tps": "recent", "KeepMe": "yes"},
-            fmt=plistlib.FMT_BINARY,
-        )
-    )
+    plist_file.write_bytes(plistlib.dumps({"/Users/someone/project.tps": "recent", "KeepMe": "yes"}, fmt=plistlib.FMT_BINARY))
     monkeypatch.setattr(ocd_cleanup, "HOME", str(tmp_path))
 
     ocd_cleanup.texturePacker()
 
-    assert [
-        "defaults",
-        "delete",
-        str(prefs_dir / "de.code-and-web.TexturePacker"),
-        "/Users/someone/project.tps",
-    ] in run_calls
+    assert ["defaults", "delete", str(prefs_dir / "de.code-and-web.TexturePacker"), "/Users/someone/project.tps"] in run_calls
     assert plistlib.loads(plist_file.read_bytes()) == {"KeepMe": "yes"}
 
 
-def test_bbedit_saved_bounds_key_is_removed_with_defaults_delete(
-    monkeypatch, run_calls, tmp_path
-):
-    prefs_dir = (
-        tmp_path / "Library/Containers/com.barebones.bbedit/Data/Library/Preferences"
-    )
+def test_bbedit_saved_bounds_key_is_removed_with_defaults_delete(monkeypatch, run_calls, tmp_path):
+    prefs_dir = tmp_path / "Library/Containers/com.barebones.bbedit/Data/Library/Preferences"
     prefs_dir.mkdir(parents=True)
     plist_file = prefs_dir / "com.barebones.bbedit.plist"
-    plist_file.write_bytes(
-        plistlib.dumps(
-            {"InstaprojectWindowSavedBounds-1": "{0, 0, 100, 100}", "KeepMe": "yes"},
-            fmt=plistlib.FMT_BINARY,
-        )
-    )
+    plist_file.write_bytes(plistlib.dumps({"InstaprojectWindowSavedBounds-1": "{0, 0, 100, 100}", "KeepMe": "yes"}, fmt=plistlib.FMT_BINARY))
     monkeypatch.setattr(ocd_cleanup, "HOME", str(tmp_path))
 
     ocd_cleanup.BBEdit()
 
-    assert [
-        "defaults",
-        "delete",
-        str(prefs_dir / "com.barebones.bbedit"),
-        "InstaprojectWindowSavedBounds-1",
-    ] in run_calls
+    assert ["defaults", "delete", str(prefs_dir / "com.barebones.bbedit"), "InstaprojectWindowSavedBounds-1"] in run_calls
     assert plistlib.loads(plist_file.read_bytes()) == {"KeepMe": "yes"}
 
 
-def test_books_recents_last_cleared_is_set_with_defaults_write_string(
-    monkeypatch, run_calls, tmp_path
-):
-    prefs_dir = (
-        tmp_path / "Library/Containers/com.apple.iBooksX/Data/Library/Preferences"
-    )
+def test_books_recents_last_cleared_is_set_with_defaults_write_string(monkeypatch, run_calls, tmp_path):
+    prefs_dir = tmp_path / "Library/Containers/com.apple.iBooksX/Data/Library/Preferences"
     prefs_dir.mkdir(parents=True)
     plist_file = prefs_dir / "com.apple.iBooksX.plist"
     plist_file.write_bytes(plistlib.dumps({"KeepMe": "yes"}, fmt=plistlib.FMT_BINARY))
@@ -200,13 +126,7 @@ def test_books_recents_last_cleared_is_set_with_defaults_write_string(
 
     ocd_cleanup.books()
 
-    write_prefix = [
-        "defaults",
-        "write",
-        str(prefs_dir / "com.apple.iBooksX"),
-        "BKRecentsLastCleared",
-        "-string",
-    ]
+    write_prefix = ["defaults", "write", str(prefs_dir / "com.apple.iBooksX"), "BKRecentsLastCleared", "-string"]
     write_calls = [call for call in run_calls if call[:5] == write_prefix]
     assert len(write_calls) == 1, run_calls
     date_string = write_calls[0][-1]
@@ -216,116 +136,55 @@ def test_books_recents_last_cleared_is_set_with_defaults_write_string(
     assert plist["KeepMe"] == "yes"
 
 
-def test_xcode_template_options_and_nav_root_are_set_with_defaults_write(
-    monkeypatch, run_calls, tmp_path
-):
+def test_xcode_template_options_and_nav_root_are_set_with_defaults_write(monkeypatch, run_calls, tmp_path):
     prefs_dir = tmp_path / "Library/Preferences"
     prefs_dir.mkdir(parents=True)
     plist_file = prefs_dir / "com.apple.dt.Xcode.plist"
-    plist_file.write_bytes(
-        plistlib.dumps(
-            {
-                "IDETemplateOptions": {"languageChoice": "Objective-C", "old": "x"},
-                "KeepMe": "yes",
-            },
-            fmt=plistlib.FMT_BINARY,
-        )
-    )
+    plist_file.write_bytes(plistlib.dumps({"IDETemplateOptions": {"languageChoice": "Objective-C", "old": "x"}, "KeepMe": "yes"}, fmt=plistlib.FMT_BINARY))
     monkeypatch.setattr(ocd_cleanup, "HOME", str(tmp_path))
 
     ocd_cleanup.xcode()
 
     domain = str(prefs_dir / "com.apple.dt.Xcode")
-    assert [
-        "defaults",
-        "write",
-        domain,
-        "IDETemplateOptions",
-        "-dict",
-        "languageChoice",
-        "Swift",
-        "bundleIdentifierPrefix",
-        "com.geedbla",
-        "ORGANIZATIONNAME",
-        "Gee Dbl A",
-    ] in run_calls
-    assert [
-        "defaults",
-        "write",
-        domain,
-        "NSNavLastRootDirectory",
-        "-string",
-        f"{tmp_path}/Developer/",
-    ] in run_calls
+    assert ["defaults", "write", domain, "IDETemplateOptions", "-dict", "languageChoice", "Swift", "bundleIdentifierPrefix", "com.geedbla", "ORGANIZATIONNAME", "Gee Dbl A"] in run_calls
+    assert ["defaults", "write", domain, "NSNavLastRootDirectory", "-string", f"{tmp_path}/Developer/"] in run_calls
     plist = plistlib.loads(plist_file.read_bytes())
-    assert plist["IDETemplateOptions"] == {
-        "languageChoice": "Swift",
-        "bundleIdentifierPrefix": "com.geedbla",
-        "ORGANIZATIONNAME": "Gee Dbl A",
-    }
+    assert plist["IDETemplateOptions"] == {"languageChoice": "Swift", "bundleIdentifierPrefix": "com.geedbla", "ORGANIZATIONNAME": "Gee Dbl A"}
     assert plist["NSNavLastRootDirectory"] == f"{tmp_path}/Developer/"
     assert plist["KeepMe"] == "yes"
 
 
-def test_sublime_text_nav_root_is_set_with_defaults_write_string(
-    monkeypatch, run_calls, tmp_path
-):
+def test_sublime_text_nav_root_is_set_with_defaults_write_string(monkeypatch, run_calls, tmp_path):
     session_dir = tmp_path / "Library/Application Support/Sublime Text/Local"
     session_dir.mkdir(parents=True)
     (session_dir / "Session.sublime_session").write_text("{}")
     prefs_dir = tmp_path / "Library/Preferences"
     prefs_dir.mkdir(parents=True)
     plist_file = prefs_dir / "com.sublimetext.4.plist"
-    plist_file.write_bytes(
-        plistlib.dumps(
-            {"NSNavLastRootDirectory": "/old/place/", "KeepMe": "yes"},
-            fmt=plistlib.FMT_BINARY,
-        )
-    )
+    plist_file.write_bytes(plistlib.dumps({"NSNavLastRootDirectory": "/old/place/", "KeepMe": "yes"}, fmt=plistlib.FMT_BINARY))
     monkeypatch.setattr(ocd_cleanup, "HOME", str(tmp_path))
 
     ocd_cleanup.sublimeText()
 
-    assert [
-        "defaults",
-        "write",
-        str(prefs_dir / "com.sublimetext.4"),
-        "NSNavLastRootDirectory",
-        "-string",
-        f"{tmp_path}/Developer/",
-    ] in run_calls
+    assert ["defaults", "write", str(prefs_dir / "com.sublimetext.4"), "NSNavLastRootDirectory", "-string", f"{tmp_path}/Developer/"] in run_calls
     plist = plistlib.loads(plist_file.read_bytes())
     assert plist["NSNavLastRootDirectory"] == f"{tmp_path}/Developer/"
     assert plist["KeepMe"] == "yes"
 
 
-def test_sublime_merge_nav_root_is_set_with_defaults_write_string(
-    monkeypatch, run_calls, tmp_path
-):
+def test_sublime_merge_nav_root_is_set_with_defaults_write_string(monkeypatch, run_calls, tmp_path):
     session_dir = tmp_path / "Library/Application Support/Sublime Merge/Local"
     session_dir.mkdir(parents=True)
     (session_dir / "Session.sublime_session").write_text("{}")
     prefs_dir = tmp_path / "Library/Preferences"
     prefs_dir.mkdir(parents=True)
     plist_file = prefs_dir / "com.sublimemerge.plist"
-    plist_file.write_bytes(
-        plistlib.dumps(
-            {"NSNavLastRootDirectory": "/old/place/", "KeepMe": "yes"},
-            fmt=plistlib.FMT_BINARY,
-        )
-    )
+    plist_file.write_bytes(plistlib.dumps({"NSNavLastRootDirectory": "/old/place/", "KeepMe": "yes"}, fmt=plistlib.FMT_BINARY))
     monkeypatch.setattr(ocd_cleanup, "HOME", str(tmp_path))
 
     ocd_cleanup.sublimeMerge()
 
-    assert [
-        "defaults",
-        "write",
-        str(prefs_dir / "com.sublimemerge"),
-        "NSNavLastRootDirectory",
-        "-string",
-        f"{tmp_path}/Developer/",
-    ] in run_calls
+    assert ["defaults", "write", str(prefs_dir / "com.sublimemerge"), "NSNavLastRootDirectory", "-string", f"{tmp_path}/Developer/"] in run_calls
     plist = plistlib.loads(plist_file.read_bytes())
     assert plist["NSNavLastRootDirectory"] == f"{tmp_path}/Developer/"
     assert plist["KeepMe"] == "yes"

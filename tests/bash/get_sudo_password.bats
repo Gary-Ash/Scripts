@@ -26,7 +26,7 @@ setup() {
 	printf '#!/usr/bin/env bash\nexit 1\n' >"$BATS_TEST_TMPDIR/bin/sudo"
 	chmod +x "$BATS_TEST_TMPDIR/bin/sudo"
 
-	run /usr/bin/timeout 5 bash -c "source \"\$1\"; get_sudo_password 2>/dev/null" _ "$LIB" </dev/null
+	run /usr/bin/timeout 5 bash -c 'source "$1"; get_sudo_password 2>/dev/null' _ "$LIB" </dev/null
 
 	[ "$status" -eq 0 ]
 	[ "$output" = "" ]

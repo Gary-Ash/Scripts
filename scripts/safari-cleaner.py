@@ -29,14 +29,10 @@ HOME = os.environ["HOME"]
 SAFARI_DATA = f"{HOME}/Library/Containers/com.apple.Safari/Data/Library"
 COOKIE_FILE = f"{SAFARI_DATA}/Cookies/Cookies.binarycookies"
 BOOKMARK_FILE = f"{HOME}/Library/Safari/Bookmarks.plist"
-OBSERVATIONS = (
-    f"{SAFARI_DATA}/WebKit/WebsiteData/ResourceLoadStatistics/observations.db"
-)
+OBSERVATIONS = f"{SAFARI_DATA}/WebKit/WebsiteData/ResourceLoadStatistics/observations.db"
 WEBSITE_DATA = f"{SAFARI_DATA}/WebKit/WebsiteData/Default"
 WEBKIT_CACHE = f"{SAFARI_DATA}/Caches/com.apple.Safari/WebKitCache"
-ALT_SERVICES = (
-    f"{SAFARI_DATA}/Caches/WebKit/AlternativeServices/AlternativeService.sqlite"
-)
+ALT_SERVICES = f"{SAFARI_DATA}/Caches/WebKit/AlternativeServices/AlternativeService.sqlite"
 URL_CACHE_DIR = f"{SAFARI_DATA}/Caches/com.apple.Safari/fsCachedData"
 URL_CACHE_DB = f"{SAFARI_DATA}/Caches/com.apple.Safari/Cache.db"
 HISTORY_DB = f"{HOME}/Library/Safari/History.db"
@@ -78,10 +74,7 @@ WHITELIST_DOMAINS = """
 """.split()
 
 MULTIPART_SUFFIX = re.compile(r"^(co|com|org|net|gov|edu|ac)$")
-ORIGIN_DOMAIN = re.compile(
-    r"\b([a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+)\b",
-    re.IGNORECASE,
-)
+ORIGIN_DOMAIN = re.compile(r"\b([a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+)\b", re.IGNORECASE)
 URL_HOST = re.compile(r"^https?://([^/]+)", re.IGNORECASE)
 
 APPLESCRIPT = r"""tell application "Safari" to quit
@@ -190,9 +183,7 @@ def count_of(text):
 
 
 def shell(command):
-    return subprocess.run(
-        command, shell=True, capture_output=True, text=True, check=False
-    ).stdout
+    return subprocess.run(command, shell=True, capture_output=True, text=True, check=False).stdout
 
 
 def check_safari_not_running():
@@ -247,23 +238,15 @@ def stop_knowledge_daemons():
     # Kicking them releases the WAL so our writes can land. launchd will
     # relaunch them automatically.
     uid = os.getuid()
-    for service in (
-        "com.apple.knowledge-agent",
-        "com.apple.CoreDuet.knowledgeC.syncService",
-        "com.apple.contextstoreagent",
-    ):
-        subprocess.run(
-            ["launchctl", "kickstart", "-k", f"gui/{uid}/{service}"], check=False
-        )
+    for service in ("com.apple.knowledge-agent", "com.apple.CoreDuet.knowledgeC.syncService", "com.apple.contextstoreagent"):
+        subprocess.run(["launchctl", "kickstart", "-k", f"gui/{uid}/{service}"], check=False)
     time.sleep(1)
 
 
 def run_sqlite(database, sql):
     result = subprocess.run(["sqlite3", database, sql], check=False)
     if result.returncode != 0:
-        sys.stderr.write(
-            f"sqlite3 failed on {database} (rc={result.returncode}): {sql}\n"
-        )
+        sys.stderr.write(f"sqlite3 failed on {database} (rc={result.returncode}): {sql}\n")
         return False
     return True
 
@@ -355,9 +338,7 @@ def read_cstring(data, offset):
 
 
 def parse_cookie(page_data, offset):
-    size, flags, unknown1, unknown2, url_off, name_off, path_off, value_off = (
-        struct.unpack_from("<8I", page_data, offset)
-    )
+    size, flags, unknown1, unknown2, url_off, name_off, path_off, value_off = struct.unpack_from("<8I", page_data, offset)
 
     return {
         "raw_data": page_data[offset : offset + size],
@@ -484,10 +465,7 @@ def clean_cookies(bookmark_domains):
                 kept.append(cookie)
                 total_after += 1
             elif options.verbose:
-                print(
-                    f"  DELETE: {cookie['domain']:<40}  "
-                    f"{cookie['name']}={cookie['value'][:30]}"
-                )
+                print(f"  DELETE: {cookie['domain']:<40}  {cookie['name']}={cookie['value'][:30]}")
         if kept:
             filtered_pages.append(kept)
 
@@ -512,9 +490,7 @@ def clean_observations_db(bookmark_domains):
         return
 
     to_delete = []
-    rows = query_sqlite(
-        OBSERVATIONS, "SELECT domainID, registrableDomain FROM ObservedDomains;"
-    )
+    rows = query_sqlite(OBSERVATIONS, "SELECT domainID, registrableDomain FROM ObservedDomains;")
     lines = sqlite_lines(rows)
 
     for line in lines:
@@ -536,10 +512,7 @@ def clean_observations_db(bookmark_domains):
 
     if not options.dry_run:
         identifiers = ",".join(item["id"] for item in to_delete)
-        run_sqlite(
-            OBSERVATIONS,
-            f"PRAGMA foreign_keys = ON; DELETE FROM ObservedDomains WHERE domainID IN ({identifiers});",
-        )
+        run_sqlite(OBSERVATIONS, f"PRAGMA foreign_keys = ON; DELETE FROM ObservedDomains WHERE domainID IN ({identifiers});")
 
 
 def clean_website_data(bookmark_domains):
@@ -560,9 +533,7 @@ def clean_website_data(bookmark_domains):
             continue
 
         try:
-            content = Path(origin_file).read_text(
-                encoding="utf-8", errors="surrogateescape"
-            )
+            content = Path(origin_file).read_text(encoding="utf-8", errors="surrogateescape")
         except OSError:
             continue
 
@@ -615,10 +586,7 @@ def clean_alt_services(bookmark_domains):
     # selective DELETEs race. Nuking the file is reliable — Safari rebuilds
     # it as sites advertise alt-svc on next visit.
     action = "Would wipe" if options.dry_run else "Wiping"
-    print(
-        f"{action} HTTP Alternative Service cache ({total} entries, "
-        f"{would_keep} would re-populate on use)"
-    )
+    print(f"{action} HTTP Alternative Service cache ({total} entries, {would_keep} would re-populate on use)")
 
     if not options.dry_run:
         for path in (ALT_SERVICES, f"{ALT_SERVICES}-wal", f"{ALT_SERVICES}-shm"):
@@ -644,11 +612,7 @@ def clean_url_cache():
                 pass
         # Also clear the Cache.db entries
         if Path(URL_CACHE_DB).is_file():
-            run_sqlite(
-                URL_CACHE_DB,
-                "DELETE FROM cfurl_cache_response; DELETE FROM cfurl_cache_blob_data; "
-                "DELETE FROM cfurl_cache_receiver_data;",
-            )
+            run_sqlite(URL_CACHE_DB, "DELETE FROM cfurl_cache_response; DELETE FROM cfurl_cache_blob_data; DELETE FROM cfurl_cache_receiver_data;")
         print(f"Cleared {len(files)} URL cache files")
 
 
@@ -666,20 +630,11 @@ def clean_history_db(bookmark_domains):
     if options.dry_run:
         return
 
-    run_sqlite(
-        HISTORY_DB,
-        "DELETE FROM history_visits; DELETE FROM history_items; "
-        "DELETE FROM history_tombstones; VACUUM;",
-    )
+    run_sqlite(HISTORY_DB, "DELETE FROM history_visits; DELETE FROM history_items; DELETE FROM history_tombstones; VACUUM;")
 
-    remaining = shell(
-        f'sqlite3 "{HISTORY_DB}" "SELECT COUNT(*) FROM history_items;"'
-    ).strip()
+    remaining = shell(f'sqlite3 "{HISTORY_DB}" "SELECT COUNT(*) FROM history_items;"').strip()
     if count_of(remaining) > 0:
-        sys.stderr.write(
-            f"History.db still has {remaining} rows after DELETE — "
-            "com.apple.Safari.History helper may have respawned.\n"
-        )
+        sys.stderr.write(f"History.db still has {remaining} rows after DELETE — com.apple.Safari.History helper may have respawned.\n")
 
 
 def clean_recently_closed_tabs():
@@ -712,21 +667,14 @@ def clean_content_blocker_stats(bookmark_domains):
                 found[identifier] = domain
         return found, total
 
-    to_delete, total_1p = collect(
-        "SELECT firstPartyDomainID, domain FROM FirstPartyDomains;"
-    )
-    to_delete_3p, total_3p = collect(
-        "SELECT thirdPartyDomainID, domain FROM ThirdPartyDomains;"
-    )
+    to_delete, total_1p = collect("SELECT firstPartyDomainID, domain FROM FirstPartyDomains;")
+    to_delete_3p, total_3p = collect("SELECT thirdPartyDomainID, domain FROM ThirdPartyDomains;")
 
     if not to_delete and not to_delete_3p:
         return
 
     action = "Would remove" if options.dry_run else "Removing"
-    print(
-        f"{action} {len(to_delete)}/{total_1p} first-party + "
-        f"{len(to_delete_3p)}/{total_3p} third-party ContentBlocker entries"
-    )
+    print(f"{action} {len(to_delete)}/{total_1p} first-party + {len(to_delete_3p)}/{total_3p} third-party ContentBlocker entries")
 
     if options.verbose:
         for key in sorted(to_delete, key=lambda k: to_delete[k]):
@@ -740,16 +688,10 @@ def clean_content_blocker_stats(bookmark_domains):
     statements = []
     if to_delete:
         identifiers = ",".join(to_delete)
-        statements += [
-            f"DELETE FROM BlockedResources WHERE firstPartyDomainID IN ({identifiers});",
-            f"DELETE FROM FirstPartyDomains WHERE firstPartyDomainID IN ({identifiers});",
-        ]
+        statements += [f"DELETE FROM BlockedResources WHERE firstPartyDomainID IN ({identifiers});", f"DELETE FROM FirstPartyDomains WHERE firstPartyDomainID IN ({identifiers});"]
     if to_delete_3p:
         identifiers = ",".join(to_delete_3p)
-        statements += [
-            f"DELETE FROM BlockedResources WHERE thirdPartyDomainID IN ({identifiers});",
-            f"DELETE FROM ThirdPartyDomains WHERE thirdPartyDomainID IN ({identifiers});",
-        ]
+        statements += [f"DELETE FROM BlockedResources WHERE thirdPartyDomainID IN ({identifiers});", f"DELETE FROM ThirdPartyDomains WHERE thirdPartyDomainID IN ({identifiers});"]
     run_sqlite(CB_STATS_DB, " ".join(statements))
 
 
@@ -770,9 +712,7 @@ def clean_hsts(bookmark_domains):
     if not isinstance(session, dict):
         return
 
-    removed = [
-        host for host in session if not domain_matches_bookmarks(host, bookmark_domains)
-    ]
+    removed = [host for host in session if not domain_matches_bookmarks(host, bookmark_domains)]
     total = len(session)
 
     if not removed:
@@ -818,9 +758,7 @@ def clean_favicons(bookmark_domains):
     reject_delete = []  # page_url rows to remove from rejected_resources
 
     total_page = 0
-    for line in sqlite_lines(
-        query_sqlite(FAVICONS_DB, "SELECT url, uuid FROM page_url;")
-    ):
+    for line in sqlite_lines(query_sqlite(FAVICONS_DB, "SELECT url, uuid FROM page_url;")):
         url, _, uuid = line.partition("|")
         if not url:
             continue
@@ -832,9 +770,7 @@ def clean_favicons(bookmark_domains):
             page_delete[uuid] = host
 
     total_rej = 0
-    for url in sqlite_lines(
-        query_sqlite(FAVICONS_DB, "SELECT page_url FROM rejected_resources;")
-    ):
+    for url in sqlite_lines(query_sqlite(FAVICONS_DB, "SELECT page_url FROM rejected_resources;")):
         if not url:
             continue
         total_rej += 1
@@ -848,10 +784,7 @@ def clean_favicons(bookmark_domains):
         return
 
     action = "Would remove" if options.dry_run else "Removing"
-    print(
-        f"{action} {len(page_delete)}/{total_page} favicon page rows + "
-        f"{len(reject_delete)}/{total_rej} rejected_resources rows"
-    )
+    print(f"{action} {len(page_delete)}/{total_page} favicon page rows + {len(reject_delete)}/{total_rej} rejected_resources rows")
 
     if options.dry_run:
         return
@@ -859,10 +792,7 @@ def clean_favicons(bookmark_domains):
     statements = []
     if page_delete:
         uuids = ",".join(f"'{uuid}'" for uuid in page_delete)
-        statements += [
-            f"DELETE FROM page_url  WHERE uuid IN ({uuids});",
-            f"DELETE FROM icon_info WHERE uuid IN ({uuids});",
-        ]
+        statements += [f"DELETE FROM page_url  WHERE uuid IN ({uuids});", f"DELETE FROM icon_info WHERE uuid IN ({uuids});"]
     if reject_delete:
         urls = ",".join("'" + url.replace("'", "''") + "'" for url in reject_delete)
         statements.append(f"DELETE FROM rejected_resources WHERE page_url IN ({urls});")
@@ -879,10 +809,7 @@ def clean_screen_time(bookmark_domains):
     if options.dry_run:
         print("Would run: tccutil reset ScreenTime")
     else:
-        if (
-            subprocess.run(["tccutil", "reset", "ScreenTime"], check=False).returncode
-            != 0
-        ):
+        if subprocess.run(["tccutil", "reset", "ScreenTime"], check=False).returncode != 0:
             sys.stderr.write("tccutil reset ScreenTime failed\n")
         elif options.verbose:
             print("Reset ScreenTime TCC entries")
@@ -890,11 +817,7 @@ def clean_screen_time(bookmark_domains):
     # Query ZSTRUCTUREDMETADATA directly so orphaned rows (no ZOBJECT
     # reference) are also caught. We'll cascade-delete ZOBJECT rows that
     # point at the metadata we're removing.
-    rows = query_sqlite(
-        KNOWLEDGE_DB,
-        "SELECT Z_PK, Z_DKDIGITALHEALTHMETADATAKEY__WEBDOMAIN FROM ZSTRUCTUREDMETADATA "
-        "WHERE Z_DKDIGITALHEALTHMETADATAKEY__WEBDOMAIN IS NOT NULL;",
-    )
+    rows = query_sqlite(KNOWLEDGE_DB, "SELECT Z_PK, Z_DKDIGITALHEALTHMETADATAKEY__WEBDOMAIN FROM ZSTRUCTUREDMETADATA WHERE Z_DKDIGITALHEALTHMETADATAKEY__WEBDOMAIN IS NOT NULL;")
 
     to_delete = []
     total = 0
@@ -920,10 +843,7 @@ def clean_screen_time(bookmark_domains):
         return
 
     keys = ",".join(item["pk"] for item in to_delete)
-    sql = (
-        f"DELETE FROM ZOBJECT WHERE ZSTRUCTUREDMETADATA IN ({keys}); "
-        f"DELETE FROM ZSTRUCTUREDMETADATA WHERE Z_PK IN ({keys});"
-    )
+    sql = f"DELETE FROM ZOBJECT WHERE ZSTRUCTUREDMETADATA IN ({keys}); DELETE FROM ZSTRUCTUREDMETADATA WHERE Z_PK IN ({keys});"
     count_sql = f"SELECT COUNT(*) FROM ZSTRUCTUREDMETADATA WHERE Z_PK IN ({keys});"
 
     run_sqlite(KNOWLEDGE_DB, sql)
@@ -931,18 +851,12 @@ def clean_screen_time(bookmark_domains):
 
     if count_of(remaining) > 0:
         if options.verbose:
-            print(
-                f"knowledgeC.db blocked ({remaining} rows remain), "
-                "kicking daemons and retrying"
-            )
+            print(f"knowledgeC.db blocked ({remaining} rows remain), kicking daemons and retrying")
         stop_knowledge_daemons()
         run_sqlite(KNOWLEDGE_DB, sql)
         remaining = shell(f'sqlite3 "{KNOWLEDGE_DB}" "{count_sql}"').strip()
         if count_of(remaining) > 0:
-            sys.stderr.write(
-                f"knowledgeC.db still has {remaining} target rows after daemon "
-                "restart. Screen Time cleanup failed.\n"
-            )
+            sys.stderr.write(f"knowledgeC.db still has {remaining} target rows after daemon restart. Screen Time cleanup failed.\n")
 
 
 def clean_biome_streams():
@@ -954,11 +868,7 @@ def clean_biome_streams():
     biome_root = f"{HOME}/Library/Biome/streams/restricted"
     streams = ("Safari.AutoPlay", "Safari.Navigations", "App.WebUsage")
 
-    to_clean = [
-        f"{biome_root}/{stream}/local"
-        for stream in streams
-        if Path(f"{biome_root}/{stream}/local").is_dir()
-    ]
+    to_clean = [f"{biome_root}/{stream}/local" for stream in streams if Path(f"{biome_root}/{stream}/local").is_dir()]
     if not to_clean:
         return
 
@@ -976,9 +886,7 @@ def clean_biome_streams():
     subprocess.run(["launchctl", "bootout", f"gui/{uid}/com.apple.biomed"], check=False)
     for path in to_clean:
         shutil.rmtree(path, ignore_errors=True)
-    subprocess.run(
-        ["launchctl", "kickstart", f"gui/{uid}/com.apple.biomed"], check=False
-    )
+    subprocess.run(["launchctl", "kickstart", f"gui/{uid}/com.apple.biomed"], check=False)
 
 
 def clean_webkit_cache():
@@ -1024,10 +932,7 @@ def main(argv):
         bookmark_domains[domain] = 1
 
     if options.verbose:
-        print(
-            f"Found {len(bookmark_domains)} bookmarked domains "
-            f"(incl. {len(WHITELIST_DOMAINS)} whitelisted)"
-        )
+        print(f"Found {len(bookmark_domains)} bookmarked domains (incl. {len(WHITELIST_DOMAINS)} whitelisted)")
 
     clean_cookies(bookmark_domains)
     clean_observations_db(bookmark_domains)

@@ -22,14 +22,8 @@ from pathlib import Path
 LOGO_FILE = Path("/opt/geedbla/pictures/apple-logo.png")
 
 MODEL_LIST_FILES = (
-    Path(
-        "/System/Library/PrivateFrameworks/ServerInformation.framework/Versions/A/"
-        "Resources/English.lproj/SIMachineAttributes.plist"
-    ),
-    Path(
-        "/System/Library/PrivateFrameworks/ServerInformation.framework/Versions/A/"
-        "Resources/en.lproj/SIMachineAttributes.plist"
-    ),
+    Path("/System/Library/PrivateFrameworks/ServerInformation.framework/Versions/A/Resources/English.lproj/SIMachineAttributes.plist"),
+    Path("/System/Library/PrivateFrameworks/ServerInformation.framework/Versions/A/Resources/en.lproj/SIMachineAttributes.plist"),
 )
 
 # marketing names for the releases that system_profiler reports by number alone
@@ -86,9 +80,7 @@ APPLE_LOGO = """\033[38;5;034m                                        @@
 
 
 def shell(command):
-    return subprocess.run(
-        command, shell=True, capture_output=True, text=True, check=False
-    ).stdout
+    return subprocess.run(command, shell=True, capture_output=True, text=True, check=False).stdout
 
 
 def capture(text, pattern, group=1):
@@ -145,15 +137,11 @@ def parse_command_line(argv):
 # gather system information
 # ****************************************************************************************
 def gather_specs(highlight_text, normal_info_text):
-    hardware_data = shell(
-        "system_profiler SPHardwareDataType SPSoftwareDataType  SPDisplaysDataType"
-    )
+    hardware_data = shell("system_profiler SPHardwareDataType SPSoftwareDataType  SPDisplaysDataType")
     df_data = shell("df -H / 2> /dev/null")
     battery_data = shell("pmset -g batt 2> /dev/null").rstrip("\n")
     internal_ip = shell("ipconfig getifaddr en0 2> /dev/null").rstrip("\n")
-    external_ip = shell(
-        "/usr/bin/dig +short myip.opendns.com @resolver1.opendns.com"
-    ).rstrip("\n")
+    external_ip = shell("/usr/bin/dig +short myip.opendns.com @resolver1.opendns.com").rstrip("\n")
 
     specs = []
 
@@ -174,9 +162,7 @@ def gather_specs(highlight_text, normal_info_text):
     # ------------------------------------------------------------------------------------
     # Homebrew package manager
     # ------------------------------------------------------------------------------------
-    if os.access("/usr/local/bin/brew", os.X_OK) or os.access(
-        "/opt/homebrew/bin/brew", os.X_OK
-    ):
+    if os.access("/usr/local/bin/brew", os.X_OK) or os.access("/opt/homebrew/bin/brew", os.X_OK):
         shell("brew update &> /dev/null")
 
         installed = len(re.split(r"\s", shell("brew list --formula")))
@@ -193,9 +179,7 @@ def gather_specs(highlight_text, normal_info_text):
     shell_path = os.environ.get("SHELL", "")
     shell_text = shell_path
     if "bash" in shell_path:
-        version = shell(
-            f"{shell_path} -c 'echo ${{BASH_VERSINFO[0]}}.${{BASH_VERSINFO[1]}}.${{BASH_VERSINFO[2]}}'"
-        ).rstrip("\n")
+        version = shell(f"{shell_path} -c 'echo ${{BASH_VERSINFO[0]}}.${{BASH_VERSINFO[1]}}.${{BASH_VERSINFO[2]}}'").rstrip("\n")
         shell_text = f"Bash v{version} ({shell_path})"
     elif "zsh" in shell_path:
         version = shell(f"{shell_path} -c 'echo $ZSH_VERSION'").rstrip("\n")
@@ -217,9 +201,7 @@ def gather_specs(highlight_text, normal_info_text):
                 with open(model_list_file, "rb") as plist_file:
                     model_dict = plistlib.load(plist_file).get(hardware_id)
                 if model_dict:
-                    marketing_model = model_dict.get("_LOCALIZABLE_", {}).get(
-                        "marketingModel"
-                    )
+                    marketing_model = model_dict.get("_LOCALIZABLE_", {}).get("marketingModel")
             except (OSError, plistlib.InvalidFileException):
                 model_dict = None
 
@@ -262,13 +244,9 @@ def gather_specs(highlight_text, normal_info_text):
         charge = capture(battery_data, r"([0-9]+%)")
         if "InternalBattery" in battery_data:
             if "Now drawing from 'AC Power'" in battery_data:
-                specs.append(
-                    f"Power        : Charging on AC Power Battery charge at {charge}"
-                )
+                specs.append(f"Power        : Charging on AC Power Battery charge at {charge}")
             else:
-                specs.append(
-                    f"Power        : Running on Battery Power charge at {charge}"
-                )
+                specs.append(f"Power        : Running on Battery Power charge at {charge}")
 
     # ------------------------------------------------------------------------------------
     # parse IP addresses
@@ -334,11 +312,7 @@ def main(argv):
             heading = text[: colon_index + 1]
             text = text[colon_index + 1 :]
 
-        print(
-            f"\033[{specs_line};{specs_column}H{heading_text}{heading}"
-            f"{normal_info_text}{text}",
-            end="",
-        )
+        print(f"\033[{specs_line};{specs_column}H{heading_text}{heading}{normal_info_text}{text}", end="")
 
     print("\n\n\n", end="")
     return 0

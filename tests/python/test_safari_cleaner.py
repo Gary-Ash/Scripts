@@ -23,9 +23,7 @@ _spec.loader.exec_module(safari_cleaner)
 def test_microsoft_login_cookie_is_kept_with_only_whitelist_domains():
     bookmark_domains = {d: 1 for d in safari_cleaner.WHITELIST_DOMAINS}
 
-    kept = safari_cleaner.domain_matches_bookmarks(
-        ".login.microsoftonline.com", bookmark_domains
-    )
+    kept = safari_cleaner.domain_matches_bookmarks(".login.microsoftonline.com", bookmark_domains)
 
     assert kept is True
 

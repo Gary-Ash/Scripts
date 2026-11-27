@@ -31,15 +31,11 @@ TEMPLATE_LOCATION = "/opt/geedbla/templates/Xcode/"
 # ----------------------------------------------------------------------------------------
 
 # this will match copyright declarations an isolate the copyright holder into group 1
-FIND_FILES_TO_PROCESS = re.compile(
-    r"Copyright\s*(?:.*)\s*(?:\d{4}\s*-\s*\d{4}|\d{4}) By (.*) All rights reserved\."
-)
+FIND_FILES_TO_PROCESS = re.compile(r"Copyright\s*(?:.*)\s*(?:\d{4}\s*-\s*\d{4}|\d{4}) By (.*) All rights reserved\.")
 
 # this matches the copyright declaration found in non Xcode project files
 # group 1 contains the comment leader of the line containing the copyright
-NON_PROJECT_FILE_COPYRIGHT = re.compile(
-    r"(.*)Copyright\s*(?:.*)\s*(\d{4}\s*-\s*\d{4}|\d{4})\s*By\s*(.*) All rights reserved\."
-)
+NON_PROJECT_FILE_COPYRIGHT = re.compile(r"(.*)Copyright\s*(?:.*)\s*(\d{4}\s*-\s*\d{4}|\d{4})\s*By\s*(.*) All rights reserved\.")
 
 # this matches the copyright declaration found in Xcode project files
 PROJECT_FILE_COPYRIGHT = re.compile(
@@ -61,21 +57,7 @@ SOURCE_MODIFIED = re.compile(r"Modified :[^\\\n]*")
 VALID_PROJECT_NAME = re.compile(r"^[a-zA-Z][0-9a-zA-Z_-]+$")
 VALID_BUNDLE_IDENTIFIER = re.compile(r"^(net|com|org)\.[a-z0-9]+$")
 
-IGNORE_EXTENSIONS = {
-    ".png",
-    ".ttf",
-    ".jpg",
-    ".jpeg",
-    ".bmp",
-    ".psd",
-    ".mov",
-    ".mp3",
-    ".ogg",
-    ".mp4",
-    ".caf",
-    ".scpt",
-    ".xcuserstate",
-}
+IGNORE_EXTENSIONS = {".png", ".ttf", ".jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".scpt", ".xcuserstate"}
 
 # ----------------------------------------------------------------------------------------
 #  global variables
@@ -148,9 +130,7 @@ def wrap_text(text, width, prefix):
         if not segment.strip():
             lines.append(prefix)
             continue
-        for line in textwrap.wrap(
-            segment, width=available, break_long_words=True, break_on_hyphens=False
-        ):
+        for line in textwrap.wrap(segment, width=available, break_long_words=True, break_on_hyphens=False):
             lines.append(prefix + line)
 
     return "\n".join(unexpand(line) for line in lines)
@@ -179,9 +159,7 @@ def search_path(name):
 
     for directory in directories:
         candidate = os.path.join(directory, name)
-        if (os.path.isfile(candidate) and os.access(candidate, os.X_OK)) or (
-            candidate.endswith(".app") and os.path.isdir(candidate)
-        ):
+        if (os.path.isfile(candidate) and os.access(candidate, os.X_OK)) or (candidate.endswith(".app") and os.path.isdir(candidate)):
             return candidate
     return None
 
@@ -208,18 +186,11 @@ def check_for_required_tools():
 def help_text():
     script_name = Path(sys.argv[0]).name
 
-    sys.stderr.write(
-        f"{script_name} <template name> <project name> <location of project> "
-        "[company] [bundle ID]\n\n"
-    )
-    sys.stderr.write(
-        "-cs,\t---closed        \tCreated a project with a closed source license\n"
-    )
+    sys.stderr.write(f"{script_name} <template name> <project name> <location of project> [company] [bundle ID]\n\n")
+    sys.stderr.write("-cs,\t---closed        \tCreated a project with a closed source license\n")
     sys.stderr.write("-lif,\t--inFileLicense \tAdd the source license to the files\n")
     sys.stderr.write("-ng,\t--no-github      \tDo Not create a GitHub repository\n")
-    sys.stderr.write(
-        "-nx,\t--no-xcode       \tDo Not start Xcode after the project is generated\n"
-    )
+    sys.stderr.write("-nx,\t--no-xcode       \tDo Not start Xcode after the project is generated\n")
     sys.exit(1)
 
 
@@ -235,20 +206,12 @@ def validate_bundle_identifier():
         return
 
     if not VALID_BUNDLE_IDENTIFIER.match(options["bundleIdentifier"]):
-        sys.stderr.write(
-            f"*** Error: Invalid bundle identifer - {options['bundleIdentifier']}\n"
-        )
+        sys.stderr.write(f"*** Error: Invalid bundle identifer - {options['bundleIdentifier']}\n")
         help_text()
 
 
 def parse_command_line(argv):
-    names = [
-        "projectTemplate",
-        "projectName",
-        "projectLocation",
-        "companyName",
-        "bundleIdentifier",
-    ]
+    names = ["projectTemplate", "projectName", "projectLocation", "companyName", "bundleIdentifier"]
     name_index = 0
 
     if len(argv) < 3:
@@ -338,14 +301,10 @@ def prepare_template_variables():
     meridiem = "am" if now.hour < 12 else "pm"
     timestamp = f"{now.day:2d}-{now.strftime('%b')}-{now.year}  {hour}:{now.minute:02d}{meridiem}"
 
-    copyright_notice = (
-        f"Copyright © {now.year} By {options['companyName']} All rights reserved."
-    )
+    copyright_notice = f"Copyright © {now.year} By {options['companyName']} All rights reserved."
 
     try:
-        with open(
-            f"{TEMPLATE_LOCATION}/_Files/organizations.txt", encoding="utf-8"
-        ) as handle:
+        with open(f"{TEMPLATE_LOCATION}/_Files/organizations.txt", encoding="utf-8") as handle:
             companies.extend(line.rstrip("\n") for line in handle)
     except OSError as error:
         die(f"Unable to open organizations file: {error}")
@@ -367,9 +326,7 @@ def prepare_template_variables():
             die(f"Unable to read the license file: {error}")
 
         license_text = license_text[license_text.index("Copyright") :]
-        license_text = FIND_FILES_TO_PROCESS.sub(
-            lambda _: copyright_notice, license_text, count=1
-        )
+        license_text = FIND_FILES_TO_PROCESS.sub(lambda _: copyright_notice, license_text, count=1)
         license_text = license_text.strip()
 
 
@@ -407,11 +364,7 @@ def create_project_file_structure():
             directories[:] = []
             continue
 
-        kept = [
-            f"{parent}/{name}"
-            for name in directories + files
-            if not skip(f"{parent}/{name}")
-        ]
+        kept = [f"{parent}/{name}" for name in directories + files if not skip(f"{parent}/{name}")]
 
         if parent == template_root or kept:
             os.makedirs(rename(parent), exist_ok=True)
@@ -435,9 +388,7 @@ def create_project_file_structure():
     tree_copy_or_die(f"{TEMPLATE_LOCATION}/_Files/BuildEnv", f"{project_root}/BuildEnv")
 
     if options["setupGithub"]:
-        tree_copy_or_die(
-            f"{TEMPLATE_LOCATION}/_Files/.github", f"{project_root}/.github"
-        )
+        tree_copy_or_die(f"{TEMPLATE_LOCATION}/_Files/.github", f"{project_root}/.github")
 
     copy_or_die(f"{TEMPLATE_LOCATION}/_Files/.swiftlint.yml", f"{project_root}/")
     copy_or_die(f"{TEMPLATE_LOCATION}/_Files/.gitignore", f"{project_root}/")
@@ -465,23 +416,10 @@ def create_project_file_structure():
     except OSError as error:
         die(f"disk error: {error}")
 
-    if (
-        subprocess.run(
-            ["git", "init", f"{project_root}/"], capture_output=True, check=False
-        ).returncode
-        != 0
-    ):
+    if subprocess.run(["git", "init", f"{project_root}/"], capture_output=True, check=False).returncode != 0:
         die("disk error")
 
-    if (
-        subprocess.run(
-            ["git", "checkout", "-b", "develop"],
-            cwd=project_root,
-            capture_output=True,
-            check=False,
-        ).returncode
-        != 0
-    ):
+    if subprocess.run(["git", "checkout", "-b", "develop"], cwd=project_root, capture_output=True, check=False).returncode != 0:
         die("disk error")
 
 
@@ -489,24 +427,14 @@ def stamp_project_file(source):
     company_name = options["companyName"]
     project_name = options["projectName"]
 
-    source = ORGANIZATION_NAME.sub(
-        lambda _: f'ORGANIZATIONNAME = "{company_name}";', source, count=1
-    )
+    source = ORGANIZATION_NAME.sub(lambda _: f'ORGANIZATIONNAME = "{company_name}";', source, count=1)
 
     if DISPLAY_NAME.search(source):
-        source = DISPLAY_NAME.sub(
-            lambda _: f'INFOPLIST_KEY_CFBundleDisplayName = "{project_name}";', source
-        )
+        source = DISPLAY_NAME.sub(lambda _: f'INFOPLIST_KEY_CFBundleDisplayName = "{project_name}";', source)
     elif GENERATE_INFOPLIST.search(source):
-        source = GENERATE_INFOPLIST.sub(
-            lambda _: "GENERATE_INFOPLIST_FILE = YES;\n\t\t\t"
-            f'INFOPLIST_KEY_CFBundleDisplayName = "{project_name}";',
-            source,
-        )
+        source = GENERATE_INFOPLIST.sub(lambda _: f'GENERATE_INFOPLIST_FILE = YES;\n\t\t\tINFOPLIST_KEY_CFBundleDisplayName = "{project_name}";', source)
 
-    source = BUNDLE_IDENTIFIER.sub(
-        lambda _: f"PRODUCT_BUNDLE_IDENTIFIER  = {options['bundleIdentifier']};", source
-    )
+    source = BUNDLE_IDENTIFIER.sub(lambda _: f"PRODUCT_BUNDLE_IDENTIFIER  = {options['bundleIdentifier']};", source)
     source = PROJECT_CREATED.sub(lambda _: f"Created  :  {timestamp}", source)
     source = PROJECT_MODIFIED.sub(lambda _: "Modified :", source)
 
@@ -526,17 +454,13 @@ def stamp_project_file(source):
             wrapped = "\\n" + wrapped
             source = PROJECT_FILE_COPYRIGHT.sub(lambda _: wrapped, source, count=1)
         else:
-            source = FIND_FILES_TO_PROCESS.sub(
-                lambda _: copyright_notice, source, count=1
-            )
+            source = FIND_FILES_TO_PROCESS.sub(lambda _: copyright_notice, source, count=1)
 
         count += 1
         if count > 10:
             break
 
-    return COMPANY_NAME_CREDIT.sub(
-        lambda _: f"By {company_name} All rights reserved.", source
-    )
+    return COMPANY_NAME_CREDIT.sub(lambda _: f"By {company_name} All rights reserved.", source)
 
 
 def stamp_source_file(source):
@@ -555,10 +479,7 @@ def stamp_source_file(source):
 
 
 def set_file_dates(path):
-    subprocess.run(
-        ["SetFile", "-d", set_file_date_format, "-m", set_file_date_format, str(path)],
-        check=False,
-    )
+    subprocess.run(["SetFile", "-d", set_file_date_format, "-m", set_file_date_format, str(path)], check=False)
 
 
 def search_replace(path):
@@ -582,9 +503,7 @@ def search_replace(path):
 
         match = FIND_FILES_TO_PROCESS.search(source)
         if match and is_valid_organization(match.group(1)):
-            source = re.sub(
-                options["projectTemplate"], lambda _: options["projectName"], source
-            )
+            source = re.sub(options["projectTemplate"], lambda _: options["projectName"], source)
             source = source.replace("__PROJECT_NAME__", options["projectName"])
 
             if extension == ".pbxproj":
@@ -593,9 +512,7 @@ def search_replace(path):
                 source = stamp_source_file(source)
 
             try:
-                Path(name).write_text(
-                    source, encoding="utf-8", errors="surrogateescape"
-                )
+                Path(name).write_text(source, encoding="utf-8", errors="surrogateescape")
             except OSError:
                 pass
 
@@ -619,30 +536,10 @@ def main(argv):
             search_replace(f"{parent}/{name}")
 
     if options["openXcode"]:
-        subprocess.Popen(
-            [
-                "open",
-                "-a",
-                "Xcode",
-                f"{project_root}/{options['projectName']}.xcodeproj",
-            ]
-        )
+        subprocess.Popen(["open", "-a", "Xcode", f"{project_root}/{options['projectName']}.xcodeproj"])
 
     if options["setupGithub"]:
-        subprocess.run(
-            [
-                "gh",
-                "repo",
-                "create",
-                options["projectName"],
-                "--private",
-                "--source=.",
-                "--remote=upstream",
-            ],
-            cwd=project_root,
-            capture_output=True,
-            check=False,
-        )
+        subprocess.run(["gh", "repo", "create", options["projectName"], "--private", "--source=.", "--remote=upstream"], cwd=project_root, capture_output=True, check=False)
 
     return 0
 

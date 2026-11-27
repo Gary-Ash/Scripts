@@ -16,21 +16,7 @@ import re
 import sys
 from pathlib import Path
 
-EXTENSIONS = {
-    "c",
-    "cc",
-    "cpp",
-    "cs",
-    "cxx",
-    "swift",
-    "m",
-    "mm",
-    "h",
-    "hh",
-    "hpp",
-    "hxx",
-    "pch",
-}
+EXTENSIONS = {"c", "cc", "cpp", "cs", "cxx", "swift", "m", "mm", "h", "hh", "hpp", "hxx", "pch"}
 
 BLANK_RUN = re.compile(r"^(\s*\r\n){2,}", re.MULTILINE)
 

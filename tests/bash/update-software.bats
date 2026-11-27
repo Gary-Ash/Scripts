@@ -23,7 +23,7 @@ setup() {
 
 teardown() {
 	# stops a sudo keep-alive loop a test started
-	if [[ -n "${sudo_keepalive_pid:-}" ]]; then
+	if [[ -n ${sudo_keepalive_pid:-} ]]; then
 		kill "$sudo_keepalive_pid" 2>/dev/null || true
 	fi
 }
@@ -306,7 +306,10 @@ No compatible system Ruby gem updates available." ]
 	# a stand-in for the loop, started from a command substitution so it is not this
 	# shell's child: once killed it is reaped at once instead of lingering as a zombie
 	# that kill -0 still finds
-	sudo_keepalive_pid=$(sleep 30 >/dev/null 2>&1 3>&- & echo $!)
+	sudo_keepalive_pid=$(
+		sleep 30 >/dev/null 2>&1 3>&- &
+		echo $!
+	)
 
 	run cleanup
 	# the stand-in may take a moment to be reaped, so wait up to 5 seconds

@@ -20,10 +20,7 @@ import sys
 from pathlib import Path
 
 XCODE_CONTENTS = Path("/Applications/Xcode.app/Contents")
-STRINGS_TEMPLATE = XCODE_CONTENTS / (
-    "Developer/Library/Xcode/Templates/File Templates/MultiPlatform/Resource/"
-    "Strings File (Legacy).xctemplate/___FILEBASENAME___.strings"
-)
+STRINGS_TEMPLATE = XCODE_CONTENTS / ("Developer/Library/Xcode/Templates/File Templates/MultiPlatform/Resource/Strings File (Legacy).xctemplate/___FILEBASENAME___.strings")
 
 # the templates are a mix of text and binaries, so they are edited as bytes
 FILE_HEADER_MARKER = re.compile(rb"//\s*___FILEHEADER___")

@@ -68,9 +68,7 @@ def collect_media(media_location):
 def main():
     home = Path(os.environ["HOME"])
     simulators_location = home / "Library/Developer/CoreSimulator/Devices"
-    media_location = (
-        home / "Documents/GeeDblA/Resources/Development/Apple/SimulatorBackup"
-    )
+    media_location = home / "Documents/GeeDblA/Resources/Development/Apple/SimulatorBackup"
 
     simulators = get_simulators(simulators_location)
     media = collect_media(media_location)
@@ -79,18 +77,11 @@ def main():
         subprocess.run([SIMCTL] + arguments, capture_output=True, check=False)
 
     for name in simulators:
-        booted = subprocess.run(
-            [SIMCTL, "boot", name], capture_output=True, check=False
-        )
+        booted = subprocess.run([SIMCTL, "boot", name], capture_output=True, check=False)
         if booted.returncode != 0:
             continue
 
-        if (
-            subprocess.run(
-                [SIMCTL, "addmedia", "booted"] + media, check=False
-            ).returncode
-            != 0
-        ):
+        if subprocess.run([SIMCTL, "addmedia", "booted"] + media, check=False).returncode != 0:
             return 1
 
         if subprocess.run([SIMCTL, "shutdown", "booted"], check=False).returncode != 0:

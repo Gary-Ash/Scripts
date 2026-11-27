@@ -41,12 +41,7 @@ class ResourceForkError(Exception):
 # exposes the extended attribute calls on Linux only
 # ****************************************************************************************
 def run_xattr(*arguments):
-    result = subprocess.run(
-        ["/usr/bin/xattr", *arguments],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
-        check=False,
-    )
+    result = subprocess.run(["/usr/bin/xattr", *arguments], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
     return result.stdout if result.returncode == 0 else None
 
 
@@ -179,24 +174,15 @@ def parse_resource_map(reader, size):
         if entry + 8 > map_length:
             raise ResourceForkError("resource type list is truncated")
 
-        name, reference_count, reference_list = struct.unpack_from(
-            ">4sHH", resource_map, entry
-        )
+        name, reference_count, reference_list = struct.unpack_from(">4sHH", resource_map, entry)
 
         for reference_index in range(reference_count + 1):
             reference = type_list + reference_list + reference_index * 12
             if reference + 12 > map_length:
                 raise ResourceForkError("resource reference list is truncated")
 
-            identifier, _name_offset, packed = struct.unpack_from(
-                ">hHI", resource_map, reference
-            )
-            types.setdefault(name, []).append(
-                {
-                    "id": identifier,
-                    "offset": data_offset + (packed & 0x00FFFFFF),
-                }
-            )
+            identifier, _name_offset, packed = struct.unpack_from(">hHI", resource_map, reference)
+            types.setdefault(name, []).append({"id": identifier, "offset": data_offset + (packed & 0x00FFFFFF)})
 
     return {"data_offset": data_offset, "types": types}
 
@@ -228,29 +214,14 @@ def icns_problem(reader, reference):
 # checking
 # ****************************************************************************************
 def issue(code, level, fixable, path, message):
-    return {
-        "code": code,
-        "level": level,
-        "fixable": fixable,
-        "path": path,
-        "message": message,
-        "repaired": None,
-    }
+    return {"code": code, "level": level, "fixable": fixable, "path": path, "message": message, "repaired": None}
 
 
 def check_icon_resources(icon, issues):
     reader, size = open_resource_fork(icon)
 
     if reader is None:
-        issues.append(
-            issue(
-                "icon-no-resource-fork",
-                "error",
-                False,
-                icon,
-                "the icon file has no resource fork, so it carries no icon at all",
-            )
-        )
+        issues.append(issue("icon-no-resource-fork", "error", False, icon, "the icon file has no resource fork, so it carries no icon at all"))
         return
 
     try:
@@ -262,32 +233,13 @@ def check_icon_resources(icon, issues):
 
     references = resource_map["types"].get(b"icns")
     if not references:
-        issues.append(
-            issue(
-                "icon-no-icns-resource",
-                "error",
-                False,
-                icon,
-                "the resource fork holds no icns resource",
-            )
-        )
+        issues.append(issue("icon-no-icns-resource", "error", False, icon, "the resource fork holds no icns resource"))
         return
 
-    icon_resource = next(
-        (item for item in references if item["id"] == ICNS_RESOURCE_ID), None
-    )
+    icon_resource = next((item for item in references if item["id"] == ICNS_RESOURCE_ID), None)
     if icon_resource is None:
         identifiers = ", ".join(str(item["id"]) for item in references)
-        issues.append(
-            issue(
-                "icon-wrong-icns-id",
-                "error",
-                False,
-                icon,
-                f"the icns resource must have id {ICNS_RESOURCE_ID}, "
-                f"but the fork holds id {identifiers}",
-            )
-        )
+        issues.append(issue("icon-wrong-icns-id", "error", False, icon, f"the icns resource must have id {ICNS_RESOURCE_ID}, but the fork holds id {identifiers}"))
         return
 
     problem = icns_problem(reader, icon_resource)
@@ -302,88 +254,30 @@ def check_folder(directory):
 
     if not os.path.islink(icon) and not os.path.exists(icon):
         if flags & HAS_CUSTOM_ICON:
-            issues.append(
-                issue(
-                    "stray-custom-icon-flag",
-                    "error",
-                    True,
-                    directory,
-                    "the folder is marked as having a custom icon but contains no icon file",
-                )
-            )
+            issues.append(issue("stray-custom-icon-flag", "error", True, directory, "the folder is marked as having a custom icon but contains no icon file"))
 
         if os.path.isfile(os.path.join(directory, "Icon")):
-            issues.append(
-                issue(
-                    "plain-icon-file",
-                    "warning",
-                    False,
-                    directory,
-                    "the folder holds a file named Icon with no trailing carriage return, "
-                    "which the Finder ignores",
-                )
-            )
+            issues.append(issue("plain-icon-file", "warning", False, directory, "the folder holds a file named Icon with no trailing carriage return, which the Finder ignores"))
 
         return issues
 
     if os.path.islink(icon) or not os.path.isfile(icon):
-        issues.append(
-            issue(
-                "icon-not-regular-file",
-                "error",
-                False,
-                icon,
-                "the icon file must be a regular file",
-            )
-        )
+        issues.append(issue("icon-not-regular-file", "error", False, icon, "the icon file must be a regular file"))
         return issues
 
     if not flags & HAS_CUSTOM_ICON:
-        issues.append(
-            issue(
-                "missing-custom-icon-flag",
-                "error",
-                True,
-                directory,
-                "the folder holds an icon file but is not marked as having a custom icon",
-            )
-        )
+        issues.append(issue("missing-custom-icon-flag", "error", True, directory, "the folder holds an icon file but is not marked as having a custom icon"))
 
     if not finder_flags(icon) & IS_INVISIBLE:
-        issues.append(
-            issue(
-                "icon-not-invisible",
-                "error",
-                True,
-                icon,
-                "the icon file is not marked invisible, so it shows up in the Finder",
-            )
-        )
+        issues.append(issue("icon-not-invisible", "error", True, icon, "the icon file is not marked invisible, so it shows up in the Finder"))
 
     mode = os.stat(icon).st_mode & 0o7777
     if (mode & 0o444) != 0o444:
-        issues.append(
-            issue(
-                "icon-not-readable",
-                "error",
-                True,
-                icon,
-                f"the icon file is mode {mode:04o} and is not readable by everyone",
-            )
-        )
+        issues.append(issue("icon-not-readable", "error", True, icon, f"the icon file is mode {mode:04o} and is not readable by everyone"))
 
     data_fork = os.stat(icon).st_size
     if data_fork:
-        issues.append(
-            issue(
-                "icon-data-fork-not-empty",
-                "warning",
-                False,
-                icon,
-                f"the icon file's data fork holds {data_fork} bytes; the Finder reads "
-                "only the resource fork",
-            )
-        )
+        issues.append(issue("icon-data-fork-not-empty", "warning", False, icon, f"the icon file's data fork holds {data_fork} bytes; the Finder reads only the resource fork"))
 
     check_icon_resources(icon, issues)
     return issues
@@ -521,18 +415,10 @@ def main(argv):
             if not option.quiet:
                 report(directory, issues)
 
-            unresolved += sum(
-                1
-                for item in issues
-                if item["level"] == "error" and not item["repaired"]
-            )
+            unresolved += sum(1 for item in issues if item["level"] == "error" and not item["repaired"])
 
     if not option.quiet:
-        print(
-            f"{checked} folder{'' if checked == 1 else 's'} checked, "
-            f"{problems} problem{'' if problems == 1 else 's'} found, "
-            f"{repaired} repaired"
-        )
+        print(f"{checked} folder{'' if checked == 1 else 's'} checked, {problems} problem{'' if problems == 1 else 's'} found, {repaired} repaired")
 
     return 1 if unresolved else 0
 

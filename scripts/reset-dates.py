@@ -30,32 +30,13 @@ TEMPLATE_LOCATION = Path("/opt/geedbla/templates/Xcode")
 # ----------------------------------------------------------------------------------------
 
 # this will match copyright declarations an isolate the copyright holder into group 1
-FIND_FILES_TO_PROCESS = re.compile(
-    r"Copyright\s*(?:.*)\s*(?:\d{4}\s*-\s*\d{4}|\d{4}) By (.*) All rights reserved\."
-)
+FIND_FILES_TO_PROCESS = re.compile(r"Copyright\s*(?:.*)\s*(?:\d{4}\s*-\s*\d{4}|\d{4}) By (.*) All rights reserved\.")
 
-CREATED_LINE = re.compile(
-    r"Created  :[\/\t 0-9A-Za-z\-:]*[^\n|\\n]|Created  :*[^\n|\\n]"
-)
-MODIFIED_LINE = re.compile(
-    r"Modified :[\/\t 0-9A-Za-z\-:]*[^\n|\\n]|Modified :*[^\n|\\n]"
-)
+CREATED_LINE = re.compile(r"Created  :[\/\t 0-9A-Za-z\-:]*[^\n|\\n]|Created  :*[^\n|\\n]")
+MODIFIED_LINE = re.compile(r"Modified :[\/\t 0-9A-Za-z\-:]*[^\n|\\n]|Modified :*[^\n|\\n]")
 ORGANIZATION_NAME = re.compile(r"ORGANIZATIONNAME\s*=\s*.*;")
 
-IGNORE_EXTENSIONS = (
-    ".png",
-    ".ttf",
-    "jpg",
-    ".jpeg",
-    ".bmp",
-    ".psd",
-    ".mov",
-    ".mp3",
-    ".ogg",
-    ".mp4",
-    ".caf",
-    ".xcuserstate",
-)
+IGNORE_EXTENSIONS = (".png", ".ttf", "jpg", ".jpeg", ".bmp", ".psd", ".mov", ".mp3", ".ogg", ".mp4", ".caf", ".xcuserstate")
 
 # ----------------------------------------------------------------------------------------
 #  global variables
@@ -86,19 +67,12 @@ def stamp_header(source, count=0):
 
 def process_scpt_file(filename):
     language = "AppleScript"
-    decompiled = subprocess.run(
-        ["osadecompile", str(filename)], capture_output=True, text=True, check=False
-    )
+    decompiled = subprocess.run(["osadecompile", str(filename)], capture_output=True, text=True, check=False)
     source = decompiled.stdout
 
     if decompiled.returncode != 0 or not source:
         language = "JavaScript"
-        decompiled = subprocess.run(
-            ["osadecompile", "-l", "JavaScript", str(filename)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        decompiled = subprocess.run(["osadecompile", "-l", "JavaScript", str(filename)], capture_output=True, text=True, check=False)
         source = decompiled.stdout
         if decompiled.returncode != 0 or not source:
             return
@@ -108,35 +82,19 @@ def process_scpt_file(filename):
         source = stamp_header(source, count=1)
         source = FIND_FILES_TO_PROCESS.sub(lambda _: copyright_notice, source, count=1)
 
-        subprocess.run(
-            ["osacompile", "-l", language, "-o", str(filename)],
-            input=source,
-            text=True,
-            stderr=subprocess.DEVNULL,
-            check=False,
-        )
+        subprocess.run(["osacompile", "-l", language, "-o", str(filename)], input=source, text=True, stderr=subprocess.DEVNULL, check=False)
 
 
 def parse_command_line(argv):
     global company_name
 
     if len(argv) < 1:
-        sys.stderr.write(
-            'Usage: reset-dates.py "company name" [file|directory ...]\n\n'
-        )
+        sys.stderr.write('Usage: reset-dates.py "company name" [file|directory ...]\n\n')
         sys.stderr.write("Examples:\n")
-        sys.stderr.write(
-            '  reset-dates.py "Gary Ash"                              # Process current directory\n'
-        )
-        sys.stderr.write(
-            '  reset-dates.py "Gary Ash" ./src ./lib ./tests          # Process multiple directories\n'
-        )
-        sys.stderr.write(
-            '  reset-dates.py "Gary Ash" main.swift AppDelegate.swift # Process specific files\n'
-        )
-        sys.stderr.write(
-            '  reset-dates.py "Gary Ash" ./src config.swift           # Mix of files and directories\n'
-        )
+        sys.stderr.write('  reset-dates.py "Gary Ash"                              # Process current directory\n')
+        sys.stderr.write('  reset-dates.py "Gary Ash" ./src ./lib ./tests          # Process multiple directories\n')
+        sys.stderr.write('  reset-dates.py "Gary Ash" main.swift AppDelegate.swift # Process specific files\n')
+        sys.stderr.write('  reset-dates.py "Gary Ash" ./src config.swift           # Mix of files and directories\n')
         sys.exit(1)
 
     company_name = argv[0]
@@ -163,9 +121,7 @@ def prepare():
     copyright_notice = f"Copyright © {now.year} By {company_name} All rights reserved."
 
     try:
-        with open(
-            TEMPLATE_LOCATION / "_Files/organizations.txt", encoding="utf-8"
-        ) as handle:
+        with open(TEMPLATE_LOCATION / "_Files/organizations.txt", encoding="utf-8") as handle:
             companies.extend(line.rstrip("\n") for line in handle)
     except OSError as error:
         sys.stderr.write(f"*** Error: Unable to open orginations file : {error}\n")
@@ -175,11 +131,7 @@ def prepare():
 
 
 def set_file_dates(path):
-    subprocess.run(
-        ["SetFile", "-d", set_file_date_format, "-m", set_file_date_format, str(path)],
-        capture_output=True,
-        check=False,
-    )
+    subprocess.run(["SetFile", "-d", set_file_date_format, "-m", set_file_date_format, str(path)], capture_output=True, check=False)
 
 
 def search_replace(path):
@@ -210,9 +162,7 @@ def search_replace(path):
         match = FIND_FILES_TO_PROCESS.search(source)
         if match and is_valid_organization(match.group(1)):
             if extension == ".pbxproj":
-                source = ORGANIZATION_NAME.sub(
-                    f'ORGANIZATIONNAME = "{company_name}";', source, count=1
-                )
+                source = ORGANIZATION_NAME.sub(f'ORGANIZATIONNAME = "{company_name}";', source, count=1)
                 source = stamp_header(source)
 
                 count = 0
@@ -220,17 +170,13 @@ def search_replace(path):
                     match = FIND_FILES_TO_PROCESS.search(source)
                     if not match or not is_valid_organization(match.group(1)):
                         break
-                    source = FIND_FILES_TO_PROCESS.sub(
-                        lambda _: copyright_notice, source, count=1
-                    )
+                    source = FIND_FILES_TO_PROCESS.sub(lambda _: copyright_notice, source, count=1)
                     count += 1
                     if count > 10:
                         break
             else:
                 source = stamp_header(source, count=1)
-                source = FIND_FILES_TO_PROCESS.sub(
-                    lambda _: copyright_notice, source, count=1
-                )
+                source = FIND_FILES_TO_PROCESS.sub(lambda _: copyright_notice, source, count=1)
 
             try:
                 path.write_text(source, encoding="utf-8", errors="surrogateescape")
@@ -256,9 +202,7 @@ def main(argv):
         elif path.is_file():
             search_replace(path)
         else:
-            sys.stderr.write(
-                f"*** Warning: '{path}' is not a valid file or directory\n"
-            )
+            sys.stderr.write(f"*** Warning: '{path}' is not a valid file or directory\n")
 
     return 0
 
